@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bloggar on Shelltrail - Experter inom offensiv säkerhet</title>
+    <link>https://www.shelltrail.com/sv/blogg/</link>
+    <description>Recent content in Bloggar on Shelltrail - Experter inom offensiv säkerhet</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>sv-se</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Thu, 09 Nov 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/sv/blogg/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>CERT-SE och Automatiska Notifieringar avseende Tekniska Sårbarheter (ANTS)</title>
+      <link>https://www.shelltrail.com/sv/blogg/cert-se-automatiska-notifieringar-avseende-tekniska-sarbarheter/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/blogg/cert-se-automatiska-notifieringar-avseende-tekniska-sarbarheter/</guid>
+      <description>&lt;p&gt;CERT-SE är Sveriges nationella Computer Emergency Response Team med uppgift att stötta
+samhället i arbetet med att hantera och förebygga IT-incidenter. Exempel på CERT-SE&amp;rsquo;s uppgifter
+är bland annat att öka säkerhetsmedvetenheten genom att förmedla kunskap och fakta gällande
+sårbarheter i IT system eller att hjälpa till att hantera IT-incidenter genom
+att vara en central punkt för hantering av information gällande pågående attacker.&lt;/p&gt;
+&lt;p&gt;CERT-SE är en del av Myndigheten för Samhällsskydd och Beredskap (MSB) som via stöd från
+regeringen har i uppdrag att förebygga och hantera eventuella dessa IT-incidenter för både
+privata företag och offentlig sektor.&lt;/p&gt;
+&lt;p&gt;Som ett led i att förebygga IT-incidenter tillhandahåller CERT-SE tjänsten
+&lt;a href=&#34;https://www.cert.se/utskick-faq/&#34;&gt;Automatiska Notifieringar avseende Tekniska Sårbarheter (ANTS)&lt;/a&gt;.
+Detta är en tjänst där företag, organisationer eller offentlig sektor kan kan rapportera in sina
+internet-exponerade system och via CERT-SE bli notifierade om systemen tros ha blivit
+kapade, har en sårbar konfiguration eller om det påträffats en publikt känd sårbarhet.&lt;/p&gt;
+&lt;p&gt;Att anmäla sig till ANTS är ett komplement i sitt säkerhetsarbete och kan ej ses som en
+ersättning till exempelvis en &lt;a href=&#34;https://www.shelltrail.com/sv/cyber-security-services/external-infrastructure/&#34;&gt;extern säkerhetsgranskning&lt;/a&gt;
+där manuell granskning av systemen utförs.&lt;/p&gt;
+&lt;h2 id=&#34;summering&#34;&gt;Summering&lt;/h2&gt;
+&lt;p&gt;ANTS är en konstnadsfri tjänst som underlättar möjligheten för CERT-SE att
+kontakta dig om det skulle uppdagas att något av de system du anmält till tjänsten kan
+vara hotade.
+Med det sagt finns det få anledningar till att
+inte anmäla sig - mer information finns på &lt;a href=&#34;https://www.cert.se/utskick-faq/&#34;&gt;https://www.cert.se/utskick-faq/&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Hur går ett pentest till?</title>
+      <link>https://www.shelltrail.com/sv/blogg/hur-gar-ett-pentest-till/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/blogg/hur-gar-ett-pentest-till/</guid>
+      <description>&lt;p&gt;Ett pentest eller penetrationstest är en säkerhetsgranskning av ett system som
+syftar till att identifiera sårbarheter i systemet som sedan kan åtgärdas för
+att se till att de inte kan utnyttjas av en angripare. Det finns ett flertal
+olika typer av pentest, som skiljer sig något i förutsättningar och utförande:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Pentest av &lt;a href=&#34;https://www.shelltrail.com/sv/cybersakerhetstjanster/internt-natverk-och-active-directory-pentest/&#34;&gt;interna nätverk och Active Directory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Pentest av &lt;a href=&#34;https://www.shelltrail.com/sv/cybersakerhetstjanster/webbapplikations-pentest/&#34;&gt;webbapplikationer&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Pentest av mobilapplikationer&lt;/li&gt;
+&lt;li&gt;Pentest av &lt;a href=&#34;https://www.shelltrail.com/sv/cybersakerhetstjanster/molnsakerhetsgranskning/&#34;&gt;molnmiljöer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Vi har i denna artikel valt att beskriva de delar som dessa olika typer av
+pentest har gemensamt, vilket är de olika faserna testerna går igenom under de
+1-2 veckor som pentestet pågår. Här skiljer sig dessa något mellan olika
+leverantörer, men vi har valt att beskriva dem i grova drag.&lt;/p&gt;
+&lt;h2 id=&#34;scoping&#34;&gt;Scoping&lt;/h2&gt;
+&lt;p&gt;Den första fasen är vanligtvis det som kallas scoping, där innehållet i testet
+definieras. Här går man igenom saker som vilka system som skall testas, när i
+tiden, vilka risker uppdragsgivaren ser, i vilken miljö testet genomförs
+(exempelvis i utvecklings- eller produktionsmiljö) samt om det finns undantag
+till vad som får testas. Scopingen är viktig då denna sätter omfattningen på testet.&lt;/p&gt;
+&lt;p&gt;Det är värt att notera att den här fasen typiskt sett utförs en tid innan testet
+då det ofta uppkommer frågor och begränsningar som behöver lösas innan ett test
+väl kan påbörjas.&lt;/p&gt;
+&lt;h2 id=&#34;uppstart&#34;&gt;Uppstart&lt;/h2&gt;
+&lt;p&gt;Nästa, vanligtvis korta fas, är uppstarten på testet. Här valideras att alla
+förutsättningar är på plats, att testarna har tillgång till miljön samt ges
+möjlighet att se hur applikationen används till vardags. Under detta, typiskt 1
+timme långa möte finns det ofta möljighet att reda ut kvarvarande frågor från kundens
+sida samt möjlighet för testarna att ställa ytterligare frågor.&lt;/p&gt;
+&lt;p&gt;Som en del i den här fasen ingår även de förberedelser testarna behöver utföra
+för att på ett säkert sätt kunna genomföra uppdraget. Det innefattar bland annat
+att sätta upp en säker isolerad miljö för testning, införskaffande av utrustning
+som kan behövas och att läsa på om kundens verksamhet.&lt;/p&gt;
+&lt;h2 id=&#34;testfasen&#34;&gt;Testfasen&lt;/h2&gt;
+&lt;p&gt;Så snart uppstartsmötet är avslutat är testarna i regel redo att påbörja testet
+där de etiska hackarna använder samma verktyg och metoder som riktiga angripare.
+Vanligtvis behövs lite eller ingen vägledning under denna fas, även om det är
+bra att ha en teknisk kontaktperson hos kunden för att reda ut problem som kan
+uppstå. Även om det inte är vanligt att de testade miljöerna helt slutar
+fungera, så kan de anrop som används utav testarna få applikationen att bete sig
+på ett sätt som inte var menat.&lt;/p&gt;
+&lt;p&gt;Även om de flesta brister inte rapporteras löpande under testets gång så är det
+vanligt att kritiska sårbarheter rapporteras så snart de identifierats, då dessa kan
+leda till allvarliga konsekvenser i produktionsssystem.&lt;/p&gt;
+&lt;h2 id=&#34;avrapporteringsmöte-och-rapport&#34;&gt;Avrapporteringsmöte och Rapport&lt;/h2&gt;
+&lt;p&gt;När tiden för testet löper mot sitt slut så sammanställer testarna de
+säkerhetsbrister som identifierats i en utförlig rapport samt presenterar
+bristerna på ett avrapporteringsmöte.&lt;/p&gt;
+&lt;p&gt;Rapporten, som är tilltänkt att läsas av personer med olika ansvar och bakgrund,
+innehåller vanligtvis en högnivåbeskrivning av testet och resultatet samt en mer
+detaljerad teknisk del där bristerna, hur de nyttjas och åtgärdas beskrivs.&lt;/p&gt;
+&lt;p&gt;Avrapporteringsmötet syftar till att
+testarna skall kunna visa de identifierade bristerna, hur de går att utnyttja
+samt hur de kan åtgärdas eller motverkas. Här har även kunden möjlighet att ställa
+frågor som ofta kan uppkomma då vissa attacker innefattar komplexa flöden.&lt;/p&gt;
+&lt;h2 id=&#34;summering&#34;&gt;Summering&lt;/h2&gt;
+&lt;p&gt;Vi på Shelltrail är vana att hjälpa företag att säkra upp sina system
+genom att uföra säkerhetsgranskningar. Använd vårt kontaktformulär
+eller skicka ett mail till &lt;a href=&#34;mailto:info@shelltrail.com&#34;&gt;info@shelltrail.com&lt;/a&gt; så kan vi diskutera
+vilka sätt vi kan hjälpa er.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Vad skall man tänka på när man beställer ett pentest?</title>
+      <link>https://www.shelltrail.com/sv/blogg/att-tanka-pa-nar-man-bestaller-pentest/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/blogg/att-tanka-pa-nar-man-bestaller-pentest/</guid>
+      <description>&lt;p&gt;Nurförtiden finns hoten överallt och allt från hackers till organiserade brottslingar
+försöker kontinuerligt angripa företag och deras tillgångar. Ett pentest
+(kort för penetrationstest) är en specialiserad typ av cybersäkerhetstjänst som strävar
+efter att hitta sårbarheter i olika typer av applikationer och system. Detta så att man hinner åtgärda
+sårbarheterna innna de utnyttjas av angripare.
+Den här artikeln kommer vara en guide för att förklara dessa tester och för att
+ge förståelse för när det kan vara dags att använda dem för att skydda ert
+bolags resurser.&lt;/p&gt;
+&lt;h2 id=&#34;vad-är-ett-pentest&#34;&gt;Vad är ett pentest?&lt;/h2&gt;
+&lt;p&gt;En säkerhetsgranskning benämns ofta som ett pentest eller
+penetrationstest, och är en process där personer med djup kunskap inom
+cybersäkerhet gör en bedömning av er säkerhet genom att simulera ett angrepp på utvalda
+system. Personerna kallas ofta etiska hackare eller pentestare och använder sig av samma
+metoder och verktyg som en riktig angripare, med syfte att hitta och rapportera
+säkerhetsbrister. Pentest av externa och även interna tjänster är idag vanligt
+då många ramverk (som PCI-DSS, ISO 27001), interna policies och kunder ställer krav på
+eller rekommenderar att genomföra dessa.&lt;/p&gt;
+&lt;p&gt;Men det handlar inte bara om att hitta sårbarheter, utan även att stärka
+skyddet mot en hotbild som bara ökar i takt med digitaliseringen av samhället.&lt;/p&gt;
+&lt;h2 id=&#34;när-bör-ett-pentest-göras&#34;&gt;När bör ett pentest göras?&lt;/h2&gt;
+&lt;p&gt;Att genomföra säkerhetsgranskningar av affärskritiska system bör vara en del av
+varje företags säkerhetsrutin. Detta då det kan räcka med &lt;em&gt;ett&lt;/em&gt; säkerhetshål i något
+system för att det allvarligt ska påverka den dagliga verksamheten eller företagets rykte negativt.&lt;/p&gt;
+&lt;p&gt;Förutom att på en återkommande basis göra granskningar, finns det även några
+tillfällen då det kan vara bra att genomföra ytterligare tester av säkerhetent:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Om man är leverantör av en mjukvara eller tjänst och har introducerat ny
+komplex funktionalitet.&lt;/li&gt;
+&lt;li&gt;Vid upphandlingar eller integrationer av tredjepartssystem.&lt;/li&gt;
+&lt;li&gt;När större systemförändringar genomförs.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;generella-rekommendationer&#34;&gt;Generella rekommendationer&lt;/h2&gt;
+&lt;p&gt;Vi har även valt att sammanfatta några generella rekommendationer till dig som
+skall beställa ett test:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Tänk på att inte genomföra tester för sent i ett utvecklings- eller
+integrationsprojekt. Ofta planeras säkerhetsgranskningar in som ett av de
+sista delarna innan produktionssättning, utan att reflektera över att dessa
+tester kan lägga till ytterligare utvecklingsinsatser.&lt;/li&gt;
+&lt;li&gt;Under scoping-fasen är det bra att få en bild av vilka testerare det är som kommer utföra
+testet, eftersom det inte alltid är samma person som är med och scopar, vilket
+kan leda till att förväntningarna på pentestet inte matchar resultatet.&lt;/li&gt;
+&lt;li&gt;Vi rekommenderar även att det är minst två testare som samtidigt genomför
+pentestet då leveransen ofta blir bättre när testarna drar nytta av varandras erfarenheter.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;att-välja-leverantör-av-penetrationstest&#34;&gt;Att välja leverantör av penetrationstest&lt;/h2&gt;
+&lt;p&gt;Valet av leverantör för att genomföra kan vara svårt om man inte tidigare varit
+med om processen, och det finns ett antal fallgropar man kan råka ut för.
+Leverantörerna har alla olika bakgrund, erfarenhet och metodik och det kan
+därför vara svårt att veta vad som passar just din verksamhet. Vi kommer därför
+ta upp några punkter som kan var värda att tänka extra på innan ni genomför valet
+av cybersäkerhetsleverantör.&lt;/p&gt;
+&lt;h3 id=&#34;identifierade-sårbarheter&#34;&gt;Identifierade sårbarheter&lt;/h3&gt;
+&lt;p&gt;Målet med ett pentest är oftast att identifiera så många sårbarheter som
+möjligt, och framförallt olika typer av sårbarheter. Här kan det variera
+kraftigt mellan leverantörer som mestadels förlitar sig på automatiserade
+verktyg och de som förlitar sig på manuell testning. Här är det absolut en
+fördel att använda sig av manuella tester då de med största sannolikhet hittar
+de brister som automatiska verktyg inte hittar. Manuell testning kan även uppfatta
+samband och använda bristerna i en attack-kedja samt möjligheten att hitta brister
+i affärslogik som automatiserade tester inte kan. Tänk även på att de leverantörer
+som utför manuella granskningar även använder sig av automatiserade verktyg, vilket
+gör att du som kund får ut mer av dessa.&lt;/p&gt;
+&lt;p&gt;Men även manuella tester kan skilja sig inom och mellan olika leverantörer, då
+kvalitén är beroende av testarens erfarenhet. För att maximera erfarenheten är
+det därför oftast bäst att anlita en leverantör som har säkerhet som sitt
+huvudområde, och inte generell konsultverksamhet, då konsulterna ifråga ofta är
+delaktiga i andra leveranser och inte har samma fokus på pentestning. Utöver det
+är det även bra att tillse att pentestarna har tillräcklig erfarenhet, då
+förmågan att identifiera brister ökar markant med antalet genomförda uppdrag.&lt;/p&gt;
+&lt;p&gt;Även certifieringar inom den typ av system som skall testas (exempelvis OSWE för webb
+och OSEP för interna nätverk) kan vara en stark indikator på att pentestaren kunnat
+visa sin förmåga att identifiera mer avancerade sårbarheter.&lt;/p&gt;
+&lt;h3 id=&#34;rätt-allvarlighetsbedömning&#34;&gt;Rätt allvarlighetsbedömning&lt;/h3&gt;
+&lt;p&gt;Att klassificera allvarlighetsgraden för en sårbarhet är inte alltid enkelt, men
+väldigt viktigt för en mottagare för att kunna göra rätt prioriteringar i
+arbetet med att säkra upp applikationen/systemet. Det är vanligt att en pentestare
+med mindre erfarenhet inom området gör en felaktig bedömning av
+allvarligheten, och därigenom orsakar extra arbete eller att brister som bör
+prioriteras inte får rätt fokus.&lt;/p&gt;
+&lt;p&gt;Det finns även lägen då så kallade &amp;ldquo;false
+positives&amp;rdquo;, alltså brister som egentligen inte är ett säkerhetsproblem
+rapporteras. Även här är det viktigt att anlita en erfaren säkerhetsleverantör
+som tar ett helhetsperspektiv i sin allvarlighetsbedömning så att ni kan göra
+rätt prioriteringar och därigenom höja säkerhetsnivån.&lt;/p&gt;
+&lt;h3 id=&#34;tydlig-rapportering&#34;&gt;Tydlig rapportering&lt;/h3&gt;
+&lt;p&gt;Värdet av en webbapplikationsgranskning förhöjs genom klar och tydlig
+kommunikation som ger mottagaren insikt och förståelse för den nuvarande
+säkerhetsnivån. Det är därför viktigt att en säkerhetsleverantör tydligt kan
+förklara sårbarheter, vilka risker de kan medföra i just er miljö samt
+tydligt beskriva hur de kan åtgärdas, både till tekniska men även icke-teckniska
+mottagare. Här rekommenderar vi att ni efterfrågar en exempelrapport från
+leverantören för att se om de möter de förväntningar ni ställer.&lt;/p&gt;
+&lt;h2 id=&#34;sammanfattning&#34;&gt;Sammanfattning&lt;/h2&gt;
+&lt;p&gt;Ett pentest är en ovärdelig tillgång i aktiv
+säkerhetsprocess, där sårbarheter upptäcks och åtgärdas tidigt. Genom att
+kontinuerligt granska sina applikationer/system/milöjer arbetar ett företag
+proaktivt och får en bättre motståndskraft mot angrepp. När ni är i processen att
+säkra era system genom att utföra ett pentest, kom ihåg att det i slutändan är
+erfarenheten och noggrannheten hos testarna som oftast leder till en värdefull
+granskning. Vi uppmanar er även att utforska vårat tjänsteutbud för att se om vi
+kan vara med och hjälpa er att stärka erat skydd och er motsåndskraft.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

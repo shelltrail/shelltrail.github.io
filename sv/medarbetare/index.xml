@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Medarbetare on Shelltrail - Experter inom offensiv säkerhet</title>
+    <link>https://www.shelltrail.com/sv/medarbetare/</link>
+    <description>Recent content in Medarbetare on Shelltrail - Experter inom offensiv säkerhet</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>sv-se</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Thu, 09 Nov 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/sv/medarbetare/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Andreas Vikerup</title>
+      <link>https://www.shelltrail.com/sv/medarbetare/andreas/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/medarbetare/andreas/</guid>
+      <description>&lt;p&gt;Flera års infrastrukturadministration har omvandlats till färdigheter inom penetrationstestning.
+Besitter en bred bakgrund av att arbeta med olika branscher i huvudsakligen
+säkerhetsorienterade aspekter.&lt;/p&gt;
+&lt;p&gt;Certifieringar:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Offensive Security Certified Expert 3 (OSCE3)&lt;/li&gt;
+&lt;li&gt;Offensive Security Experienced Penetration Tester (OSEP)&lt;/li&gt;
+&lt;li&gt;Offensive Security Web Expert (OSWE)&lt;/li&gt;
+&lt;li&gt;Offensive Security Exploit Developer (OSED)&lt;/li&gt;
+&lt;li&gt;Offensive Security Certified Professional (OSCP)&lt;/li&gt;
+&lt;li&gt;Certified Kubernetes Security Specialist (CKS)&lt;/li&gt;
+&lt;li&gt;Certified Kubernetes Administrator (CKA)&lt;/li&gt;
+&lt;li&gt;Certified Az Red Team Professional (CARTP)&lt;/li&gt;
+&lt;li&gt;Microsoft Certified: Azure Security Engineer Associate (AZ-500)&lt;/li&gt;
+&lt;li&gt;AWS Certified Security Specialty&lt;/li&gt;
+&lt;li&gt;Microsoft Certified: Azure Fundamentals (AZ-900)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Dan Rosenqvist</title>
+      <link>https://www.shelltrail.com/sv/medarbetare/dan/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/medarbetare/dan/</guid>
+      <description>&lt;p&gt;En erfaren IT-Säkerhetskonsult med en påvisad historik av arbete inom dator- och
+nätverkssäkerhetsbranschen. Dan har en passion för att hitta sårbarheter och
+lära sig nya färdigheter.&lt;/p&gt;
+&lt;p&gt;Certifieringar:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Offensive Security Certified Expert 3 (OSCE3)&lt;/li&gt;
+&lt;li&gt;Offensive Security Experienced Penetration Tester (OSEP)&lt;/li&gt;
+&lt;li&gt;Offensive Security Web Expert (OSWE)&lt;/li&gt;
+&lt;li&gt;Offensive Security Exploit Developer (OSED)&lt;/li&gt;
+&lt;li&gt;Offensive Security Certified Professional (OSCP)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Utbildning:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;M.Sc. i Mikroelektronik (Civilingenjör)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

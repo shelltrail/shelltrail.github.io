@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Shelltrail - Experter inom offensiv säkerhet</title>
+    <link>https://www.shelltrail.com/sv/</link>
+    <description>Recent content on Shelltrail - Experter inom offensiv säkerhet</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>sv-se</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Mon, 06 May 2024 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/sv/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Cybersäkerhetstjänster</title>
+      <link>https://www.shelltrail.com/sv/cybersakerhetstjanster/</link>
+      <pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/cybersakerhetstjanster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Research</title>
+      <link>https://www.shelltrail.com/sv/research/</link>
+      <pubDate>Mon, 22 Apr 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/research/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Bloggar</title>
+      <link>https://www.shelltrail.com/sv/blogg/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/blogg/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Medarbetare</title>
+      <link>https://www.shelltrail.com/sv/medarbetare/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/medarbetare/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Authors</title>
+      <link>https://www.shelltrail.com/sv/authors/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/authors/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Privacy policy</title>
+      <link>https://www.shelltrail.com/sv/privacy-policy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/privacy-policy/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
