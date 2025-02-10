@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Shelltrail - Swedish offensive security experts</title>
+    <link>https://www.shelltrail.com/</link>
+    <description>Recent content on Shelltrail - Swedish offensive security experts</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Mon, 10 Feb 2025 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Research</title>
+      <link>https://www.shelltrail.com/research/</link>
+      <pubDate>Mon, 10 Feb 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/research/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Cyber security services</title>
+      <link>https://www.shelltrail.com/cyber-security-services/</link>
+      <pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/cyber-security-services/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Employees</title>
+      <link>https://www.shelltrail.com/employees/</link>
+      <pubDate>Mon, 17 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/employees/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Authors</title>
+      <link>https://www.shelltrail.com/authors/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/authors/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Bloggs</title>
+      <link>https://www.shelltrail.com/blog/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/blog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Privacy policy</title>
+      <link>https://www.shelltrail.com/privacy-policy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/privacy-policy/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

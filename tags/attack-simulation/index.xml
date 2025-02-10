@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Attack simulation on Shelltrail - Swedish offensive security experts</title>
+    <link>https://www.shelltrail.com/tags/attack-simulation/</link>
+    <description>Recent content in Attack simulation on Shelltrail - Swedish offensive security experts</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Mon, 30 Oct 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/tags/attack-simulation/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Red Team engagement</title>
+      <link>https://www.shelltrail.com/cyber-security-services/red-team-engagement/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/cyber-security-services/red-team-engagement/</guid>
+      <description>&lt;p&gt;A Red Team-engagement is a simulated attack on an organization from a holistic
+view that can include several different parts, such as phishing, social
+engineering, attacks against externally exposed infrastructure as well as
+internal systems. The simulation is intended to be similar to a real-world
+attack, using the same Tools, Techniques and Procedures (TTPs) used by real
+attackers (and often based on the specific threat actors of the targeted
+business sector).&lt;/p&gt;
+&lt;h2 id=&#34;what-is-a-red-team-engagement&#34;&gt;What is a Red Team engagement?&lt;/h2&gt;
+&lt;p&gt;Red Team engagement are often confused with the closely related term penetration
+testing, but differs greatly in a number of areas. While both deal with the
+identification and exploitation of vulnerabilities they have different
+methodology, goals, purpose and execution. While a pentest aims at identifying
+as many vulnerabilities as possible in a network or system, a Red Team
+engagement aim to assess an entire organizations resilience against a targeted
+attack with one or more specific goals.&lt;/p&gt;
+&lt;p&gt;The goal of a Red Team engagement can be, for instance to access specific
+sensitive information, a certain mail account or the CEO&amp;rsquo;s user account in the
+Active Directory domain. This often means that the attacker can act more
+like a real threat, acting more stealthy as the goal is not to exploit
+vulnerabilities that may trigger certain alarms.&lt;/p&gt;
+&lt;p&gt;During a Red Team engagement it is also common to only notify a select group of
+people that are aware the test is being conducted, so that the actions and
+reactions from the staff more closely resembles what would happen in a
+real-world scenario. By doing this, the organizational procedures can be
+evaluated and improved upon.&lt;/p&gt;
+&lt;h2 id=&#34;why-and-when-should-a-red-team-engagement-be-conducted&#34;&gt;Why and when should a Red Team engagement be conducted?&lt;/h2&gt;
+&lt;p&gt;It is recommended to perform a Red Team engagement when the security posture of
+the internal network is mature and tools and procedures are in place to handle
+threats within the organization. As the aim is to evaluate how an entire
+organization handles an attack, there is little need for evaluation if the
+procedures are not in place.&lt;/p&gt;
+&lt;p&gt;When the network has undergone an internal assessment, identified
+vulnerabilities fixed, procedures and monitoring are in place it would be a good
+time to conduct a Red Team engagement to verify that everything works as
+intended.&lt;/p&gt;
+&lt;p&gt;Besides these occasions, some regulatory frameworks such as Threat
+Intelligence-based Ethical Red Teaming (TIBER) may require you to perform Red
+Team exercises.&lt;/p&gt;
+&lt;h2 id=&#34;reporting-and-results&#34;&gt;Reporting and results&lt;/h2&gt;
+&lt;p&gt;The reporting of a Red Team engagement differs from that of a normal pentest, as
+the goals and approach to the test are different between the two test types. In
+this type of test, the reporting is focused around what&amp;rsquo;s called an attack
+narrative where the testers describes attacks performed, why the types of attack
+were used, what the expected reactions from the defending team was and what
+actually happened. As the goal is aimed at a specific target, all identified
+vulnerabilities may not be included, but rather the path chosen by the attackers
+at reaching the specified target. The report and de-briefing meeting also aims
+to identify improvements that have an overall impact on both a technical as well
+as on an organizational level.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

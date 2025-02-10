@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Webbapplikation säkerhet on Shelltrail - Experter inom offensiv säkerhet</title>
+    <link>https://www.shelltrail.com/sv/tags/webbapplikation-sakerhet/</link>
+    <description>Recent content in Webbapplikation säkerhet on Shelltrail - Experter inom offensiv säkerhet</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>sv-se</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Thu, 09 Nov 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/sv/tags/webbapplikation-sakerhet/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Webbapplikations pentest</title>
+      <link>https://www.shelltrail.com/sv/cybersakerhetstjanster/webbapplikations-pentest/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/cybersakerhetstjanster/webbapplikations-pentest/</guid>
+      <description>&lt;p&gt;Webbapplikationer i alla dess former är ofta kritiska system för de flesta
+företag, oavsett om det rör sig om företagets egna exponerade webbsidor,
+SaaS-lösningar, produkter eller interna system. Webbapplikationer är ofta
+komplexa lösningar, med mycket funktionalitet och utger därför en stor (ofta
+internet-exponerad) attackyta. Av dessa anledningar är det viktigt att
+regelbundet kontrollera säkerheten där ett steg i detta kan vara att göra ett
+pentest av applikationen.&lt;/p&gt;
+&lt;h2 id=&#34;vad-innebär-ett-pentest-av-en-webbapplikation&#34;&gt;Vad innebär ett pentest av en webbapplikation?&lt;/h2&gt;
+&lt;p&gt;Ett pentest av en webbapplikation innebär att en eller flera erfarna
+säkerhetsexperter granskar applikationen med samma verktyg och metoder som
+riktiga angripare använder för att hitta sårbarheter. Dessa sårbarheter kan
+sedan åtgärdas med hjälp av de pentestarnas rekommendationer, för att stärka
+skyddet av applikationen.&lt;/p&gt;
+&lt;p&gt;Säkerhetsgranskningen utförs inte bara mot brister som nämns i branschstandarder
+som OWASP Top 10 eller OWASP Testing Guide, utan går även in på logiska brister
+och brister som är specifika för företagets egen sektor. Här skräddarsys testet
+efter företagets egna identifierade risker för att bäst försöka minimera dessa.&lt;/p&gt;
+&lt;h2 id=&#34;varför-och-när-skall-man-göra-en-säkerhetsgranskning&#34;&gt;Varför och när skall man göra en säkerhetsgranskning?&lt;/h2&gt;
+&lt;p&gt;Det finns ett flertal anledningar till att utföra säkerhetsgranskningar av ett
+företags webbapplikationer, varav några nämns nedan:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Applikationen är verksamhetskritisk och bör därför skyddas&lt;/li&gt;
+&lt;li&gt;Vid inköp av tredjeparsprodukter, för att verifiera att inga brister existerar&lt;/li&gt;
+&lt;li&gt;Kunder efterfrågar ofta verifikation på att säkerhetsgranskningar har
+genomförst&lt;/li&gt;
+&lt;li&gt;Regulatoriska krav&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;För de flesta applikationer, som de som är exponerade mot internet eller är
+kritiska för företagets verksamhet rekommenderas att minst göra årliga
+säkerhetsgranskningar, eller att utföra dessa då större förändringar gjorts i
+applikationen&lt;/p&gt;
+&lt;h2 id=&#34;resultat&#34;&gt;Resultat&lt;/h2&gt;
+&lt;p&gt;Vanligtvis tar ett test ca 1-2 veckor att utföra och resulterar i en rapport
+samt ett avrapporteringsmöte, där alla detaljer kring de påträffade bristerna
+gås igenom samt hur dessa kan åtgärdas.&lt;/p&gt;
+&lt;p&gt;Shelltrails säkerhetsexperter har erfarenhet från hundratals
+säkerhetsgranskningar och har alla branschledande certifieringar inom
+webbapplikationssäkerhet.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
