@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>OWASP on Shelltrail - Swedish offensive security experts</title>
+    <link>https://www.shelltrail.com/tags/owasp/</link>
+    <description>Recent content in OWASP on Shelltrail - Swedish offensive security experts</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Mon, 30 Oct 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/tags/owasp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Web assessment</title>
+      <link>https://www.shelltrail.com/cyber-security-services/web-security-assessment/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/cyber-security-services/web-security-assessment/</guid>
+      <description>&lt;p&gt;Web applications in all its forms are often categorized as critical systems for
+organizations, whether being the organizations own internet exposed services,
+SaaS-solutions, products or internal systems. Web applications are often
+complex solutions with lots of functionality and thus constitute a large (often
+internet-exposed) attack surface. With these characteristics it is paramount to
+conduct security assessments to ensure the security of the application on a
+regular basis.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-a-web-application-security-assessmentpentest&#34;&gt;What is a web application security assessment/pentest?&lt;/h2&gt;
+&lt;p&gt;A web application pentest is an assessment of the security of a web application
+conducted by seasoned security experts where the testers try to uncover security
+issues by hacking the web application in the same manner and with the same tools
+as real-world attackers would. The uncovered vulnerabilities can later be fixed
+or mitigated using the recommendations given by the pentesters, thereby
+strengthening the security of the application.&lt;/p&gt;
+&lt;p&gt;The security assessment is conducted to uncover vulnerabilities that are covered
+in standards such as OWASP Top 10 and OWASP Testing Guide, but is not only
+limited to these, as it is not uncommon to find logical issues and other issues
+which are related to the organizations sector as well. The tests are tailored to
+match the risks identified by the target organization, and identifying
+vulnerabilities that could lead to those risks, in order to minimize them.&lt;/p&gt;
+&lt;h2 id=&#34;why-and-when-should-you-conduct-a-security-assessment&#34;&gt;Why and when should you conduct a security assessment?&lt;/h2&gt;
+&lt;p&gt;There are a number of reasons why a web application security assessment should
+be conducted, some of which are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Applications are business critical and should be better protected&lt;/li&gt;
+&lt;li&gt;Upon procuring or integrating third-party components it is common to perform
+due-diligence or to assess the integration effort to ensure no new
+vulnerabilities have been introduced.&lt;/li&gt;
+&lt;li&gt;Customers regularly want to be ensured that security assessments have been
+performed on products&lt;/li&gt;
+&lt;li&gt;Rules and regulatory frameworks (such as PCI-DSS) require or recommend that
+a pentest of the application has been performed.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;results&#34;&gt;Results&lt;/h2&gt;
+&lt;p&gt;A common web application pentest is conducted during a period of 1-2 weeks and
+result in a report and a de-briefing meeting, where all details about the
+identified vulnerabilities are discussed and how these can be remedied.&lt;/p&gt;
+&lt;p&gt;Shelltrail&amp;rsquo;s security experts have experience from hundreds of security
+assessments of web applications and have some of the highest certifications in
+the industry when it comes to offensive security in web applications.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
