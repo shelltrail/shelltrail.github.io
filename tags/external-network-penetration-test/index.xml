@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>External network penetration test on Shelltrail - Swedish offensive security experts</title>
+    <link>https://www.shelltrail.com/tags/external-network-penetration-test/</link>
+    <description>Recent content in External network penetration test on Shelltrail - Swedish offensive security experts</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Mon, 30 Oct 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/tags/external-network-penetration-test/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>External infrastructure</title>
+      <link>https://www.shelltrail.com/cyber-security-services/external-infrastructure/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/cyber-security-services/external-infrastructure/</guid>
+      <description>&lt;p&gt;When was the last time your company performed an inventory and review of all
+internet-exposed systems? This is a good question to seek an answer to when you
+want to assess the risk of your internet presence. Systems become obsolete, and
+new vulnerabilities are discovered daily, which means companies must be diligent
+in inventorying their systems, which ports are exposed, which versions of
+different software are running, and map these against vulnerabilities that pose
+a real threat.&lt;/p&gt;
+&lt;p&gt;It is a challenging task that must be iterated at regular basis and is not
+always in line with the company&amp;rsquo;s prioritized goals. A common reason is a
+&lt;em&gt;Don&amp;rsquo;t fix it if it ain&amp;rsquo;t broken&lt;/em&gt; a attitude in combination with prioritization
+of scale an growth which may leave internet-exposed system vulnerable to attacks.&lt;/p&gt;
+&lt;h2 id=&#34;what-does-a-pentest-of-external-infrastructure-entail&#34;&gt;What does a pentest of external infrastructure entail?&lt;/h2&gt;
+&lt;p&gt;The assignment usually begins with the client providing a list of IP addresses and
+domain names to be reviewed. In addition to this, Shelltrail uses Open Source
+Intelligence sources (OSINT) to try to find more systems that may be undocumented
+or classified as &lt;em&gt;Shadow IT&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Once the list of identified systems is deemed complete, it is verified that all
+targets are under the client&amp;rsquo;s security responsibility and not third-party
+systems. If third-party systems are involved, written approval regarding the
+security audit of the third-party must be submitted to Shelltrail&amp;rsquo;s security
+consultants.&lt;/p&gt;
+&lt;p&gt;With a complete list of legitimate targets, the testing begins where a
+combination of automated and manual security audits of the systems is performed. Here,
+techniques from all of Shelltrail&amp;rsquo;s areas of expertise are combined, such as
+security reviews of web applications, Windows and Linux attacks, binary
+exploitation, and cloud-specific attacks, to name a few.&lt;/p&gt;
+&lt;p&gt;Shelltrail&amp;rsquo;s security experts possess a broad background in cybersecurity audits,
+which serves well for the varied services that can be exposed on the internet.&lt;/p&gt;
+&lt;h2 id=&#34;why-and-when-should-an-external-infrastructure-review-be-performed&#34;&gt;Why and when should an external infrastructure review be performed?&lt;/h2&gt;
+&lt;p&gt;As previously mentioned, new vulnerabilities are discovered daily and systems
+become End-of-Life, sometimes leading to the manufacturer ceasing to maintain
+systems with security updates. This makes it important to periodically conduct a
+review of internet-exposed systems to secure them before attackers find the system.
+Regardless of whether your company produces garden hoses or develops pharmaceuticals,
+your internet-exposed systems may become a target for opportunistic attackers
+scanning the internet.&lt;/p&gt;
+&lt;h2 id=&#34;the-result&#34;&gt;The Result&lt;/h2&gt;
+&lt;p&gt;The assignment results in a professional report where all security issues are described
+in a detail. The vulnerabilities described in the report are ranked from
+critical to low, and in combination with the client&amp;rsquo;s perceived risks, the report
+can be used as a priority list in which order to address the problems. It is not
+uncommon for the report to be used to increase the security budget for a company
+or to inform, for example, management that security must be prioritized.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

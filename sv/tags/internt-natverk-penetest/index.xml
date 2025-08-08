@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Internt nätverk penetest on Shelltrail - Experter inom offensiv säkerhet</title>
+    <link>https://www.shelltrail.com/sv/tags/internt-natverk-penetest/</link>
+    <description>Recent content in Internt nätverk penetest on Shelltrail - Experter inom offensiv säkerhet</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>sv-se</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Thu, 09 Nov 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/sv/tags/internt-natverk-penetest/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Internt nätverk/Active Directory pentest</title>
+      <link>https://www.shelltrail.com/sv/cybersakerhetstjanster/internt-natverk-och-active-directory-pentest/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/cybersakerhetstjanster/internt-natverk-och-active-directory-pentest/</guid>
+      <description>&lt;p&gt;En säkerhetgranskning av interna nätverk, som vanligtvis kombineras med en
+granskning av ett företags Active Directory-miljö är ett vanligt sätt att
+utvärdera ett företags djupa motståndskraft mot angripare. En vanlig
+missuppfattning är att det externa skyddet är tillräckligt för att effektivt
+stoppa angripare, men detta är sällan fallet då lösenords gissning, phishing,
+nyttjande av noll-dags sårbarheter eller social engineering är attackytor som alltid
+är tillgängliga för angripare.&lt;/p&gt;
+&lt;h2 id=&#34;vad-är-innebär-ett-pentest-av-interna-nätverk&#34;&gt;Vad är innebär ett pentest av interna nätverk?&lt;/h2&gt;
+&lt;p&gt;Ett pentest av de interna systemen genomförs vanligtvis i ett så kallat &amp;ldquo;Assume
+Breach&amp;rdquo;-scenario, som simulerar att en intern resurs (exempelvis en klientdator)
+har blivit komprometterad av en angripare. Ett test tar ca 2 veckor att
+genomföra i en medelstor miljö, även om detta kan variera baserat på upplägget
+av testet. Ifrån denna utgångspunkt granskar
+Shelltrails säkerhetsexperter de system (inklusive Active Directory-miljön) för
+att se hur en angripare skulle kunna ta över angränsande system och eskalera
+sina behörigheter i miljön för att nå mål definierade av kunden.&lt;/p&gt;
+&lt;p&gt;Granskningen består av många delar och system, som exempelvis:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Interna webbapplikationer&lt;/li&gt;
+&lt;li&gt;Behörighetsstrukturer (ACL)&lt;/li&gt;
+&lt;li&gt;Konfigurationsservrar (SCCM/MECM/ConfigMgr)&lt;/li&gt;
+&lt;li&gt;Certifikatssystem (AD CS)&lt;/li&gt;
+&lt;li&gt;SQL-servrar&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;varför-och-när-bör-vi-göra-ett-internt-pentest&#34;&gt;Varför och när bör vi göra ett internt pentest?&lt;/h2&gt;
+&lt;p&gt;Målsättningen med ett internt pentest är att öka motståndskraften i era interna
+nätverk, genom att identifiera sårbarheter och därigenom begränsa möjligheterna
+för angripare att överta ytterligare system eller tillskansa sig högre
+behörigheter.&lt;/p&gt;
+&lt;p&gt;Vi rekommenderar alla företag med större interna miljöer att genomföra
+säkerhetsgranskningar av sina interna miljöer åt minstone på en årlig basis, då
+nya attacker ständigt uppdagas.&lt;/p&gt;
+&lt;h2 id=&#34;resultat&#34;&gt;Resultat&lt;/h2&gt;
+&lt;p&gt;En säkerhetsgranskning avslutas med ett avrapporteringsmöte och en rapport som
+detaljerat går igenom identifierade brister och hur dessa kan åtgärdas, samt
+övergripande rekommendationer om hur säkerhetsnivån i er interna miljö kan
+höjas.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

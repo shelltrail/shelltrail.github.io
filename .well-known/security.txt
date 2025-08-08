@@ -1,0 +1,24 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+# security.txt
+# https://www.rfc-editor.org/rfc/rfc9116
+
+Contact: mailto:security@shelltrail.com
+Encryption: https://www.shelltrail.com/.well-known/pgp-key.txt
+Preferred-Languages: en, sv
+Canonical: https://www.shelltrail.com/.well-known/security.txt
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEt3VfUyScw0ete8Kmdk5PXOuLaeAFAmdSv/UACgkQdk5PXOuL
+aeBONwwAnsnGcrvEIDd6QZbLzYHtACyEvRqOI6XtL7w8H4Ch1rAbnouHXrsObvte
+qjGdGuIpsLcMAtesO12JYx83rWRQmtfRh1dEyCXgYCi+ZrOgvwPJ4xvrHL0v0zW5
+ibbpadzmAFcZYAAje94OAETNu5bw2cwf+k0A3gsPfYJ5O3UMPmY/vxRQAIMarSU1
+4hTBE53/to6gePo5NE+aIKAopj7nRVX/7EBJ7DoLTVzl1Dqfv2Rqy+4Aqz7cpp9k
+YRv4cq0SOeggvwmSSdu1R/J5Hf2xehV3w90SQI8ZIW12v5kiSzu8pzwRrNHknJVK
+TVahh7iSdyTPPurn4wr0zKOZePhoaEbw/qEAUMjsYBo+P35cxcGzpeHz6emo4fx1
+trwvjg5FFt62K4FD0s+HUt63La1Qu1wb2QcztfKRvzL4EQTiI1C+OTuO5Em0WsAP
+22IHWAgir+Xq7iPCnXiq8FIgn5hus+CkCQ+ogsH5pOHe9giuKKKx/s78hwot+hid
+0SRhzvlo
+=fCaF
+-----END PGP SIGNATURE-----

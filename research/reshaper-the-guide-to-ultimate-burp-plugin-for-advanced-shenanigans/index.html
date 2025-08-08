@@ -1,0 +1,2539 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academia 4.3.1">
+  <meta name="theme-name" content="academia-hugo"/>
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Have you ever had issues with CSRF tokens during a web assessment? Or drop data from burp to commandline for parsing? This is the guide to leverage the power of the Reshaper plugin developed by @ddwightx">
+
+  
+  <link rel="alternate" hreflang="sv" href="https://www.shelltrail.com/sv/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/">
+  
+  <link rel="alternate" hreflang="en-us" href="https://www.shelltrail.com/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#000000">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academia.min.d29584a8d689167dc15889efc8f9006e.css">
+
+  
+
+  
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://www.shelltrail.com/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/">
+
+  
+  
+  
+  
+    
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Shelltrail - Swedish offensive security experts">
+  <meta property="og:url" content="https://www.shelltrail.com/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/">
+  <meta property="og:title" content="Reshaper - The guide to the ultimate Burp plugin for advanced shenanigans | Shelltrail - Swedish offensive security experts">
+  <meta property="og:description" content="Have you ever had issues with CSRF tokens during a web assessment? Or drop data from burp to commandline for parsing? This is the guide to leverage the power of the Reshaper plugin developed by @ddwightx"><meta property="og:image" content="https://www.shelltrail.com/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/featured.png">
+  <meta property="twitter:image" content="https://www.shelltrail.com/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/featured.png"><meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2024-04-22T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2024-04-22T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Reshaper - The guide to the ultimate Burp plugin for advanced shenanigans | Shelltrail - Swedish offensive security experts</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/"><img src="/img/shelltrail_slim_transparent.png" height="90%" width="90%" alt="Shelltrail - Swedish offensive security experts"></a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"><span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#proposal"><span>Proposal</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#services"><span>Services</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#about"><span>About us</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#research"><span>Research</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#blog"><span>Blog</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true">
+            <i class="fas fa-globe" aria-hidden="true"></i>
+            <span>English</span>
+          </a>
+          <ul class="dropdown-menu">
+            
+            <li class="dropdown-item my-0 py-0 mx-0 px-0">
+              <a href="https://www.shelltrail.com/sv/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/">
+                <span>Svenska</span>
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+        
+
+        
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article py-5" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container split-header">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+        <img class="img-fluid w-100" src="/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/featured_huaf590a19843d8e85fabe9004315a17f1_58659_900x500_fill_q90_lanczos_smart1_3.png" itemprop="image" alt="">
+        
+    </div>
+    <div class="col-lg-12">
+      <h1 itemprop="name">Reshaper - The guide to the ultimate Burp plugin for advanced shenanigans</h1>
+
+      
+
+      
+
+
+
+<meta content="2024-04-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2024-04-22 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=https://www.shelltrail.com/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/&amp;text=Reshaper%20-%20The%20guide%20to%20the%20ultimate%20Burp%20plugin%20for%20advanced%20shenanigans" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=https://www.shelltrail.com/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/&amp;t=Reshaper%20-%20The%20guide%20to%20the%20ultimate%20Burp%20plugin%20for%20advanced%20shenanigans" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Reshaper%20-%20The%20guide%20to%20the%20ultimate%20Burp%20plugin%20for%20advanced%20shenanigans&amp;body=https://www.shelltrail.com/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=https://www.shelltrail.com/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/&amp;title=Reshaper%20-%20The%20guide%20to%20the%20ultimate%20Burp%20plugin%20for%20advanced%20shenanigans" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Reshaper%20-%20The%20guide%20to%20the%20ultimate%20Burp%20plugin%20for%20advanced%20shenanigans%20https://www.shelltrail.com/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=https://www.shelltrail.com/research/reshaper-the-guide-to-ultimate-burp-plugin-for-advanced-shenanigans/&amp;title=Reshaper%20-%20The%20guide%20to%20the%20ultimate%20Burp%20plugin%20for%20advanced%20shenanigans" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+    
+    </div>
+  </div>
+</div>
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css">
+
+
+<h2 id="tldr">TL;DR</h2>
+<p>This research will guide you through how to handle complex flows
+using the Reshaper plugin when performing web application security testing
+with Burp Suite. Even though Burp Suite arguably is the best proxy in the
+business - it falls short in certain
+tasks where the Reshaper plugin (developed by ddwightx) will shine.</p>
+<p>This research may be used as a reference or baseline when building your Reshaper
+rules or a training ground to improve your Burp skills.</p>
+<p>In total 6 scenarios will be displayed where all of them have an accompanied
+demo application:</p>
+<ul>
+<li>Scenario 1 - Resending CSRF tokens which changes on each request with Burp</li>
+<li>Scenario 2 - Using Burp to increment values with Reshapers Evaluate action</li>
+<li>Scenario 3 - Using Burp with custom scripting via Reshapers JavaScript engine</li>
+<li>Scenario 4 - URL and base64 encoding</li>
+<li>Scenario 5 - Using Burp with command line tools with Reshapers Run Process</li>
+<li>Scenario 6 - Using Burp and Reshaper to perform multiple request and save PDF files to disk</li>
+<li>Scenario 7 - gRPC from the abyss</li>
+</ul>
+<p>While some of these scenarios can be solved with other solutions such as
+Mitmproxy, Hackvertor or Burp macros, this plugin gives more versatility.</p>
+<p>And a big shout out to <a href="https://github.com/ddwightx">@ddwightx</a> for making
+all of these stunts available via <a href="https://github.com/synfron/ReshaperForBurp">Reshaper</a>. Big thanks!</p>
+<h2 id="background">Background</h2>
+<p>How many times have you had issues with handling CSRF tokens in a web assessment?
+What if you were told that this have been possible all along with the lesser known
+plugin called Reshaper?</p>
+<p><img src="reshaper-plugin-in-bapp-store.png" alt="reshaper-plugin-in-bapp-store"></p>
+<p>It is powerful, extremely powerful. The popularity of this plugin is oddly enough low,
+maybe because of its complexity and limited guides and detailed setup steps.</p>
+<p>We will show you how to utilize this plugin in some common scenarios where
+the standard Burp Suite lacks the capability.</p>
+<h2 id="reshaper-introduction">Reshaper introduction</h2>
+<p>When installed Reshaper provides a new tab in burp with multiple sub tabs:</p>
+<p><img src="reshaper-tabs-in-burp.png" alt="reshaper-tabs-in-burp"></p>
+<p>Most time will be spent in the <em>HTTP rules</em> sub tab as it is here you configure
+what actions the plugin should perform.</p>
+<p>Let&rsquo;s start with a simple task such as setting a comment named <em>testing</em> on HTTP requests.</p>
+<p>Use the add button to create a new rule. In the <em>Whens</em> frame give it a name and choose the event
+direction of the rule. As we want to trigger on outgoing traffic we choose
+<code>request</code> as direction.</p>
+<p><img src="reshaper-setting-a-comment-on-request.png" alt="reshaper-setting-a-comment-on-request"></p>
+<p>The next step is the provide what the action,<em>Thens</em>, will be when matching the <em>Whens</em>:</p>
+<p>Choose <code>comment</code> and add. Specify a name, check enabled an finish off with save.</p>
+<p><img src="reshaper-setting-enabling-comment.png" alt="reshaper-setting-enabling-comment"></p>
+<p>We are now done. All request passing through Burp will have the
+comment &ldquo;testing&rdquo;. Nice.</p>
+<p><img src="reshaper-sucessfully-setting-a-comment.png" alt="reshaper-sucessfully-setting-a-comment"></p>
+<p>Now we want to change the <em>Whens</em> to only perform actions when the request is
+sent to a specific path i.e <code>/user</code>. Any of the following <em>matches text</em> will be sufficient:</p>
+<table>
+<thead>
+<tr>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Match Text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request URI Path</td>
+<td>Text</td>
+<td>/user</td>
+</tr>
+<tr>
+<td>Request URI</td>
+<td>Text</td>
+<td>/user</td>
+</tr>
+<tr>
+<td>Request Status Line</td>
+<td>Text</td>
+<td>GET /user HTTP/1.1</td>
+</tr>
+<tr>
+<td>URL</td>
+<td>Text</td>
+<td>http://localhost:3000/user</td>
+</tr>
+</tbody>
+</table>
+<p>The following setup will successfully comment a request with a status line of
+<code>GET /user HTTP/1.1</code></p>
+<p><img src="reshaper-example-of-matching-text.png" alt="reshaper-example-of-matching-text"></p>
+<p>More advanced rules can be performed such as matching if a JSON key value pair exists
+in the request body (be mindful that the <em>Source Value Path</em> and <em>Match Text</em> should not include quotation):</p>
+<p><img src="reshaper-example-of-matching-json-key-value.png" alt="reshaper-example-of-matching-json-key-value"></p>
+<p>The following picture is an example request that will be matched by our rule:</p>
+<p><img src="reshaper-commenting-based-on-json-body.png" alt="reshaper-commenting-based-on-json-body"></p>
+<p>Cool. Now we have a basic knowledge how to configure Reshaper. Lets dive in to
+some interesting scenarios.</p>
+<h1 id="scenario-1---resending-csrf-tokens-which-changes-on-each-request-with-burp">Scenario 1 - Resending CSRF tokens which changes on each request with Burp</h1>
+<p>Alright, we know the basics of how to configure Reshaper. Let&rsquo;s put it to the
+test on a demo application.</p>
+<p>The demo application is an API application hosted with node.js. Save this
+code as <code>app.js</code> and run it with <code>node app.js</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// mkdir $HOME/node-api-csrf
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// cd $HOME/node-api-csrf
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// npn init -y
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// npm install express uuid
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">express</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;express&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">v4</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">uuidv4</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;uuid&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">express</span>();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">express</span>.<span style="color:#a6e22e">json</span>());  <span style="color:#75715e">// Middleware to parse JSON bodies
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// In-memory &#34;database&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">users</span> <span style="color:#f92672">=</span> [];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// CSRF tokens store
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">csrfTokens</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Map</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Middleware to check CSRF token
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">checkCsrfToken</span>(<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>, <span style="color:#a6e22e">next</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">csrfToken</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">headers</span>[<span style="color:#e6db74">&#39;csrf-token&#39;</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">csrfToken</span> <span style="color:#f92672">||</span> <span style="color:#f92672">!</span><span style="color:#a6e22e">csrfTokens</span>.<span style="color:#a6e22e">has</span>(<span style="color:#a6e22e">csrfToken</span>)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">newToken</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">uuidv4</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">csrfTokens</span>.<span style="color:#a6e22e">set</span>(<span style="color:#a6e22e">newToken</span>, <span style="color:#66d9ef">true</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">setHeader</span>(<span style="color:#e6db74">&#39;CSRF-Token&#39;</span>, <span style="color:#a6e22e">newToken</span>); <span style="color:#75715e">// Provide a valid CSRF token in response header
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">403</span>).<span style="color:#a6e22e">json</span>({ <span style="color:#a6e22e">error</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Invalid CSRF token&#34;</span> });
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// CSRF token is valid, let&#39;s remove it and proceed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">csrfTokens</span>.<span style="color:#66d9ef">delete</span>(<span style="color:#a6e22e">csrfToken</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">next</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Route to add a user
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">post</span>(<span style="color:#e6db74">&#39;/user&#39;</span>, <span style="color:#a6e22e">checkCsrfToken</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">name</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">name</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">400</span>).<span style="color:#a6e22e">json</span>({ <span style="color:#a6e22e">error</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Name is required&#39;</span> });
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">users</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">name</span>);  <span style="color:#75715e">// Storing the name in &#34;database&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">newToken</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">uuidv4</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">csrfTokens</span>.<span style="color:#a6e22e">set</span>(<span style="color:#a6e22e">newToken</span>, <span style="color:#66d9ef">true</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">setHeader</span>(<span style="color:#e6db74">&#39;CSRF-Token&#39;</span>, <span style="color:#a6e22e">newToken</span>); <span style="color:#75715e">// Provide a valid CSRF token in response header
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">201</span>).<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;User added&#39;</span>);
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Starting the server
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">PORT</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">PORT</span> <span style="color:#f92672">||</span> <span style="color:#ae81ff">3000</span>;
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">listen</span>(<span style="color:#a6e22e">PORT</span>, () =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`Server running on http://localhost:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">PORT</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>The end-user can send a JSON formatted POST body to <code>/user</code> endpoint which adds
+a name to the in-memory database. The request will only be successful if the
+end-user provides
+CSRF token which is randomly generated and returned to the user as a HTTP response
+header.</p>
+<p>If we would want to use Burp&rsquo;s built in active scanner to look for vulnerabilities
+this would be a problem as we need to provide the CSRF token upon each
+request.</p>
+<p><img src="burps-built-int-scanner-having-issues-with-version-value-csrf.png" alt="burps-built-int-scanner-having-issues-with-version-value"></p>
+<p>To circumvent this problem we create a new Reshaper rule called
+&ldquo;set_csrf_variable&rdquo; and configure the <em>Whens</em> with <em>Request Direction = Response</em>
+and actions as the example shown in the following table:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Whens</th>
+<th>Source Message Value</th>
+<th>Source Identifier</th>
+<th>Identifier Placement</th>
+<th>Source Value Type</th>
+<th>Match Type</th>
+<th>Match Text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Response</td>
+<td>Matches Text</td>
+<td>Response Header</td>
+<td>CSRF-Token</td>
+<td>Last</td>
+<td>Text</td>
+<td>Regex</td>
+<td>.+</td>
+</tr>
+</tbody>
+</table>
+<p>The Regexp <code>.+</code> matches any sequence of characters that is at least one
+character long which makes sure the Response Header <code>CSRF-Token</code> is not
+empty.</p>
+<p>For the <em>Thens</em> part we want to store our CSRF-Token in a variable:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Message Value</th>
+<th>Source Identifier</th>
+<th>Identifier Placement</th>
+<th>Source Value Type</th>
+<th>Destination Variable Source</th>
+<th>Destination Variable Name</th>
+<th>Destination Variable Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Variable</td>
+<td>Response Header</td>
+<td>CSRF-Token</td>
+<td>Last</td>
+<td>Text</td>
+<td>Global</td>
+<td>csrf_variable</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p>This rule will, for every response that has <code>CSRF-Token</code> set as a header,
+fetch the token value and save it to a variable named <code>csrf_variable</code>.</p>
+<p>The result should look like this:</p>
+<p><img src="reshaper-example-for-setting-a-variable-csrf.png" alt="reshaper-example-for-setting-a-variable"></p>
+<p>Now, when sending a request to the server via Burp, a variable will be created
+or updated in the <em>Global Variables</em> sub tab of Reshaper:</p>
+<p><img src="reshaper-variable-set-csrf.png" alt="reshaper-variable-set"></p>
+<p>Next step is to use this <code>csrf_variable</code> in subsequent request. We
+do by creating a new rule called <code>set_csrf</code> with event direction request and by using the
+<em>Set Value</em> as a <em>Whens</em> action according to the following tables:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Whens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Match Type</th>
+<th>Match Text</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request</td>
+<td>Matches Text</td>
+<td>URL</td>
+<td>Text</td>
+<td>Equals</td>
+<td>http://localhost:3000/user</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Text</th>
+<th>Source Type Value</th>
+<th>Destination Message Value</th>
+<th>Destination Identifier</th>
+<th>Destination Identifier Placement</th>
+<th>Destination Type Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Value</td>
+<td>{{g:csrf_variable}}</td>
+<td>Text</td>
+<td>Request Header</td>
+<td>CSRF-Token</td>
+<td>Only</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p>The result should look like this:</p>
+<p><img src="reshaper-providing-csrf-token-on-each-request.png" alt="reshaper-providing-csrf-token-on-each-request"></p>
+<p>If all steps are followed correctly every response that contains a <code>CSRF-Token</code>
+will will be saved as a variable which will be referenced and used in all upcoming request
+to <code>http://localhost:3000/user</code>. This makes it possible to, for instance, use
+Burp active scanner where CSRF tokens need to be provided.</p>
+<p><img src="reshaper-sucessful-usage-of-burp-active-scanner-with-csrf-tokens.png" alt="reshaper-sucessful-usage-of-burp-active-scanner-with-csrf-tokens"></p>
+<p>Quite powerful innit.</p>
+<p>But now you went all this way only find out that your CSRF token is provided
+via cookies and not HTTP headers? Not a problem. Replace the references to
+<em>Request Header</em> and <em>Response Header</em> to <em>Request Cookie</em> and <em>Response Cookie</em>.</p>
+<h1 id="scenario-2---using-burp-to-increment-values-with-reshapers-evaluate-action">Scenario 2 - Using Burp to increment values with Reshapers Evaluate action</h1>
+<p>In the previous scenario we configured Reshaper to fetch a value from a response and
+the use that value in subsequent requests which works perfectly when
+assessing applications with CSRF tokens.</p>
+<p>Now we will demonstrate another hurdle that Reshaper can help bypass, namely
+incrementing values.</p>
+<p>For this demonstration we will yet again use an API hosted by node.js that
+takes user input in JSON format and stores in memory.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// mkdir $HOME/node-api-version
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// cd $HOME/node-api-version
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// npn init -y
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// npm install express
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">express</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;express&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">express</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">PORT</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">PORT</span> <span style="color:#f92672">||</span> <span style="color:#ae81ff">3000</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">express</span>.<span style="color:#a6e22e">json</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// In-memory storage
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">userData</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">version</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">post</span>(<span style="color:#e6db74">&#39;/user&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">version</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">name</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">version</span> <span style="color:#f92672">!==</span> <span style="color:#66d9ef">undefined</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">version</span> <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">userData</span>.<span style="color:#a6e22e">version</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">userData</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">name</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">userData</span>.<span style="color:#a6e22e">version</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">version</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">200</span>).<span style="color:#a6e22e">json</span>({ <span style="color:#a6e22e">message</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;User data updated&#34;</span>, <span style="color:#a6e22e">data</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">userData</span> });
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">400</span>).<span style="color:#a6e22e">json</span>({ <span style="color:#a6e22e">error</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;A newer version exists. Please update the version number.&#34;</span> });
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">400</span>).<span style="color:#a6e22e">json</span>({ <span style="color:#a6e22e">error</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Both name and version are required&#34;</span> });
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">listen</span>(<span style="color:#a6e22e">PORT</span>, () =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`Server running on http://localhost:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">PORT</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>The end-user can send a JSON formatted POST body to <code>/user</code> endpoint which updates the <code>name</code>
+key on the server with the provided value. The request is only successful if the end-user provides
+a valid version number, which is increased every time the <code>name</code> is updated.</p>
+<pre tabindex="0"><code>POST /user HTTP/1.1
+Host: localhost
+Content-Type: application/json
+Content-Length: 31
+
+{
+  &#34;name&#34;:&#34;user1&#34;,
+  &#34;version&#34;:1 
+}
+</code></pre><p>This obstacle would be a problem for Burp&rsquo;s active scanner or
+let alone be a time consuming task overcoming manually when using Burp&rsquo;s repeater.</p>
+<p>We circumvent this by creating a new Reshaper rule called
+<code>set_version_variable</code> and configure the <em>Whens</em>
+to either of the following examples in the table which shows how to match
+text or JSON key values:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Whens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Source Value Path</th>
+<th>Match Type</th>
+<th>Match Text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Response</td>
+<td>Matching Text</td>
+<td>Response Body</td>
+<td>Text</td>
+<td>N/A</td>
+<td>Contains</td>
+<td>&ldquo;version&rdquo;:</td>
+</tr>
+<tr>
+<td>Response</td>
+<td>Matching Text</td>
+<td>Response Body</td>
+<td>JSON</td>
+<td>data.version</td>
+<td>Regex</td>
+<td>[0-9]</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>The usage of quotation with <em>version</em> in the first example is because we are now looking
+for a string in the response body which is quoted..</li>
+<li>The reason for using <em>data.version</em> in the second example is because the
+response from the server is nested JSON, as in:</li>
+</ul>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+
+{
+  &#34;message&#34;:&#34;User data updated&#34;,
+  &#34;data&#34;:{
+    &#34;name&#34;:&#34;user&#34;,
+    &#34;version&#34;:14
+  }
+}
+</code></pre><p>For the <em>Thens</em> we configure it as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Source Value Path</th>
+<th>Destination Variable Source</th>
+<th>Destination Variable Name</th>
+<th>Destination Value Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Variable</td>
+<td>Response Body</td>
+<td>JSON</td>
+<td>data.version</td>
+<td>Global</td>
+<td>version_variable</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p>This should make sure that we have the current <code>version</code> number stored in a variable in Burp.
+However, this
+must be increased by 1 because every time the <code>name</code> parameter is updated we need
+to provide a new version number.</p>
+<p>We accomplish this by using the <em>Evaluate</em> action in Reshaper:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Whens</th>
+<th>X</th>
+<th>Operation</th>
+<th>Y</th>
+<th>Destination Variable Source</th>
+<th>Destination Variable Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Evaluate</td>
+<td>{{g:version_variable}}</td>
+<td>Add</td>
+<td>1</td>
+<td>Global</td>
+<td>version_variable_incremented</td>
+</tr>
+</tbody>
+</table>
+<p>The result should look like this:</p>
+<p><img src="reshaper-example-for-setting-a-variable.png" alt="reshaper-example-for-setting-a-variable"></p>
+<p>And the <em>Evaluate</em> action:</p>
+<p><img src="reshaper-evaluate-example.png" alt="reshaper-evaluate-example"></p>
+<p>Now, when sending a request to the server with a correct version number,
+two variables should be created in the <em>Global Variables</em> sub tab of Reshaper:</p>
+<p><img src="reshaper-variable-set.png" alt="reshaper-variable-set"></p>
+<p>Next step is to replace the <code>version</code> key-value in subsequent requests with
+the <code>version_variable_incremented</code>. We can perform this by creating a new
+rule with event direction request and by using the
+<em>Set Value</em> action according to the following image:</p>
+<p><img src="reshaper-using-the-variable.png" alt="reshaper-using-the-variable"></p>
+<p>If all steps are followed correctly every request that contains a JSON key-value
+pair with the name <em>version</em>, with data as a digit and is sent to <code>http://localhost:3000/user</code>
+will have it&rsquo;s <em>version</em> key-value replaced with our variable <code>version_variable_increased</code>. Great success.</p>
+<h1 id="scenario-3---using-burp-with-custom-scripting-via-reshapers-javascript-engine">Scenario 3 - Using Burp with custom scripting via Reshapers JavaScript engine</h1>
+<p>This incrementation done by the <em>Evalute</em> action done in the previous scenario
+can also be perform with JavaScript. This scenarion will display the
+richness and customizability by using Reshapers JavaScript engine.</p>
+<p>So instead of using the <em>Evaluate</em> setup in the previous example we replace it
+with <em>Run Script</em>. &ldquo;Script&rdquo; refers to JavaScript whereas <em>Run Process</em> can run
+execute python, ruby or bash scripts stored on the file system.</p>
+<p>The following setup will use <em>Run Script</em> instead of <em>Evaluate</em> in the
+<code>set_version_variable</code> rules:</p>
+<p><strong>Whens</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Whens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Source Value Path</th>
+<th>Destination Variable Source</th>
+<th>Destination Variable Name</th>
+<th>Destination Value Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request</td>
+<td>Match text</td>
+<td>Response Body</td>
+<td>JSON</td>
+<td>data.version</td>
+<td>Global</td>
+<td>version_variable</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Thens</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Source Value Path</th>
+<th>Destination Variable Source</th>
+<th>Destination Variable Name</th>
+<th>Destination Value Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Variable</td>
+<td>Response Body</td>
+<td>JSON</td>
+<td>data.version</td>
+<td>Global</td>
+<td>version_variable</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p>Instead of the <em>Evaluate</em> action we add <em>Run Script</em> with the following
+JavaScript code:</p>
+<pre tabindex="0"><code>var version = Reshaper.variables.getGlobalVariable(&#34;version_variable&#34;);
+
+let verint = parseInt(version, 10);
+verint += 1;
+
+Reshaper.event.runThen(&#34;SetVariable&#34;,
+{
+    text: verint,
+    useMessageValue: false,
+    targetSource: &#34;Global&#34;,
+    variableName: &#34;version_variable_incremented&#34;
+}
+);
+</code></pre><p>When configured it should look like this:</p>
+<p><img src="reshaper-using-javascript.png" alt="reshaper-using-javascript"></p>
+<p>The JavaScript fetches the <code>version_variable</code> data and converts it to an int
+which is incremented and stored in a variable named <code>version_variable_incremented</code>.</p>
+<p>By knowing how to fetch and store variables with Reshapers JavaScript Engine
+opens up for unlimited flexibility.</p>
+<h1 id="scenario-4---url-and-base64-encoding">Scenario 4 - URL and base64 encoding</h1>
+<p>New scenario new possibilities. <a href="https://portswigger.net/bappstore/65033cbd2c344fbabe57ac060b5dd100">Hackvertor</a>
+is an awesome extension when is comes to converting and encoding data. All of
+these action can also be done with Reshaper which will be demonstrated in
+this scenario.</p>
+<p>The following node.js application code is vulnerable to SQL injection, the
+caveat however is that the
+input is required to be base64 encoded. Compared to previous scenarios this
+demonstration application use form-urlencoding instead of JSON input to mix things up a bit.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// mkdir $HOME/node-api-sqli
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// cd $HOME/node-api-sqli
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// npm init -y
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// npm install express sqlite3 body-parser
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">express</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;express&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">bodyParser</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;body-parser&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sqlite3</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;sqlite3&#39;</span>).<span style="color:#a6e22e">verbose</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">express</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">port</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3000</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">bodyParser</span>.<span style="color:#a6e22e">urlencoded</span>({ <span style="color:#a6e22e">extended</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span> }));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Initialize the in-memory SQLite database
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">db</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">sqlite3</span>.<span style="color:#a6e22e">Database</span>(<span style="color:#e6db74">&#39;:memory:&#39;</span>, (<span style="color:#a6e22e">err</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">err</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">error</span>(<span style="color:#a6e22e">err</span>.<span style="color:#a6e22e">message</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;Connected to the in-memory SQLite database.&#39;</span>);
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Create a users table and insert some sample data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">serialize</span>(() =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">run</span>(<span style="color:#e6db74">&#39;CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)&#39;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">run</span>(<span style="color:#e6db74">&#34;INSERT INTO users (name) VALUES (&#39;Alice&#39;), (&#39;Bob&#39;), (&#39;Charlie&#39;)&#34;</span>);
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Middleware to decode base64 and URL encoding
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>((<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>, <span style="color:#a6e22e">next</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">method</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;POST&#39;</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">typeof</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#39;string&#39;</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">decodedData</span> <span style="color:#f92672">=</span> decodeURIComponent(<span style="color:#a6e22e">Buffer</span>.<span style="color:#a6e22e">from</span>(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">data</span>, <span style="color:#e6db74">&#39;base64&#39;</span>).<span style="color:#a6e22e">toString</span>(<span style="color:#e6db74">&#39;ascii&#39;</span>));
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">decodedInput</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">decodedData</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">next</span>();
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">e</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">400</span>).<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;Invalid input. Please ensure your input is base64 and URL encoded.&#39;</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">400</span>).<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;Invalid input format.&#39;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">next</span>();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Vulnerable SQL route
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">post</span>(<span style="color:#e6db74">&#39;/search&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">query</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">`SELECT * FROM users WHERE name = &#39;</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">decodedInput</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;`</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">all</span>(<span style="color:#a6e22e">query</span>, [], (<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">rows</span>) =&gt; {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">err</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">500</span>).<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;Error executing SQL query.&#39;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">json</span>(<span style="color:#a6e22e">rows</span>);
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">listen</span>(<span style="color:#a6e22e">port</span>, () =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`Server running on http://localhost:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">port</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>By supplying <code>Alice' or '1'=1</code> base64 encoded in the data parameter the full
+database is dumped:</p>
+<p><img src="reshaper-sucessful-sql-injection.png" alt="reshaper-sucessful-sql-injection"></p>
+<p>This SQL injection is very trivial to exploit and much more complex payloads may be
+needed in live environments. When testing and construction these payloads
+it may be time consuming to base64 decode or encode at every attempt.</p>
+<p>For this we will use Reshaper to:</p>
+<ol>
+<li>Fetch payload from the <code>data</code> parameter in our request body and store it in a variable named <code>payload_plain_text</code></li>
+<li>Use the JavaScript engine to base64 encode our <code>payload_plain_text</code> data and store that as a new variable named <code>payload_base64</code></li>
+<li>Replace the <code>data</code> request body parameter with the payload stored in the <code>payload_base64</code> variable</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Whens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Source Value Path</th>
+<th>Match Type</th>
+<th>Match Text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Response</td>
+<td>Matching Text</td>
+<td>Request Body</td>
+<td>Params</td>
+<td>data</td>
+<td>Regexp</td>
+<td>.+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Source Value Path</th>
+<th>Destination Variable Source</th>
+<th>Destination Variable Name</th>
+<th>Destination Value Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Variable</td>
+<td>Request Body</td>
+<td>Params</td>
+<td>data</td>
+<td>Global</td>
+<td>payload_plain_text</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p>Next we will add run a custom JavaScript that fetches the <code>payload_plain_text</code>, base64
+encodes it and saves it to <code>payload_base64</code></p>
+<p>Run Script:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">Base64</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// private property
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">_keyStr</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&#34;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// public method for encoding
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">encode</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">input</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">output</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">chr1</span>, <span style="color:#a6e22e">chr2</span>, <span style="color:#a6e22e">chr3</span>, <span style="color:#a6e22e">enc1</span>, <span style="color:#a6e22e">enc2</span>, <span style="color:#a6e22e">enc3</span>, <span style="color:#a6e22e">enc4</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">input</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Base64</span>.<span style="color:#a6e22e">_utf8_encode</span>(<span style="color:#a6e22e">input</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">length</span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">chr1</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">charCodeAt</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">chr2</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">charCodeAt</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">chr3</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">charCodeAt</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">enc1</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">chr1</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">enc2</span> <span style="color:#f92672">=</span> ((<span style="color:#a6e22e">chr1</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">|</span> (<span style="color:#a6e22e">chr2</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">4</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">enc3</span> <span style="color:#f92672">=</span> ((<span style="color:#a6e22e">chr2</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">15</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">|</span> (<span style="color:#a6e22e">chr3</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">6</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">enc4</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">chr3</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">63</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (isNaN(<span style="color:#a6e22e">chr2</span>)) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">enc3</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">enc4</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">64</span>;
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (isNaN(<span style="color:#a6e22e">chr3</span>)) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">enc4</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">64</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">output</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">output</span> <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_keyStr</span>.<span style="color:#a6e22e">charAt</span>(<span style="color:#a6e22e">enc1</span>) <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_keyStr</span>.<span style="color:#a6e22e">charAt</span>(<span style="color:#a6e22e">enc2</span>) <span style="color:#f92672">+</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_keyStr</span>.<span style="color:#a6e22e">charAt</span>(<span style="color:#a6e22e">enc3</span>) <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_keyStr</span>.<span style="color:#a6e22e">charAt</span>(<span style="color:#a6e22e">enc4</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">output</span>;
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// public method for decoding
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">decode</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">input</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">output</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">chr1</span>, <span style="color:#a6e22e">chr2</span>, <span style="color:#a6e22e">chr3</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">enc1</span>, <span style="color:#a6e22e">enc2</span>, <span style="color:#a6e22e">enc3</span>, <span style="color:#a6e22e">enc4</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">input</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">replace</span>(<span style="color:#e6db74">/[^A-Za-z0-9\+\/\=]/g</span>, <span style="color:#e6db74">&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">length</span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">enc1</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_keyStr</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">charAt</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>));
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">enc2</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_keyStr</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">charAt</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>));
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">enc3</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_keyStr</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">charAt</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>));
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">enc4</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_keyStr</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#a6e22e">input</span>.<span style="color:#a6e22e">charAt</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">chr1</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">enc1</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">|</span> (<span style="color:#a6e22e">enc2</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">4</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">chr2</span> <span style="color:#f92672">=</span> ((<span style="color:#a6e22e">enc2</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">15</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>) <span style="color:#f92672">|</span> (<span style="color:#a6e22e">enc3</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">chr3</span> <span style="color:#f92672">=</span> ((<span style="color:#a6e22e">enc3</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">6</span>) <span style="color:#f92672">|</span> <span style="color:#a6e22e">enc4</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">output</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">output</span> <span style="color:#f92672">+</span> String.<span style="color:#a6e22e">fromCharCode</span>(<span style="color:#a6e22e">chr1</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">enc3</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">64</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">output</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">output</span> <span style="color:#f92672">+</span> String.<span style="color:#a6e22e">fromCharCode</span>(<span style="color:#a6e22e">chr2</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">enc4</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">64</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">output</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">output</span> <span style="color:#f92672">+</span> String.<span style="color:#a6e22e">fromCharCode</span>(<span style="color:#a6e22e">chr3</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">output</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Base64</span>.<span style="color:#a6e22e">_utf8_decode</span>(<span style="color:#a6e22e">output</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">output</span>;
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// private method for UTF-8 encoding
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">_utf8_encode</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">string</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">string</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">string</span>.<span style="color:#a6e22e">replace</span>(<span style="color:#e6db74">/\r\n/g</span>,<span style="color:#e6db74">&#34;\n&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">utftext</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">n</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">n</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">string</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">n</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">c</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">string</span>.<span style="color:#a6e22e">charCodeAt</span>(<span style="color:#a6e22e">n</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">128</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">utftext</span> <span style="color:#f92672">+=</span> String.<span style="color:#a6e22e">fromCharCode</span>(<span style="color:#a6e22e">c</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>((<span style="color:#a6e22e">c</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">127</span>) <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2048</span>)) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">utftext</span> <span style="color:#f92672">+=</span> String.<span style="color:#a6e22e">fromCharCode</span>((<span style="color:#a6e22e">c</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">6</span>) <span style="color:#f92672">|</span> <span style="color:#ae81ff">192</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">utftext</span> <span style="color:#f92672">+=</span> String.<span style="color:#a6e22e">fromCharCode</span>((<span style="color:#a6e22e">c</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">63</span>) <span style="color:#f92672">|</span> <span style="color:#ae81ff">128</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">utftext</span> <span style="color:#f92672">+=</span> String.<span style="color:#a6e22e">fromCharCode</span>((<span style="color:#a6e22e">c</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">12</span>) <span style="color:#f92672">|</span> <span style="color:#ae81ff">224</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">utftext</span> <span style="color:#f92672">+=</span> String.<span style="color:#a6e22e">fromCharCode</span>(((<span style="color:#a6e22e">c</span> <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">6</span>) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">63</span>) <span style="color:#f92672">|</span> <span style="color:#ae81ff">128</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">utftext</span> <span style="color:#f92672">+=</span> String.<span style="color:#a6e22e">fromCharCode</span>((<span style="color:#a6e22e">c</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">63</span>) <span style="color:#f92672">|</span> <span style="color:#ae81ff">128</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">utftext</span>;
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// private method for UTF-8 decoding
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">_utf8_decode</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">utftext</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">string</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">c</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">c1</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">c2</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> ( <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">utftext</span>.<span style="color:#a6e22e">length</span> ) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">c</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">utftext</span>.<span style="color:#a6e22e">charCodeAt</span>(<span style="color:#a6e22e">i</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">128</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">string</span> <span style="color:#f92672">+=</span> String.<span style="color:#a6e22e">fromCharCode</span>(<span style="color:#a6e22e">c</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span>((<span style="color:#a6e22e">c</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">191</span>) <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#a6e22e">c</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">224</span>)) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">c2</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">utftext</span>.<span style="color:#a6e22e">charCodeAt</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">string</span> <span style="color:#f92672">+=</span> String.<span style="color:#a6e22e">fromCharCode</span>(((<span style="color:#a6e22e">c</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">31</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">6</span>) <span style="color:#f92672">|</span> (<span style="color:#a6e22e">c2</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">63</span>));
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">i</span> <span style="color:#f92672">+=</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">c2</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">utftext</span>.<span style="color:#a6e22e">charCodeAt</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">c3</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">utftext</span>.<span style="color:#a6e22e">charCodeAt</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">string</span> <span style="color:#f92672">+=</span> String.<span style="color:#a6e22e">fromCharCode</span>(((<span style="color:#a6e22e">c</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">15</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">12</span>) <span style="color:#f92672">|</span> ((<span style="color:#a6e22e">c2</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">63</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">6</span>) <span style="color:#f92672">|</span> (<span style="color:#a6e22e">c3</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">63</span>));
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">i</span> <span style="color:#f92672">+=</span> <span style="color:#ae81ff">3</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">string</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">snus</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Base64</span>.<span style="color:#a6e22e">encode</span>(<span style="color:#a6e22e">Reshaper</span>.<span style="color:#a6e22e">variables</span>.<span style="color:#a6e22e">getGlobalVariable</span>(<span style="color:#e6db74">&#34;payload_plain_text&#34;</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Reshaper</span>.<span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">runThen</span>(<span style="color:#e6db74">&#34;SetVariable&#34;</span>,
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">text</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">snus</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">useMessageValue</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">targetSource</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Global&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">variableName</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;payload_base64&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p>And to finish up, we&rsquo;ll use the <em>Set Value</em> action to replace the payload in the <code>data</code>
+parameter that will be sent to the server:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Text</th>
+<th>Source Type Value</th>
+<th>Destination Message Value</th>
+<th>Destination Value Type</th>
+<th>Destination Identifier Placement</th>
+<th>Destination Value Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Value</td>
+<td>{{g:payload_base64}}</td>
+<td>Text</td>
+<td>Request Body</td>
+<td>Params</td>
+<td>N/A</td>
+<td>data</td>
+</tr>
+</tbody>
+</table>
+<p>The three steps should be inserted in the following order:</p>
+<p><img src="reshaper-sqlinjection-three-steps.png" alt="reshaper-sqlinjection-three-steps"></p>
+<p>Now we can write our payloads in plain text and let Reshaper convert our
+input:</p>
+<p><img src="reshaper-convertion-to-base64.png" alt="reshaper-convertion-to-base64"></p>
+<p>Awesome, we can now on the fly base64 encode data in form-url parameters. This
+is certainly useful.</p>
+<h1 id="scenario-5---using-burp-with-command-line-tools-with-reshaper-run-process">Scenario 5 - Using Burp with command line tools with Reshaper Run Process</h1>
+<p>Alright, so in the previous example we implemented a base64 encoder in
+JavaScript to handle encoding of input to perform a SQL injection attack.</p>
+<p>In this scenario we will continue build upon our base64 encoder but this time
+we will use it with the <em>Run Process</em> action in Reshaper. This will help us
+send complex data structures from Burp into a custom command-line tool, which
+will be used in upcoming HTTP requests.</p>
+<p>For this demonstration we will use a web application that only accepts input
+if the input data is provided with a valid signature. The signature
+is verified with the <code>node-rsa</code> package.</p>
+<p>We will continue using form-urlencoding as our input to further familiarize ourself
+with the concept.</p>
+<p>Setup the environment and store as <code>app.js</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// mkdir $HOME/node-api-sign
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// cd $HOME/node-api-sign
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// npn init -y
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// npm install express body-parser node-rsa
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// openssl rsa -pubout -in private_key.pem -out public_key.pem
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">express</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;express&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">bodyParser</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;body-parser&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">fs</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;fs&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">NodeRSA</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;node-rsa&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">express</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">port</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3000</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Use bodyParser to parse application/x-www-form-urlencoded bodies
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">bodyParser</span>.<span style="color:#a6e22e">urlencoded</span>({ <span style="color:#a6e22e">extended</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span> }));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Load the public key from file
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">publicKey</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">fs</span>.<span style="color:#a6e22e">readFileSync</span>(<span style="color:#e6db74">&#39;public_key.pem&#39;</span>, <span style="color:#e6db74">&#39;utf8&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">key</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">NodeRSA</span>();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">key</span>.<span style="color:#a6e22e">importKey</span>(<span style="color:#a6e22e">publicKey</span>, <span style="color:#e6db74">&#39;public&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">post</span>(<span style="color:#e6db74">&#39;/user&#39;</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> { <span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">signature</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">name</span> <span style="color:#f92672">||</span> <span style="color:#f92672">!</span><span style="color:#a6e22e">signature</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">400</span>).<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;Missing name or signature.&#39;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Correcting URL-decoded Base64 signature: replace spaces with plus signs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">signature</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">signature</span>.<span style="color:#a6e22e">replace</span>(<span style="color:#e6db74">/\s/g</span>, <span style="color:#e6db74">&#39;+&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Verify the signature
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">isVerified</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">key</span>.<span style="color:#a6e22e">verify</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">name</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">Buffer</span>.<span style="color:#a6e22e">from</span>(<span style="color:#a6e22e">signature</span>, <span style="color:#e6db74">&#39;base64&#39;</span>),
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;utf8&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;base64&#39;</span>
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">isVerified</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">401</span>).<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;Invalid signature.&#39;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">`Name </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> has been securely stored.`</span>);
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">listen</span>(<span style="color:#a6e22e">port</span>, () =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`Server running on http://localhost:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">port</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>We will use the following python3 script (signer.py) to perform the signing
+of the input data that will be sent to the server. The script also includes
+a try statement that checks if the input to the script is base64 encoded
+or not. More on this later.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python3" data-lang="python3"><span style="display:flex;"><span><span style="color:#f92672">from</span> cryptography.hazmat.primitives <span style="color:#f92672">import</span> hashes
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> cryptography.hazmat.primitives.asymmetric <span style="color:#f92672">import</span> padding
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> cryptography.hazmat.primitives.serialization <span style="color:#f92672">import</span> load_pem_private_key
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> base64
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># pip3 install cryptography</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> (sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">1</span>])<span style="color:#f92672">.</span>encode()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Attempt to decode the base64-encoded string</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(data)<span style="color:#f92672">.</span>decode(<span style="color:#e6db74">&#39;utf-8&#39;</span>)
+</span></span><span style="display:flex;"><span>    data <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>encode()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#print(&#34;Input is base64&#34;)</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># If decoding fails, return the original string</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#print(&#34;Input not base64&#34;)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Load your private key</span>
+</span></span><span style="display:flex;"><span>dir_path <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>dirname(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>realpath(__file__))
+</span></span><span style="display:flex;"><span>key_path <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(dir_path, <span style="color:#e6db74">&#39;private_key.pem&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(key_path, <span style="color:#e6db74">&#34;rb&#34;</span>) <span style="color:#66d9ef">as</span> key_file:
+</span></span><span style="display:flex;"><span>    private_key <span style="color:#f92672">=</span> load_pem_private_key(key_file<span style="color:#f92672">.</span>read(), password<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Sign the data</span>
+</span></span><span style="display:flex;"><span>signature <span style="color:#f92672">=</span> private_key<span style="color:#f92672">.</span>sign(
+</span></span><span style="display:flex;"><span>    data,
+</span></span><span style="display:flex;"><span>    padding<span style="color:#f92672">.</span>PKCS1v15(),
+</span></span><span style="display:flex;"><span>    hashes<span style="color:#f92672">.</span>SHA256()
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Encode the signature in base64 to simplify handling</span>
+</span></span><span style="display:flex;"><span>signature_base64 <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64encode(signature)<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(signature_base64)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ python3 signer.py asdf
+</span></span><span style="display:flex;"><span>bciDlo5cqYPWzVqPMp2L263c7wKh+21fauQBr2m1kV59S2J/hxu2lohZEiVmvwtIFxBYUkziMy0Hq33MCe3fSi7fj7CoWw5CWz95i5kxLQ01wAfsTKl5M207y9lpE6J0djYYGeidjhb6PsMm+BsoQFQ2mO09LJwMLPcEM8t2Geg7LEurlyzYBMJwtBQZB3eU4vTvWx/H0MDGdYi5jssF3GzRweXkEaopNHbrftaEEQye2uKQDdlm0+ublpmuVDsHVohosTBn74+j0LUZLCIgH/CHukh0dKL7c5YQKOdApYuwsxL16xYDfG5uOvPZdjF3yryfxjm2b2Ru1uOTsjG8bA<span style="color:#f92672">==</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>$ curl -X POST -d <span style="color:#e6db74">&#39;name=asdf&amp;signature=bciDlo5cqYPWzVqPMp2L263c7wKh+21fauQBr2m1kV59S2J/hxu2lohZEiVmvwtIFxBYUkziMy0Hq33MCe3fSi7fj7CoWw5CWz95i5kxLQ01wAfsTKl5M207y9lpE6J0djYYGeidjhb6PsMm+BsoQFQ2mO09LJwMLPcEM8t2Geg7LEurlyzYBMJwtBQZB3eU4vTvWx/H0MDGdYi5jssF3GzRweXkEaopNHbrftaEEQye2uKQDdlm0+ublpmuVDsHVohosTBn74+j0LUZLCIgH/CHukh0dKL7c5YQKOdApYuwsxL16xYDfG5uOvPZdjF3yryfxjm2b2Ru1uOTsjG8bA==&#39;</span> http://localhost:3000/user
+</span></span></code></pre></div><p>Awesome, our demo application works:</p>
+<p><img src="reshaper-demo-signature-working.png" alt="reshaper-demo-signature-working"></p>
+<p>Lets say we want to use Burps intruder to fuzz to <code>name</code> parameter. We begin
+by creating a Reshaper rule for when it should trigger:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Whens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Source Value Path</th>
+<th>Match Type</th>
+<th>Match Text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Request</td>
+<td>Matching Text</td>
+<td>Request Body</td>
+<td>Params</td>
+<td>name</td>
+<td>Regexp</td>
+<td>.+</td>
+</tr>
+</tbody>
+</table>
+<p>We&rsquo;ll store our input parameter <code>name</code> as a variable named <code>name_input</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Source Value Path</th>
+<th>Destination Variable Source</th>
+<th>Destination Variable Name</th>
+<th>Destination Value Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Variable</td>
+<td>Request Body</td>
+<td>Params</td>
+<td>data</td>
+<td>Global</td>
+<td>name_input</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p>Next we take our <code>name_input</code> variable and base64 encode it much like we did
+in scenario 4. We store the base64 value in a variable named <code>name_input_base64</code>:</p>
+<p>Run Script:</p>
+<pre tabindex="0"><code>var Base64 = {
+
+    // private property
+    _keyStr : &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&#34;,
+
+    // public method for encoding
+    encode : function (input) {
+        var output = &#34;&#34;;
+        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+        var i = 0;
+
+        input = Base64._utf8_encode(input);
+
+        while (i &lt; input.length) {
+
+            chr1 = input.charCodeAt(i++);
+            chr2 = input.charCodeAt(i++);
+            chr3 = input.charCodeAt(i++);
+
+            enc1 = chr1 &gt;&gt; 2;
+            enc2 = ((chr1 &amp; 3) &lt;&lt; 4) | (chr2 &gt;&gt; 4);
+            enc3 = ((chr2 &amp; 15) &lt;&lt; 2) | (chr3 &gt;&gt; 6);
+            enc4 = chr3 &amp; 63;
+
+            if (isNaN(chr2)) {
+                enc3 = enc4 = 64;
+            } else if (isNaN(chr3)) {
+                enc4 = 64;
+            }
+
+            output = output +
+            this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+            this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+        }
+        return output;
+    },
+
+    // public method for decoding
+    decode : function (input) {
+        var output = &#34;&#34;;
+        var chr1, chr2, chr3;
+        var enc1, enc2, enc3, enc4;
+        var i = 0;
+
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, &#34;&#34;);
+
+        while (i &lt; input.length) {
+
+            enc1 = this._keyStr.indexOf(input.charAt(i++));
+            enc2 = this._keyStr.indexOf(input.charAt(i++));
+            enc3 = this._keyStr.indexOf(input.charAt(i++));
+            enc4 = this._keyStr.indexOf(input.charAt(i++));
+
+            chr1 = (enc1 &lt;&lt; 2) | (enc2 &gt;&gt; 4);
+            chr2 = ((enc2 &amp; 15) &lt;&lt; 4) | (enc3 &gt;&gt; 2);
+            chr3 = ((enc3 &amp; 3) &lt;&lt; 6) | enc4;
+
+            output = output + String.fromCharCode(chr1);
+
+            if (enc3 != 64) {
+                output = output + String.fromCharCode(chr2);
+            }
+            if (enc4 != 64) {
+                output = output + String.fromCharCode(chr3);
+            }
+        }
+
+        output = Base64._utf8_decode(output);
+
+        return output;
+    },
+
+    // private method for UTF-8 encoding
+    _utf8_encode : function (string) {
+        string = string.replace(/\r\n/g,&#34;\n&#34;);
+        var utftext = &#34;&#34;;
+
+        for (var n = 0; n &lt; string.length; n++) {
+
+            var c = string.charCodeAt(n);
+
+            if (c &lt; 128) {
+                utftext += String.fromCharCode(c);
+            }
+            else if((c &gt; 127) &amp;&amp; (c &lt; 2048)) {
+                utftext += String.fromCharCode((c &gt;&gt; 6) | 192);
+                utftext += String.fromCharCode((c &amp; 63) | 128);
+            }
+            else {
+                utftext += String.fromCharCode((c &gt;&gt; 12) | 224);
+                utftext += String.fromCharCode(((c &gt;&gt; 6) &amp; 63) | 128);
+                utftext += String.fromCharCode((c &amp; 63) | 128);
+            }
+        }
+        return utftext;
+    },
+
+    // private method for UTF-8 decoding
+    _utf8_decode : function (utftext) {
+        var string = &#34;&#34;;
+        var i = 0;
+        var c = c1 = c2 = 0;
+
+        while ( i &lt; utftext.length ) {
+
+            c = utftext.charCodeAt(i);
+
+            if (c &lt; 128) {
+                string += String.fromCharCode(c);
+                i++;
+            }
+            else if((c &gt; 191) &amp;&amp; (c &lt; 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c &amp; 31) &lt;&lt; 6) | (c2 &amp; 63));
+                i += 2;
+            }
+            else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c &amp; 15) &lt;&lt; 12) | ((c2 &amp; 63) &lt;&lt; 6) | (c3 &amp; 63));
+                i += 3;
+            }
+        }
+        return string;
+    }
+}
+
+var snus = Base64.encode(Reshaper.variables.getGlobalVariable(&#34;name_input&#34;));
+
+Reshaper.event.runThen(&#34;SetVariable&#34;,
+{
+    text: snus,
+  useMessageValue: false,
+    targetSource: &#34;Global&#34;,
+    variableName: &#34;name_input_base64&#34;
+}
+);
+</code></pre><p>The reason for base64 encoding our data before sending it to a console is
+because many Burp payloads may include single our double quotes which can
+escape our terminal command and we end up command injecting ourselves instead
+of the server.</p>
+<p>Next we use <em>Run Process</em> to drop our <code>name_input_base64</code> variable to our python3
+tool called <code>signer.py</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Command</th>
+<th>Stdin</th>
+<th>Wait for completion</th>
+<th>Capture Output</th>
+<th>Capture Variable Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Run Process</td>
+<td>python3 /home/user/tricky-apis/node-api-sign/signer.py {{g:name_input_base64}}</td>
+<td></td>
+<td>Checked</td>
+<td>Checked</td>
+<td>signature</td>
+</tr>
+</tbody>
+</table>
+<p>If everything is followed correctly 3 variables will be created in the <em>Global Variables</em>
+tab:</p>
+<p><img src="reshaper-signer-showing-all-variables-used.png" alt="reshaper-signer-showing-all-variables-used"></p>
+<p>Next up we will use the <em>Set value</em> action the replace our form-urlencode
+parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Text</th>
+<th>Source Type Value</th>
+<th>Destination Message Value</th>
+<th>Destination Value Type</th>
+<th>Destination Identifier Placement</th>
+<th>Destination Value Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Value</td>
+<td>{{g:name_input}}</td>
+<td>Text</td>
+<td>Request Body</td>
+<td>Params</td>
+<td>N/A</td>
+<td>name</td>
+</tr>
+<tr>
+<td>N/A</td>
+<td>Set Value</td>
+<td>{{g:signature}}</td>
+<td>Text</td>
+<td>Request Body</td>
+<td>Params</td>
+<td>N/A</td>
+<td>signature</td>
+</tr>
+</tbody>
+</table>
+<p>Very nice. However, when we test run our setup everything works correctly with
+repeater but never with intruder. Don&rsquo;t forget to activate Intruder
+at <em>Capture Traffic From</em> under settings:</p>
+<p><img src="reshaper-signer-activate-intruder.png" alt="reshaper-signer-activate-intruder"></p>
+<p>Also remember to set the maximum concurrent requests in the Intruder resource
+pool to 1. The setup we have created is quite CPU intensive and will not
+handle concurrency.</p>
+<p>But on the other hand - it&rsquo;s automagic :)</p>
+<p><img src="reshaper-with-intruder.png" alt="reshaper-with-intruder"></p>
+<h1 id="scenario-6---using-burp-and-reshaper-to-perform-multiple-request-and-save-pdf-to-disk">Scenario 6 - Using Burp and Reshaper to perform multiple request and save PDF to disk</h1>
+<p>Who doesn&rsquo;t love a good PDF generator? We at Shelltrail certainly do. However
+sometimes multiple steps is needed to provide the content that later
+will be used in the generated PDF.</p>
+<p>To simulate this we run the following node.js application:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// mkdir $HOME/node-api-pdf
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// cd $HOME/node-api-pdf
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// npm init -y
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// npm install express body-parser puppeteer
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">express</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;express&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">bodyParser</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;body-parser&#39;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">puppeteer</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;puppeteer&#39;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">express</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">port</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3000</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// In-memory storage for HTML
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">storedHTML</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Middleware to check API key
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">apiKeyMiddleware</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>, <span style="color:#a6e22e">next</span>) =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">apiKey</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">headers</span>[<span style="color:#e6db74">&#39;api-key&#39;</span>];
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">apiKey</span> <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#39;1d8e71ab-8e46-47aa-b25c-a3c8c83b0360&#39;</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">403</span>).<span style="color:#a6e22e">json</span>({ <span style="color:#a6e22e">message</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Forbidden: Incorrect API key&#39;</span> });
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">next</span>();
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">bodyParser</span>.<span style="color:#a6e22e">text</span>({ <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;text/html&#39;</span> }));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Insert endpoint
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">post</span>(<span style="color:#e6db74">&#39;/insert&#39;</span>, <span style="color:#a6e22e">apiKeyMiddleware</span>, (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">storedHTML</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>;  <span style="color:#75715e">// Store HTML content in memory
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">200</span>).<span style="color:#a6e22e">json</span>({ <span style="color:#a6e22e">message</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;HTML content stored successfully&#39;</span> });
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Generate endpoint
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/generate&#39;</span>, <span style="color:#a6e22e">apiKeyMiddleware</span>, <span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">storedHTML</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">status</span>(<span style="color:#ae81ff">404</span>).<span style="color:#a6e22e">json</span>({ <span style="color:#a6e22e">message</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;No HTML content found to generate PDF&#39;</span> });
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">browser</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">puppeteer</span>.<span style="color:#a6e22e">launch</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">page</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">browser</span>.<span style="color:#a6e22e">newPage</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">page</span>.<span style="color:#a6e22e">setContent</span>(<span style="color:#a6e22e">storedHTML</span>, { <span style="color:#a6e22e">waitUntil</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;networkidle0&#39;</span> });
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">pdfBuffer</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">page</span>.<span style="color:#a6e22e">pdf</span>({ <span style="color:#a6e22e">format</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;A4&#39;</span> });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">browser</span>.<span style="color:#a6e22e">close</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">contentType</span>(<span style="color:#e6db74">&#39;application/pdf&#39;</span>);
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">send</span>(<span style="color:#a6e22e">pdfBuffer</span>);
+</span></span><span style="display:flex;"><span>});
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">listen</span>(<span style="color:#a6e22e">port</span>, () =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`Server running on http://localhost:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">port</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>The application has two endpoints, <code>/insert</code> and <code>/generate</code>. The <code>/insert</code>
+takes user supplied input via a POST body and stores in memory and returns a UUID
+representing the content. The input should be in HTML.
+Upon performing a GET request to <code>/generate/&lt;UUID&gt;</code> the HTML content will be
+converted to a PDF.
+Both endpoint requires an API key.</p>
+<p>Storing the HTML content:</p>
+<pre tabindex="0"><code>$ curl -X POST http://localhost:3000/insert \
+  -H &#39;Content-Type: text/html&#39; \
+  -H &#39;API-Key: 1d8e71ab-8e46-47aa-b25c-a3c8c83b0360&#39; \
+  -d &#39;&lt;html&gt;&lt;body&gt;&lt;h1&gt;Hello, World!&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;&#39;
+
+{&#34;uuid&#34;:&#34;5d164279-4515-4db6-b620-976c2b56431d&#34;}
+</code></pre><p>Generating the PDF:</p>
+<pre tabindex="0"><code>$ curl http://localhost:3000/generate/5d164279-4515-4db6-b620-976c2b56431d   -H &#39;API-Key: 1d8e71ab-8e46-47aa-b25c-a3c8c83b0360&#39;   -o output.pdf
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 14408  100 14408    0     0   9232      0  0:00:01  0:00:01 --:--:--  9229
+
+$ file output.pdf 
+output.pdf: PDF document, version 1.4, 1 page(s)
+</code></pre><p>Great success. Everything seems to work as expected.</p>
+<p>Lets plan our setup:</p>
+<ol>
+<li>Set the API key named <code>api_key</code> as variable in Reshaper</li>
+<li>Create a <em>Whens</em> action to trigger on POST to <code>/input</code></li>
+<li>Store the UUID in a variable named <code>uuid</code> returned from the <code>/input</code> action.</li>
+<li>Build a HTTP GET request which uses the UUID variable and API key to generate the PDF</li>
+<li>Send the crafted HTTP request</li>
+<li>Save the generate PDF to disk</li>
+</ol>
+<p><strong>Task 1 - Set the API key named <code>api_key</code> as variable in Reshaper:</strong></p>
+<p><img src="reshaper-creating-a-static-variable.png" alt="reshaper-creating-a-static-variable"></p>
+<p><strong>Task 2 - Create a <em>Whens</em> action to trigger on POST to <code>/input</code></strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Whens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Match Type</th>
+<th>Match Text</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Response</strong></td>
+<td>Matches Text</td>
+<td>Request Status Line</td>
+<td>Text</td>
+<td>Equals</td>
+<td>POST /insert HTTP/1.1</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>(Note: The Request direction shall be Response even though our POST action is
+a Request.)</p>
+<p><strong>Task 3 - Store the returned UUID in a variable named <code>uuid</code> from the <code>/input</code>
+endpoint:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Source Value Path</th>
+<th>Destination Variable Source</th>
+<th>Destination Variable Name</th>
+<th>Destination Value Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Variable</td>
+<td>Response Body</td>
+<td>JSON</td>
+<td>uuid</td>
+<td>Global</td>
+<td>uuid</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Task 4 - Build a HTTP GET request which uses the UUID variable and API key to generate the PDF:</strong></p>
+<p>Now we need to use a new action type called <em>Build HTTP Message</em>.</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Event Direction</th>
+<th>Starter HTTP message</th>
+<th>Setter (1) - Source Text</th>
+<th>Destination Message Value</th>
+<th>Destination Identifier Placement</th>
+<th>Setter (2)</th>
+<th>Source Text</th>
+<th>Destination Message Value</th>
+<th>Destination Identifier</th>
+<th>Destination Identifier Placement</th>
+<th>Destination Variable Source</th>
+<th>Destination Variable Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Build HTTP Message</td>
+<td>Request</td>
+<td>GET /generate/{{g:uuid}} HTTP/1.1</td>
+<td>{{g:api_key}}</td>
+<td>Request Header</td>
+<td>API-Key</td>
+<td>Only</td>
+<td>localhost:3000</td>
+<td>Request Header</td>
+<td>Host</td>
+<td>Only</td>
+<td>Global</td>
+<td>http_message</td>
+</tr>
+</tbody>
+</table>
+<p>Now this is really cool. If we trigger this Reshaper rule by sending a POST request to <code>/insert</code> to get an UUID response, Reshaper crafts a fully functional HTTP request and store in a variable called <code>http_message</code>:</p>
+<p><img src="reshaper-crafting-fully-working-http-request.png" alt="reshaper-crafting-fully-working-http-request"></p>
+<p><strong>Task 5 - Send the crafted HTTP request:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Request</th>
+<th>URL</th>
+<th>Protocol</th>
+<th>Address</th>
+<th>Port</th>
+<th>Wait for Completion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Send Request</td>
+<td>{{g:http_message}}</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Checked</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Task 6 - Save the generate PDF to disk:</strong></p>
+<p>We store every PDF on disk because we want to manually inspect them to not miss
+any potential vulnerabilities.</p>
+<p>To achieve this We create a new Reshaper HTTP rule that will match on the
+HTTP response header <code>Content-Type: application/pdf</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Whens</th>
+<th>Source Message Value</th>
+<th>Source Identifier</th>
+<th>Identifies Placement</th>
+<th>Source Value Type</th>
+<th>Match Type</th>
+<th>Match Text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Response</td>
+<td>Matches Text</td>
+<td>Response Header</td>
+<td>Content-Type</td>
+<td>Last</td>
+<td>Text</td>
+<td>Equals</td>
+<td>application-pdf</td>
+</tr>
+</tbody>
+</table>
+<p>We set the response body (a.k.a the PDF file) to a variable named <code>pdf</code></p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Destination Variable Source</th>
+<th>Destination Variable Name</th>
+<th>Destination Value Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Variable</td>
+<td>Response Body</td>
+<td>Text</td>
+<td>Global</td>
+<td>pdf</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p>And then save that variable to disk at the location <code>/tmp/pdf/&lt;UUID&gt;.pdf</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>File Path</th>
+<th>Text</th>
+<th>Encoding</th>
+<th>File Exist Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Save File</td>
+<td>/tmp/pdf/{{g:uuid}}.pdf</td>
+<td>{{g:pdf}}</td>
+<td>Default</td>
+<td>Overwrite</td>
+</tr>
+</tbody>
+</table>
+<p>From now on every request that is sent to <code>/insert</code> will save a PDF to the
+<code>/tmp/pdf</code> location where inspection of content can be made.</p>
+<pre tabindex="0"><code>$ file /tmp/pdf/*
+/tmp/pdf/05b053d5-e232-449f-b2d2-0c4338d8a2f6.pdf: PDF document, version 1.4, 1 page(s)
+/tmp/pdf/3e674c45-369e-4b04-8409-f90539a50eb3.pdf: PDF document, version 1.4, 1 page(s)
+/tmp/pdf/7fb8bbc0-91fd-4141-ba2a-090419364e5d.pdf: PDF document, version 1.4, 1 page(s)
+/tmp/pdf/812b488a-ecc1-4e8d-b8ef-b2dd105c181a.pdf: PDF document, version 1.4, 1 page(s)
+/tmp/pdf/88ce6b32-26ca-46f8-ad43-e77a8f679098.pdf: PDF document, version 1.4, 1 page(s)
+/tmp/pdf/c5c94988-d980-49d4-ba48-1d20ed5e877c.pdf: PDF document, version 1.4, 1 page(s)
+/tmp/pdf/ec410dc7-6937-45bb-ba58-37ab85566297.pdf: PDF document, version 1.4, 1 page(s)
+/tmp/pdf/f9c0101f-c510-49d6-be47-da2fb382206b.pdf: PDF document, version 1.4, 1 page(s)
+</code></pre><h1 id="scenario-7---grpc-from-the-abyss">Scenario 7 - gRPC from the abyss</h1>
+<p>gRPC is a tricky protocol which makes automatic scanning and testing hard as it is using protobuf
+and serializes its messages. <a href="https://github.com/nxenon/grpc-pentest-suite">@nxenon</a>
+has performed in-depth research and provides tooling for encoding and decoding these
+protobuf messages.</p>
+<p>We&rsquo;ll build on top of that research and implement an automatic encoder that
+can be used with Burps active scanner and repeater.</p>
+<p>Use nxenon&rsquo;s <a href="https://github.com/nxenon/grpc-lab/tree/main/examples/echo">echo gRPC lab</a>
+to spin up an demo environment which will be used to demonstrate Reshapers
+abilities.</p>
+<p>When the environment is live requests and responses will look like this:</p>
+<p><img src="grpc-setup-working.png" alt="grpc-setup-working"></p>
+<p>Lets configure our Reshaper HTTP rules as following:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Whens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Match Type</th>
+<th>Match Text</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Response</td>
+<td>Matches Text</td>
+<td>URL</td>
+<td>Text</td>
+<td>Equals</td>
+<td>http://localhost:8080/grpc.gateway.testing.EchoService/Echo</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>We&rsquo;ll set the request body to a variable:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Message Value</th>
+<th>Source Value Type</th>
+<th>Destination Variable Source</th>
+<th>Destination Variable Name</th>
+<th>Destination Value Type</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Variable</td>
+<td>Request Body</td>
+<td>Text</td>
+<td>Global</td>
+<td>grpc</td>
+<td>Text</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>We once again use our base64 encoder technique to encode our data before
+dropping it to our command-line tooling.</p>
+<p>Run Script:</p>
+<pre tabindex="0"><code>var Base64 = {
+
+    // private property
+    _keyStr : &#34;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&#34;,
+
+    // public method for encoding
+    encode : function (input) {
+        var output = &#34;&#34;;
+        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+        var i = 0;
+
+        input = Base64._utf8_encode(input);
+
+        while (i &lt; input.length) {
+
+            chr1 = input.charCodeAt(i++);
+            chr2 = input.charCodeAt(i++);
+            chr3 = input.charCodeAt(i++);
+
+            enc1 = chr1 &gt;&gt; 2;
+            enc2 = ((chr1 &amp; 3) &lt;&lt; 4) | (chr2 &gt;&gt; 4);
+            enc3 = ((chr2 &amp; 15) &lt;&lt; 2) | (chr3 &gt;&gt; 6);
+            enc4 = chr3 &amp; 63;
+
+            if (isNaN(chr2)) {
+                enc3 = enc4 = 64;
+            } else if (isNaN(chr3)) {
+                enc4 = 64;
+            }
+
+            output = output +
+            this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+            this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+        }
+        return output;
+    },
+
+    // public method for decoding
+    decode : function (input) {
+        var output = &#34;&#34;;
+        var chr1, chr2, chr3;
+        var enc1, enc2, enc3, enc4;
+        var i = 0;
+
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, &#34;&#34;);
+
+        while (i &lt; input.length) {
+
+            enc1 = this._keyStr.indexOf(input.charAt(i++));
+            enc2 = this._keyStr.indexOf(input.charAt(i++));
+            enc3 = this._keyStr.indexOf(input.charAt(i++));
+            enc4 = this._keyStr.indexOf(input.charAt(i++));
+
+            chr1 = (enc1 &lt;&lt; 2) | (enc2 &gt;&gt; 4);
+            chr2 = ((enc2 &amp; 15) &lt;&lt; 4) | (enc3 &gt;&gt; 2);
+            chr3 = ((enc3 &amp; 3) &lt;&lt; 6) | enc4;
+
+            output = output + String.fromCharCode(chr1);
+
+            if (enc3 != 64) {
+                output = output + String.fromCharCode(chr2);
+            }
+            if (enc4 != 64) {
+                output = output + String.fromCharCode(chr3);
+            }
+        }
+
+        output = Base64._utf8_decode(output);
+
+        return output;
+    },
+
+    // private method for UTF-8 encoding
+    _utf8_encode : function (string) {
+        string = string.replace(/\r\n/g,&#34;\n&#34;);
+        var utftext = &#34;&#34;;
+
+        for (var n = 0; n &lt; string.length; n++) {
+
+            var c = string.charCodeAt(n);
+
+            if (c &lt; 128) {
+                utftext += String.fromCharCode(c);
+            }
+            else if((c &gt; 127) &amp;&amp; (c &lt; 2048)) {
+                utftext += String.fromCharCode((c &gt;&gt; 6) | 192);
+                utftext += String.fromCharCode((c &amp; 63) | 128);
+            }
+            else {
+                utftext += String.fromCharCode((c &gt;&gt; 12) | 224);
+                utftext += String.fromCharCode(((c &gt;&gt; 6) &amp; 63) | 128);
+                utftext += String.fromCharCode((c &amp; 63) | 128);
+            }
+        }
+        return utftext;
+    },
+
+    // private method for UTF-8 decoding
+    _utf8_decode : function (utftext) {
+        var string = &#34;&#34;;
+        var i = 0;
+        var c = c1 = c2 = 0;
+
+        while ( i &lt; utftext.length ) {
+
+            c = utftext.charCodeAt(i);
+
+            if (c &lt; 128) {
+                string += String.fromCharCode(c);
+                i++;
+            }
+            else if((c &gt; 191) &amp;&amp; (c &lt; 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c &amp; 31) &lt;&lt; 6) | (c2 &amp; 63));
+                i += 2;
+            }
+            else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c &amp; 15) &lt;&lt; 12) | ((c2 &amp; 63) &lt;&lt; 6) | (c3 &amp; 63));
+                i += 3;
+            }
+        }
+        return string;
+    }
+}
+
+var snus = Base64.encode(Reshaper.variables.getGlobalVariable(&#34;grpc&#34;));
+
+Reshaper.event.runThen(&#34;SetVariable&#34;,
+{
+    text: snus,
+  useMessageValue: false,
+    targetSource: &#34;Global&#34;,
+    variableName: &#34;grpc_base64&#34;
+}
+);
+</code></pre><p>Now we send our payload stored in the <code>grpc_base64</code> variable to nxenon&rsquo;s
+<code>grpc-coder.py</code> tool:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Command</th>
+<th>Stdin</th>
+<th>Wait for completion</th>
+<th>Capture Output</th>
+<th>Capture Variable Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Run Process</td>
+<td>echo $(echo {{g:grpc_base64}} | base64 -d) | protoscope -s | python3 /home/user/grpc-coder.py &ndash;encode | tr -d &lsquo;\n&rsquo;</td>
+<td></td>
+<td>Checked</td>
+<td>Checked</td>
+<td>grpc_payload</td>
+</tr>
+</tbody>
+</table>
+<p>Next we replace our request body with the gRPC encoded payload:</p>
+<table>
+<thead>
+<tr>
+<th>Request Direction</th>
+<th>Thens</th>
+<th>Source Text</th>
+<th>Source Type Value</th>
+<th>Destination Message Value</th>
+<th>Destination Value Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N/A</td>
+<td>Set Value</td>
+<td>{{g:grpc_payload}}</td>
+<td>Text</td>
+<td>Request Body</td>
+<td>Text</td>
+</tr>
+</tbody>
+</table>
+<p>Awesome. Now we can grab a valid request that has been sent to the server,
+use the <code>grpc-coder.py</code> to decode the input, then we can use Burps active scanner
+or manually customize the input as we please and all encoding will be
+done automatically.</p>
+<p><img src="grpc-reshaper-setup-working.png" alt="grpc-reshaper-setup-working"></p>
+<p>This will save us precious time when assessing gRPC Web applications.</p>
+<h2 id="summary">Summary</h2>
+<p>Reshaper is an extremely powerful Burp plugin that helps you automate
+complex flows or overcome hurdles when assessing advanced web applications.
+It&rsquo;s been a long way to reach the end of this research but if you are here
+you most certainly learned a thing or two regarding the many possibilities
+with Burp and Reshaper which may help you when pentesting web applications.</p>
+<p>All the code from all node.js applications can be found at Shelltrails
+<a href="https://github.com/shelltrail/tricky-apis">github page</a>,</p>
+<p>Take care and happy hacking!</p>
+
+    </div>
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="https://www.shelltrail.com/"></a></h5>
+      
+      
+      <ul class="network-icon" aria-hidden="true">
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academia.min.6c2ba2801d406881b3c2277043cedd76.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6 mb-4 mb-md-0">
+        
+        <p class="mb-0">
+          Copyright © 2025 &middot; 
+	  Shelltrail AB 559319-6164
+        </p>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-inline network-icon text-right mb-0">
+          
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
