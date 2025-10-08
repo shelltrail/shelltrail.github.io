@@ -1,0 +1,25 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+# security.txt
+# https://www.rfc-editor.org/rfc/rfc9116
+
+Expires: 2026-09-18T10:00
+Contact: mailto:security@shelltrail.com
+Encryption: https://www.shelltrail.com/.well-known/pgp-key.txt
+Preferred-Languages: en, sv
+Canonical: https://www.shelltrail.com/.well-known/security.txt
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEt3VfUyScw0ete8Kmdk5PXOuLaeAFAmjL7dkACgkQdk5PXOuL
+aeB7PAv/Sw7rY8S9woUs/ny7DT1vxkb5MCmcewXR1ycnMNkHpErH42HPiVDF+TRB
+dwR/CPIQh3jM+KVKnFS6t+7IoQUKQidzwbHjnxW0u/e7/JvUMVW5H44AYFWFALp+
+0RSmpsZdxhloXgnnr2smznNlfhPXfxP+gKzqlSJGCnQenxIQZSO28DMEADvg5QNg
+V6EK2XNV3m27d4pBajPs8Nju9IuU5g/zvuiSSNSlURSCSbV2yNrGSTlB08KJTvNr
+Qu3ept3YAV7q9Rt88zpiXQrIAL0Y4np3NeqwYjVmsmfH4emATx9EuOnWZXuzVBC+
+RHtvvEwVfI+2tm3LKRAn4m2KG4SPYGXIxbe4eVklst8NKApxhjdaDToWBCVPl/X9
+zjj0w137cFUaSmHhUHU3FH7jt7+uKLGYzIrE8E366/LikcRbU/hkLzDKGq083Moq
+6DH6aX+I8TIy2Qryi1uGxPhaR6Vj0xIYO7I/0M+z9kkKXXr6mE611Ld0eCBqNAUQ
+jfu2zR8I
+=BHVi
+-----END PGP SIGNATURE-----
