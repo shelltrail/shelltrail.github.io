@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Säkerhetsgranskning on Shelltrail - Experter inom offensiv säkerhet</title>
+    <link>https://www.shelltrail.com/sv/tags/sakerhetsgranskning/</link>
+    <description>Recent content in Säkerhetsgranskning on Shelltrail - Experter inom offensiv säkerhet</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>sv-se</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Thu, 09 Nov 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/sv/tags/sakerhetsgranskning/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hur går ett pentest till?</title>
+      <link>https://www.shelltrail.com/sv/blogg/hur-gar-ett-pentest-till/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/blogg/hur-gar-ett-pentest-till/</guid>
+      <description>&lt;p&gt;Ett pentest eller penetrationstest är en säkerhetsgranskning av ett system som
+syftar till att identifiera sårbarheter i systemet som sedan kan åtgärdas för
+att se till att de inte kan utnyttjas av en angripare. Det finns ett flertal
+olika typer av pentest, som skiljer sig något i förutsättningar och utförande:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Pentest av &lt;a href=&#34;https://www.shelltrail.com/sv/cybersakerhetstjanster/internt-natverk-och-active-directory-pentest/&#34;&gt;interna nätverk och Active Directory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Pentest av &lt;a href=&#34;https://www.shelltrail.com/sv/cybersakerhetstjanster/webbapplikations-pentest/&#34;&gt;webbapplikationer&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Pentest av mobilapplikationer&lt;/li&gt;
+&lt;li&gt;Pentest av &lt;a href=&#34;https://www.shelltrail.com/sv/cybersakerhetstjanster/molnsakerhetsgranskning/&#34;&gt;molnmiljöer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Vi har i denna artikel valt att beskriva de delar som dessa olika typer av
+pentest har gemensamt, vilket är de olika faserna testerna går igenom under de
+1-2 veckor som pentestet pågår. Här skiljer sig dessa något mellan olika
+leverantörer, men vi har valt att beskriva dem i grova drag.&lt;/p&gt;
+&lt;h2 id=&#34;scoping&#34;&gt;Scoping&lt;/h2&gt;
+&lt;p&gt;Den första fasen är vanligtvis det som kallas scoping, där innehållet i testet
+definieras. Här går man igenom saker som vilka system som skall testas, när i
+tiden, vilka risker uppdragsgivaren ser, i vilken miljö testet genomförs
+(exempelvis i utvecklings- eller produktionsmiljö) samt om det finns undantag
+till vad som får testas. Scopingen är viktig då denna sätter omfattningen på testet.&lt;/p&gt;
+&lt;p&gt;Det är värt att notera att den här fasen typiskt sett utförs en tid innan testet
+då det ofta uppkommer frågor och begränsningar som behöver lösas innan ett test
+väl kan påbörjas.&lt;/p&gt;
+&lt;h2 id=&#34;uppstart&#34;&gt;Uppstart&lt;/h2&gt;
+&lt;p&gt;Nästa, vanligtvis korta fas, är uppstarten på testet. Här valideras att alla
+förutsättningar är på plats, att testarna har tillgång till miljön samt ges
+möjlighet att se hur applikationen används till vardags. Under detta, typiskt 1
+timme långa möte finns det ofta möljighet att reda ut kvarvarande frågor från kundens
+sida samt möjlighet för testarna att ställa ytterligare frågor.&lt;/p&gt;
+&lt;p&gt;Som en del i den här fasen ingår även de förberedelser testarna behöver utföra
+för att på ett säkert sätt kunna genomföra uppdraget. Det innefattar bland annat
+att sätta upp en säker isolerad miljö för testning, införskaffande av utrustning
+som kan behövas och att läsa på om kundens verksamhet.&lt;/p&gt;
+&lt;h2 id=&#34;testfasen&#34;&gt;Testfasen&lt;/h2&gt;
+&lt;p&gt;Så snart uppstartsmötet är avslutat är testarna i regel redo att påbörja testet
+där de etiska hackarna använder samma verktyg och metoder som riktiga angripare.
+Vanligtvis behövs lite eller ingen vägledning under denna fas, även om det är
+bra att ha en teknisk kontaktperson hos kunden för att reda ut problem som kan
+uppstå. Även om det inte är vanligt att de testade miljöerna helt slutar
+fungera, så kan de anrop som används utav testarna få applikationen att bete sig
+på ett sätt som inte var menat.&lt;/p&gt;
+&lt;p&gt;Även om de flesta brister inte rapporteras löpande under testets gång så är det
+vanligt att kritiska sårbarheter rapporteras så snart de identifierats, då dessa kan
+leda till allvarliga konsekvenser i produktionsssystem.&lt;/p&gt;
+&lt;h2 id=&#34;avrapporteringsmöte-och-rapport&#34;&gt;Avrapporteringsmöte och Rapport&lt;/h2&gt;
+&lt;p&gt;När tiden för testet löper mot sitt slut så sammanställer testarna de
+säkerhetsbrister som identifierats i en utförlig rapport samt presenterar
+bristerna på ett avrapporteringsmöte.&lt;/p&gt;
+&lt;p&gt;Rapporten, som är tilltänkt att läsas av personer med olika ansvar och bakgrund,
+innehåller vanligtvis en högnivåbeskrivning av testet och resultatet samt en mer
+detaljerad teknisk del där bristerna, hur de nyttjas och åtgärdas beskrivs.&lt;/p&gt;
+&lt;p&gt;Avrapporteringsmötet syftar till att
+testarna skall kunna visa de identifierade bristerna, hur de går att utnyttja
+samt hur de kan åtgärdas eller motverkas. Här har även kunden möjlighet att ställa
+frågor som ofta kan uppkomma då vissa attacker innefattar komplexa flöden.&lt;/p&gt;
+&lt;h2 id=&#34;summering&#34;&gt;Summering&lt;/h2&gt;
+&lt;p&gt;Vi på Shelltrail är vana att hjälpa företag att säkra upp sina system
+genom att uföra säkerhetsgranskningar. Använd vårt kontaktformulär
+eller skicka ett mail till &lt;a href=&#34;mailto:info@shelltrail.com&#34;&gt;info@shelltrail.com&lt;/a&gt; så kan vi diskutera
+vilka sätt vi kan hjälpa er.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

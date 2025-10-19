@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CERT-SE on Shelltrail - Experter inom offensiv säkerhet</title>
+    <link>https://www.shelltrail.com/sv/tags/cert-se/</link>
+    <description>Recent content in CERT-SE on Shelltrail - Experter inom offensiv säkerhet</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>sv-se</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Thu, 09 Nov 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/sv/tags/cert-se/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>CERT-SE och Automatiska Notifieringar avseende Tekniska Sårbarheter (ANTS)</title>
+      <link>https://www.shelltrail.com/sv/blogg/cert-se-automatiska-notifieringar-avseende-tekniska-sarbarheter/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/blogg/cert-se-automatiska-notifieringar-avseende-tekniska-sarbarheter/</guid>
+      <description>&lt;p&gt;CERT-SE är Sveriges nationella Computer Emergency Response Team med uppgift att stötta
+samhället i arbetet med att hantera och förebygga IT-incidenter. Exempel på CERT-SE&amp;rsquo;s uppgifter
+är bland annat att öka säkerhetsmedvetenheten genom att förmedla kunskap och fakta gällande
+sårbarheter i IT system eller att hjälpa till att hantera IT-incidenter genom
+att vara en central punkt för hantering av information gällande pågående attacker.&lt;/p&gt;
+&lt;p&gt;CERT-SE är en del av Myndigheten för Samhällsskydd och Beredskap (MSB) som via stöd från
+regeringen har i uppdrag att förebygga och hantera eventuella dessa IT-incidenter för både
+privata företag och offentlig sektor.&lt;/p&gt;
+&lt;p&gt;Som ett led i att förebygga IT-incidenter tillhandahåller CERT-SE tjänsten
+&lt;a href=&#34;https://www.cert.se/utskick-faq/&#34;&gt;Automatiska Notifieringar avseende Tekniska Sårbarheter (ANTS)&lt;/a&gt;.
+Detta är en tjänst där företag, organisationer eller offentlig sektor kan kan rapportera in sina
+internet-exponerade system och via CERT-SE bli notifierade om systemen tros ha blivit
+kapade, har en sårbar konfiguration eller om det påträffats en publikt känd sårbarhet.&lt;/p&gt;
+&lt;p&gt;Att anmäla sig till ANTS är ett komplement i sitt säkerhetsarbete och kan ej ses som en
+ersättning till exempelvis en &lt;a href=&#34;https://www.shelltrail.com/sv/cyber-security-services/external-infrastructure/&#34;&gt;extern säkerhetsgranskning&lt;/a&gt;
+där manuell granskning av systemen utförs.&lt;/p&gt;
+&lt;h2 id=&#34;summering&#34;&gt;Summering&lt;/h2&gt;
+&lt;p&gt;ANTS är en konstnadsfri tjänst som underlättar möjligheten för CERT-SE att
+kontakta dig om det skulle uppdagas att något av de system du anmält till tjänsten kan
+vara hotade.
+Med det sagt finns det få anledningar till att
+inte anmäla sig - mer information finns på &lt;a href=&#34;https://www.cert.se/utskick-faq/&#34;&gt;https://www.cert.se/utskick-faq/&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

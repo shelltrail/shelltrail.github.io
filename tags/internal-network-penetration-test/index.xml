@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Internal network penetration test on Shelltrail - Swedish offensive security experts</title>
+    <link>https://www.shelltrail.com/tags/internal-network-penetration-test/</link>
+    <description>Recent content in Internal network penetration test on Shelltrail - Swedish offensive security experts</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Mon, 30 Oct 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/tags/internal-network-penetration-test/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Internal/Active Directory penetration test</title>
+      <link>https://www.shelltrail.com/cyber-security-services/internal-and-active-directory-penetration-test/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/cyber-security-services/internal-and-active-directory-penetration-test/</guid>
+      <description>&lt;p&gt;An internal security assessment, which is commonly performed together with an
+assessment of the Active Directory environment, is a common way to evaluate an
+organizations defense-in-depth against an attacker. A common misconception is
+that the protection provided by perimeter defenses are sufficient to effectively
+stop and outside attacker, however this is rarely the case as credential
+leakage/guessing, phishing, the use of zero-day vulnerabilities and social
+engineering are all attacks that could aid an attacker in breaching the
+perimeter defenses.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-an-internal-pentest&#34;&gt;What is an internal pentest?&lt;/h2&gt;
+&lt;p&gt;A penetration test of the internal systems are commonly performed as what is
+called an &amp;ldquo;Assume Breach&amp;rdquo;-scenario, where the test simulates that a resource
+such as a workstation on the internal network has been compromised by an
+attacker. A test is typically conducted during 2 weeks (for an average-sized
+environment), even if the time allocation can vary depending on the scope of the
+test and which initial access methodology is chosen.&lt;/p&gt;
+&lt;p&gt;In the most common scenario, &amp;ldquo;Assume Breach&amp;rdquo;, Shelltrails security experts will
+assess the internal environment such as web applications, internal servers and
+services as well as the Active Directory in order to elevate privileges and move
+laterally to additional targets. The goal of the assessment is to detect
+vulnerabilities that after mitigation, will improve the company&amp;rsquo;s resilience during
+an attack. Additional targets may also be chosen such as finding and compromising
+backup-servers, hypervisors or gaining access to highly privileged accounts.&lt;/p&gt;
+&lt;p&gt;The pentest contains several parts and systems, including (but not limited to):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Internal web applications&lt;/li&gt;
+&lt;li&gt;Access Control Lists in the AD environment&lt;/li&gt;
+&lt;li&gt;Configuration servers such as SCCM/MECM/ConfigMgr&lt;/li&gt;
+&lt;li&gt;Certificate Services (AD CS)&lt;/li&gt;
+&lt;li&gt;SQL servers&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;why-and-when-should-we-pentest-our-internal-services&#34;&gt;Why and when should we pentest our internal services?&lt;/h2&gt;
+&lt;p&gt;The goal of a pentest is to increase the resilience of the internal network
+against a threat with limited access, by uncovering the paths the attacker may
+take to move laterally or elevate privileges. By identifying weak points, and
+reducing or removing their exploitability, the security posture of the entire
+network is strengthened.&lt;/p&gt;
+&lt;p&gt;We recommend all organizations with medium to large internal environments to
+conduct internal security assessments on a yearly basis, as new tools,
+techniques and attacks are constantly introduced.&lt;/p&gt;
+&lt;h2 id=&#34;the-result-of-an-internal-pentest&#34;&gt;The result of an internal pentest&lt;/h2&gt;
+&lt;p&gt;An internal pentest concludes with a de-briefing meeting and a report
+summarizing the identified vulnerabilities, how they are exploited as well as
+how they can be fixed or mitigated.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

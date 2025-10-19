@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>container orchestration on Shelltrail - Swedish offensive security experts</title>
+    <link>https://www.shelltrail.com/tags/container-orchestration/</link>
+    <description>Recent content in container orchestration on Shelltrail - Swedish offensive security experts</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Mon, 06 May 2024 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/tags/container-orchestration/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Kubernetes security assessment</title>
+      <link>https://www.shelltrail.com/cyber-security-services/kubernetes-security-assessment/</link>
+      <pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/cyber-security-services/kubernetes-security-assessment/</guid>
+      <description>&lt;p&gt;Kubernetes is a commonly used container orchestration tool providing scalability
+and resilience to enterprises utilizing containerized applications. Whether
+it may be internal policies or for compliance reasons, it is always beneficial
+to perform security assessments to proactively find vulnerabilities or
+misconfigurations. This may lower probability of a compromise occurring, and
+minimize the impact if it happens.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-assessed-in-a-kubernetes-security-review&#34;&gt;What is assessed in a Kubernetes security review?&lt;/h2&gt;
+&lt;p&gt;When doing a Kubernetes security review the initial perspective can vary, it
+may be from the perspective of a compromised pod, a specific namespace or an employee with developer access.
+From here publicly known attack paths will be evaluated in an attempt
+to reach sensitive information or cluster-wide compromise.&lt;/p&gt;
+&lt;p&gt;In addition, CIS benchmarks will be used as a foundation for the assessment
+making sure that industry standard best-practices is evaluated in the environment.
+The Center for Internet Security (CIS) is a nonprofit organization that enhances
+cybersecurity readiness and response across public and private sectors.
+CIS provides extensive checklists in terms of best practices for security
+configurations.&lt;/p&gt;
+&lt;h2 id=&#34;deliverables-after-conducting-a-security-review&#34;&gt;Deliverables after conducting a security review&lt;/h2&gt;
+&lt;p&gt;By the end of the assessment a de-briefing meeting with key stakeholders will
+be held to present the findings from the assessment, discuss recommendations and address
+questions or concerns.
+After the de-brief meeting the report will be delivered which includes an
+assessment description, a results &amp;amp; recommendations section and an executive
+summary. The executive summary is commonly used as a customer facing
+report showing proactive work in the IT security realm.&lt;/p&gt;
+&lt;h2 id=&#34;contact&#34;&gt;Contact&lt;/h2&gt;
+&lt;p&gt;If you wish to view a sample report or discuss/schedule an assessment,
+please use our contact form or reach out to us via email at &lt;a href=&#34;mailto:info@shelltrail.com&#34;&gt;info@shelltrail.com&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

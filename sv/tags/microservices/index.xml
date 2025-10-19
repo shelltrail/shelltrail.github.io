@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>microservices on Shelltrail - Experter inom offensiv säkerhet</title>
+    <link>https://www.shelltrail.com/sv/tags/microservices/</link>
+    <description>Recent content in microservices on Shelltrail - Experter inom offensiv säkerhet</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>sv-se</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Mon, 06 May 2024 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/sv/tags/microservices/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Säkerhetsgranskning av Kubernetesmiljö</title>
+      <link>https://www.shelltrail.com/sv/cybersakerhetstjanster/kubernetes-sakerhetsgranskning/</link>
+      <pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/cybersakerhetstjanster/kubernetes-sakerhetsgranskning/</guid>
+      <description>&lt;p&gt;Kubernetes är ett vanligt förkommande orkestreringsverktyg för mikrotjänster
+som tillhandahåller skalbarhet och tillgänglighet för container-baserade applikationer.
+Vare sig det gäller interna policys eller regulatoriska krav, så är det alltid
+bra att utföra säkerhetsgranskningar för att proaktivt hitta sårbarheter
+eller felkonfigurationer. Detta kan minska sannolikheten för att ett intrång kommer ske
+och minimera påverkan om det händer.&lt;/p&gt;
+&lt;h2 id=&#34;vad-ingår-i-en-säkerhetsgranskning-av-kubernetes&#34;&gt;Vad ingår i en säkerhetsgranskning av Kubernetes?&lt;/h2&gt;
+&lt;p&gt;När en Kubernetes säkerhetsgranskning utförs så kan utgångsläget variera, vanligt
+färkommande är att man utgår från perspektivet av en kapad pod, ett kapat namespace
+eller en kompromitterad anställd med utvecklaråtkomst. Utifrån dessa perspektiv så
+utnyttjas pubilkt kända attacker eller tekniker i ett försök att nå känslig
+information eller att kapa hela Kubernetes klustret.&lt;/p&gt;
+&lt;p&gt;Utöver manuella tester så kommer en CIS benchmark användas som grund
+för att säkerställa att bästa säkerhetspraxis utvärderas i miljön.
+Center for Internet Security (CIS) är en ideell organisation som förbättrar
+beredskapen inom cybersäkerhet för både den offentliga och privata sektorn.
+CIS tillhandahåller omfattande checklistor, skapade av branchexperter, för att
+för att utvärdera om säkerhetskonfigurationer lever upp till bästa praxis.&lt;/p&gt;
+&lt;h2 id=&#34;leverabler-efter-att-ha-genomfört-en-säkerhetsgranskning&#34;&gt;Leverabler efter att ha genomfört en säkerhetsgranskning&lt;/h2&gt;
+&lt;p&gt;Vid slutet av säkerhetsgranskningen kommer ett avslutande möte att hållas
+för att presentera uppdragets resultat, diskutera rekommendationer och
+svara på eventuella övriga frågor. Efter det avslutande mötet kommer rapporten att levereras,
+vilken innehåller tre sektioner: sammanfattning för ledning, uppdragsbeskrivning
+och resultat med rekommendationer. Den inledande sammanfattningen
+används ofta som ett utdrag från rapporten som kan presenteras för
+kunder. Detta kan visa på ett företags proaktivta arbete inom IT-säkerhetsområdet.&lt;/p&gt;
+&lt;h2 id=&#34;kontakt&#34;&gt;Kontakt&lt;/h2&gt;
+&lt;p&gt;Om du vill se ett exempelrapport eller diskutera/boka ett uppdrag,
+använd vårt kontaktformulär eller kontakta oss via e-post på &lt;a href=&#34;mailto:info@shelltrail.com&#34;&gt;info@shelltrail.com&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

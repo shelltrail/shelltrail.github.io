@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Red Team on Shelltrail - Experter inom offensiv säkerhet</title>
+    <link>https://www.shelltrail.com/sv/tags/red-team/</link>
+    <description>Recent content in Red Team on Shelltrail - Experter inom offensiv säkerhet</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>sv-se</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Thu, 09 Nov 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/sv/tags/red-team/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Red Team-övning</title>
+      <link>https://www.shelltrail.com/sv/cybersakerhetstjanster/red-team-ovning/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/cybersakerhetstjanster/red-team-ovning/</guid>
+      <description>&lt;p&gt;En &amp;ldquo;Red Team&amp;rdquo;-övning är ett simulerat angrepp på en organisation, och kan
+innefatta många olika delar som phishing, social engineering, attacker mot
+externt exponerad infrastruktur samt interna system. Simuleringen är tänkt att
+vara så verklighetstrogen som möjligt, där metoder/tekniker, verktyg och
+tillvägagångssätt emulerar riktiga angripare (ofta baserat på hotbilden mot
+företagets verksamhetsområde).&lt;/p&gt;
+&lt;h2 id=&#34;vad-är-en-red-team-övning&#34;&gt;Vad är en Red Team-övning&lt;/h2&gt;
+&lt;p&gt;En &amp;ldquo;Red Team&amp;rdquo;-övning blandas ofta ihop med det nära besläktade ordet pentest
+eller penetrationstest, men skiljer sig markant på ett flertal punkter som:
+utförande, metodik, mål och syfte. Medan ett penetrationstest syftar till att
+identifiera så många säkerhetsbrister i ett system eller nätverk som möjligt, är
+en &amp;ldquo;Red Team&amp;rdquo;-övning till för att på ett så realisiskt sett som möjligt testa
+en hel organisations motståndskraft mot att en angripare kommer åt ett eller
+flera specifika mål.&lt;/p&gt;
+&lt;p&gt;Målen kan vara allt från att komma åt skyddsvärd information, en specifik
+mailkorg eller att ta över ett känsligt konto. Detta innebär ofta att
+säkerhetsgranskaren använder andra metoder som på ett mer realistiskt sett
+simulerar riktiga avancerade angripare.&lt;/p&gt;
+&lt;p&gt;Under en &amp;ldquo;Red Team&amp;rdquo;-övning är även bara en begränsad skara på företaget medvetna
+om att testet utförs, så att beteendet hos personalen på företaget kan
+utvärderas och eventuella processer och metoder kan förbättras.&lt;/p&gt;
+&lt;h2 id=&#34;varför-och-när-skall-vi-utföra-en-red-team-övning&#34;&gt;Varför och när skall vi utföra en Red Team-övning?&lt;/h2&gt;
+&lt;p&gt;Vi rekommenderar att en &amp;ldquo;Red Team&amp;rdquo;-övning utförs först när företaghet har
+genomfört säkerhetsgranskningar av den interna ifrastrukturen och åtgärdat de
+brister som identifierats. Att få en bra säkerhetsgrund att stå på genom att
+utföra en intern säkerhetgranskning, där en större bredd av säkerhetbrister
+identifieras ger ofta mer valuta för pengarna i ett tidigt skede.&lt;/p&gt;
+&lt;p&gt;När företaget känner att miljön håller god säkerhet och processer och verktyg är
+på plats för att motverka angripare, så kan det vara värt att genomföra ett test
+för att se att dessa lever upp till den förväntade standarden.&lt;/p&gt;
+&lt;p&gt;Utöver dessa tillfällen finns det även regulatoriska krav som kommer ställas på
+att utföra &amp;ldquo;Red Team&amp;rdquo;-övningar för särskilda branscher, som exempelvis TIBER.&lt;/p&gt;
+&lt;h2 id=&#34;rapportering-och-resultat&#34;&gt;Rapportering och resultat&lt;/h2&gt;
+&lt;p&gt;Rapporteringen av resultatet från en &amp;ldquo;Red Team&amp;rdquo;-övning skiljer sig ganska
+markant från den av ett penetrationstest, då målsättningen och
+tillvägagångssättet skiljer sig mellan de olika testtyperna. I denna typ av test
+fokuserar rapporteringen kring en berättelse av den simulerade attacken (eng.
+Attack Narrative) där testarna resonerar kring vilka attacker som utförts,
+varför de valdes, när de genomfördes och vilken reaktion det väckte från
+företagets organisation. Detta görs så att organisationen får en uppfattning om
+hur en attack riktad mot dem kan se ut från en angripares sida, men även för att
+kunna identifiera brister, både tekniska och organisatoriska.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

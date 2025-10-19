@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Shelltrail - Swedish offensive security experts</title>
+    <link>https://www.shelltrail.com/tags/</link>
+    <description>Recent content in Tags on Shelltrail - Swedish offensive security experts</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Mon, 06 May 2024 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>container orchestration</title>
+      <link>https://www.shelltrail.com/tags/container-orchestration/</link>
+      <pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/container-orchestration/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>container security</title>
+      <link>https://www.shelltrail.com/tags/container-security/</link>
+      <pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/container-security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>k8s</title>
+      <link>https://www.shelltrail.com/tags/k8s/</link>
+      <pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/k8s/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes security assessment</title>
+      <link>https://www.shelltrail.com/tags/kubernetes-security-assessment/</link>
+      <pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/kubernetes-security-assessment/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>microservices</title>
+      <link>https://www.shelltrail.com/tags/microservices/</link>
+      <pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/microservices/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Active Directory penetration test</title>
+      <link>https://www.shelltrail.com/tags/active-directory-penetration-test/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/active-directory-penetration-test/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Adversial simulation</title>
+      <link>https://www.shelltrail.com/tags/adversial-simulation/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/adversial-simulation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Attack simulation</title>
+      <link>https://www.shelltrail.com/tags/attack-simulation/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/attack-simulation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Attack surface</title>
+      <link>https://www.shelltrail.com/tags/attack-surface/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/attack-surface/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Azure</title>
+      <link>https://www.shelltrail.com/tags/azure/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/azure/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Cloud security assessment</title>
+      <link>https://www.shelltrail.com/tags/cloud-security-assessment/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/cloud-security-assessment/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>External network penetration test</title>
+      <link>https://www.shelltrail.com/tags/external-network-penetration-test/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/external-network-penetration-test/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Internal network penetration test</title>
+      <link>https://www.shelltrail.com/tags/internal-network-penetration-test/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/internal-network-penetration-test/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>OSCE3</title>
+      <link>https://www.shelltrail.com/tags/osce3/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/osce3/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>OSEP</title>
+      <link>https://www.shelltrail.com/tags/osep/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/osep/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>OSWE</title>
+      <link>https://www.shelltrail.com/tags/oswe/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/oswe/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>OWASP</title>
+      <link>https://www.shelltrail.com/tags/owasp/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/owasp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pentest</title>
+      <link>https://www.shelltrail.com/tags/pentest/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/pentest/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pentest AWS</title>
+      <link>https://www.shelltrail.com/tags/pentest-aws/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/pentest-aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Pentest Azure</title>
+      <link>https://www.shelltrail.com/tags/pentest-azure/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/pentest-azure/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Red Team</title>
+      <link>https://www.shelltrail.com/tags/red-team/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/red-team/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Web application security</title>
+      <link>https://www.shelltrail.com/tags/web-application-security/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/web-application-security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Web security assessment</title>
+      <link>https://www.shelltrail.com/tags/web-security-assessment/</link>
+      <pubDate>Mon, 30 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/tags/web-security-assessment/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

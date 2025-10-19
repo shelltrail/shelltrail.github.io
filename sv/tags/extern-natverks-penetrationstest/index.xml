@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Extern nätverks penetrationstest on Shelltrail - Experter inom offensiv säkerhet</title>
+    <link>https://www.shelltrail.com/sv/tags/extern-natverks-penetrationstest/</link>
+    <description>Recent content in Extern nätverks penetrationstest on Shelltrail - Experter inom offensiv säkerhet</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>sv-se</language>
+    <copyright>Copyright &amp;copy; {year}</copyright>
+    <lastBuildDate>Thu, 09 Nov 2023 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="https://www.shelltrail.com/sv/tags/extern-natverks-penetrationstest/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Extern infrastruktur</title>
+      <link>https://www.shelltrail.com/sv/cybersakerhetstjanster/extern-infrastruktur/</link>
+      <pubDate>Thu, 09 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.shelltrail.com/sv/cybersakerhetstjanster/extern-infrastruktur/</guid>
+      <description>&lt;p&gt;När utförde ert företag senast en inventering och granskning av alla internetexponerade system?
+Det är en bra fråga att söka svar på när man vill riskbedöma sin internetnärvaro. System
+föråldras och nya sårbarheter upptäcks dagligen vilket innebär att företag måste vara noggranna
+med att inventera sina system, vilka portar exponeras, vilka versioner som körs av olika programvaror
+och mappa dessa mot sårbarheter som innebär en verklig risk.&lt;/p&gt;
+&lt;p&gt;Det är en svår uppgift som måste itereras med jämna mellanrum och är inte alltid i
+förening med företagets prioriterade mål. En vanlig anledning är att systemen verkar
+fungera och att det finns en attityd att inte påverka något som fungererar.&lt;/p&gt;
+&lt;h2 id=&#34;vad-innebär-ett-pentest-av-extern-infrastruktur&#34;&gt;Vad innebär ett pentest av extern infrastruktur?&lt;/h2&gt;
+&lt;p&gt;Oftast så inleds uppdraget genom att beställaren överlämnar en lista på IP-adresser och
+domännamn som skall granskas. Utöver detta så använder Shelltrail Open Source
+Intelligence-källor (OSINT) för att försöka hitta fler system som kan vara odokumenterade
+och eller klassas som &lt;em&gt;Skugg-IT&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;När listan över system som är identifierade anses vara komplett, verifieras det att alla
+mål är under beställarens säkerhetsansvar och inte tredje-partssystem. Om så är fallet måste
+skriftligt godkännande gällande säkerhetsgranskning av tredje-part överlämnas till
+Shelltrail&amp;rsquo;s säkerhetskonsulter.&lt;/p&gt;
+&lt;p&gt;Med en komplett lista av legitima mål påbörjas testandet där en kombination av automatiskta
+och manuell granskning av systemen genomförs. Här kombineras tekniker från
+alla Shelltrail&amp;rsquo;s expertområden såsom säkerhetgranskning av webbapplikation, Windows
+och Linux angrepp, binär exploatering och molnspecifika attacker för att nämna några.&lt;/p&gt;
+&lt;p&gt;Shelltrail&amp;rsquo;s säkerhetsexperter besitter en bred bakgrund inom cybersäkerhetsgranskningar vilket
+ämnar sig bra till de varierade tjänsterna som kan exponeras på internet.&lt;/p&gt;
+&lt;h2 id=&#34;varför-och-när-ska-man-göra-en-extern-infrastruktur-granskning&#34;&gt;Varför och när ska man göra en extern infrastruktur granskning?&lt;/h2&gt;
+&lt;p&gt;Som tidigare nämnts så upptäckts nya sårbarheter dagligen och system blir udaterade vilket gör
+att tillverkaren ibland slutar underhålla system med säkerhetsuppdateringar. Detta gör det viktigt
+att man med jämna mellanrum utföra en granskning av sina internetexponerade system för att
+kunna säkra upp dessa innan angripare hittar systemet. Oavsett om ert företag producerar
+knappnålar eller utvecklar läkemedel så kan era internet exponerade system bli mål för
+en opportunistisk angripare som skannar internet.&lt;/p&gt;
+&lt;h2 id=&#34;resultatet&#34;&gt;Resultatet&lt;/h2&gt;
+&lt;p&gt;Uppdraget resulterar i en professionell rapport där alla brister beskrivs i ett detaljerat format.
+Sårbarheterna beskrivna i rapporten rankas från kritisk till låg och i kombination med beställarens
+uppfattade hotbild kan rapporten användas som en
+prioriteringslista på vilken ordning man ska åtgärda problemen. Det är inte ovanlig att rapporten
+används för att skapa en ökad budget för företagets säkerhetsarbete eller upplysa exempelvis
+ledning att säkerhet måste prioriteras.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
